@@ -1,12 +1,18 @@
 #include "WPILib.h"
 #include "UserInterface.h"
 #include <stdio.h>
+#include <unistd.h>
 
 //The Robot's name is "Wedgemore"
-
+auto grip = NetworkTable::GetTable("grip");
 class Robot: public IterativeRobot
 {
 private:
+	const char *JAVA = "/usr/local/frc/JRE/bin/java";
+	    char *GRIP_ARGS[5] = { "java", "-jar", "/home/lvuser/grip.jar",
+	            "/home/lvuser/project.grip", NULL };
+
+
 	UserInterface ui;
 	struct WedgemoreUserInput wui;
 	LiveWindow *lw = LiveWindow::GetInstance();
@@ -17,6 +23,9 @@ private:
 
 	void RobotInit()
 	{
+		if(execv(JAVA, GRIP_ARGS) == -1) {
+			perror("Error running GRIP");
+		}
 		chooser = new SendableChooser();
 		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
@@ -48,6 +57,13 @@ private:
 
 	void AutonomousPeriodic()
 	{
+	    /* Get published values from GRIP using NetworkTables */
+	    auto areas = grip->GetNumberArray("targets/area", llvm::ArrayRef<double>());
+
+	    for (auto area : areas) {
+	        std::cout << "Got contour with area=" << area << std::endl;
+	    }
+
 		if(autoSelected == autoNameCustom){
 			//Custom Auto goes here
 		} else {
