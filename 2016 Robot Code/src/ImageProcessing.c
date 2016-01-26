@@ -8,7 +8,7 @@
 #include <math.h>
 #include <nivision.h>
 #include <nimachinevision.h>
-#include <windows.h>
+//#include <windows.h>
 
 // If you call Machine Vision functions in your script, add NIMachineVision.c to the project.
 
@@ -22,7 +22,7 @@ typedef enum IVA_ResultType_Enum {IVA_NUMERIC, IVA_BOOLEAN, IVA_STRING} IVA_Resu
 typedef union IVA_ResultValue_Struct    // A result in Vision Assistant can be of type double, BOOL or string.
 {
     double numVal;
-    BOOL   boolVal;
+    int boolVal;
     char*  strVal;
 } IVA_ResultValue;
 
