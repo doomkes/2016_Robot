@@ -2,7 +2,7 @@
 #include "UserInterface.h"
 #include <stdio.h>
 #include <unistd.h>
-#include
+#include <ImageProcessing.h>
 
 //The Robot's name is "Wedgemore"
 //auto grip = NetworkTable::GetTable("grip");
