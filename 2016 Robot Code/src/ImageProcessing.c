@@ -92,7 +92,7 @@ int IVA_ProcessImage(Image *image)
     VisionErrChk(imaqAddRectContour(roi, imaqMakeRect(5, 4, 475, 636)));
 
 	VisionErrChk(IVA_Classification(image, 
-		"C:\\Users\\James\\Documents\\FIRST Robotics\\2016\\Vision Assistant\\U shaped.clf", 
+		"U shaped.clf",
 		roi));
 
     // Cleans up resources associated with the object
