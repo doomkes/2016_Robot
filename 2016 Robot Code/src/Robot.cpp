@@ -53,6 +53,8 @@ public:
 		m_lazySwitchR(0),
 		m_backLiftSwitch(0)
 
+booblyboo
+
 {}
 
 
