@@ -29,7 +29,6 @@ private:
 	std::string autoSelected;
 
 public:
-	blah
 
 	Robot():
 		m_tank(0, 4, 2, 6),
