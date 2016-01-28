@@ -28,6 +28,34 @@ private:
 	const std::string autoNameCustom = "My Auto";
 	std::string autoSelected;
 
+public:
+
+	Robot():
+		m_tank(0, 4, 2, 6),
+		m_turretLazy(1),
+		m_turretLift(2),
+		m_turretShoot1(3),
+		m_turretShoot2(4),
+		m_driveStickL(1),
+		m_driveStickR(2),
+		m_turretStick(3),
+		m_driveFR(0),
+		m_driveFL(0),
+		m_driveRR(0),
+		m_driveRL(0),
+		PDBoard(0),
+		m_lazyCode(0),
+		m_liftCode(0),
+		m_shoot1Code(0),
+		m_shoot2Code(0),
+		m_homeLiftSwitch(0),
+		m_lazySwitchF(0),
+		m_lazySwitchR(0),
+		m_backLiftSwitch(0)
+
+{}
+
+
 	void RobotInit()
 	{
 		chooser = new SendableChooser();
