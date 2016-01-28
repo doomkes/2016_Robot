@@ -9,8 +9,8 @@
 class Robot: public IterativeRobot
 {
 
-	RobotDrive m_tank;	//normal drive wheels tank drive
-	//CANTalon m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
+	//RobotDrive m_tank;	//normal drive wheels tank drive
+	CANTalon m_leftMotor, m_rightMotor;//m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
 	Joystick m_driveStickL, m_driveStickR, m_turretStick; //control joysticks
 	//Solenoid m_driveFR, m_driveFL, m_driveRR, m_driveRL; //solenoids that control drive wheel height
 	//PowerDistributionPanel PDBoard;
@@ -31,14 +31,16 @@ private:
 public:
 
 	Robot():
-		m_tank(0, 4, 2, 6),
+		//m_tank(0, 4, 2, 6),
+		m_leftMotor(0),
+		m_rightMotor(1),
 //		m_turretLazy(1),
 //		m_turretLift(2),
 //		m_turretShoot1(3),
 //		m_turretShoot2(4),
-		m_driveStickL(1),
-		m_driveStickR(2),
-		m_turretStick(3)
+		m_driveStickL(0),
+		m_driveStickR(1),
+		m_turretStick(2)
 //		m_driveFR(0),
 //		m_driveFL(0),
 //		m_driveRR(0),
@@ -59,10 +61,10 @@ public:
 
 	void RobotInit()
 	{
-		chooser = new SendableChooser();
-		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
-		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
-		SmartDashboard::PutData("Auto Modes", chooser);
+//		chooser = new SendableChooser();
+//		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
+//		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
+//		SmartDashboard::PutData("Auto Modes", chooser);
 	}
 
 
@@ -106,8 +108,11 @@ public:
 	void TeleopPeriodic()
 	{
 		ui.GetData(&wui);
-
-		m_tank.TankDrive(m_driveStickL, m_driveStickR);
+		float yValueL = m_driveStickL.GetY();
+		float yValueR = m_driveStickR.GetY();
+		m_leftMotor.Set(yValueL);
+		m_rightMotor.Set(yValueR);
+		//m_tank.TankDrive(m_driveStickL, m_driveStickR);
 	}
 
 	void TestPeriodic()
