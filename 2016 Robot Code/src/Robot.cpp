@@ -8,6 +8,15 @@
 //auto grip = NetworkTable::GetTable("grip");
 class Robot: public IterativeRobot
 {
+
+	RobotDrive m_tank;	//normal drive wheels tank drive
+	CANTalon m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
+	Joystick m_driveStickL, m_driveStickR, m_turretStick; //control joysticks
+	Solenoid m_driveFR, m_driveFL, m_driveRR, m_driveRL; //solenoids that control drive wheel height
+	PowerDistributionPanel PDBoard;
+	Encoder m_lazyCode, m_liftCode, m_shoot1Code, m_shoot2Code;
+	DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
+
 private:
 
 
