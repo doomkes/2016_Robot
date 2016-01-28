@@ -8,9 +8,7 @@
 //auto grip = NetworkTable::GetTable("grip");
 class Robot: public IterativeRobot
 {
-
-	//RobotDrive m_tank;	//normal drive wheels tank drive
-	CANTalon m_leftMotor, m_rightMotor;//m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
+	CANTalon m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;//m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
 	Joystick m_driveStickL, m_driveStickR, m_turretStick; //control joysticks
 	//Solenoid m_driveFR, m_driveFL, m_driveRR, m_driveRL; //solenoids that control drive wheel height
 	//PowerDistributionPanel PDBoard;
@@ -18,8 +16,6 @@ class Robot: public IterativeRobot
 	//DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
 
 private:
-
-
 	UserInterface ui;
 	struct WedgemoreUserInput wui;
 	LiveWindow *lw = LiveWindow::GetInstance();
@@ -32,8 +28,10 @@ public:
 
 	Robot():
 		//m_tank(0, 4, 2, 6),
-		m_leftMotor(0),
-		m_rightMotor(1),
+		m_leftMotor1(1),
+		m_leftMotor2(2),
+		m_rightMotor1(3),
+		m_rightMotor2(4),
 //		m_turretLazy(1),
 //		m_turretLift(2),
 //		m_turretShoot1(3),
@@ -54,8 +52,6 @@ public:
 //		m_lazySwitchF(0),
 //		m_lazySwitchR(0)
 //		m_backLiftSwitch(0)
-
-
 {}
 
 
@@ -110,9 +106,10 @@ public:
 		ui.GetData(&wui);
 		float yValueL = m_driveStickL.GetY();
 		float yValueR = m_driveStickR.GetY();
-		m_leftMotor.Set(yValueL);
-		m_rightMotor.Set(yValueR);
-		//m_tank.TankDrive(m_driveStickL, m_driveStickR);
+		m_leftMotor1.Set(yValueL);
+		m_leftMotor2.Set(yValueL);
+		m_rightMotor1.Set(yValueR);
+		m_rightMotor2.Set(yValueR);
 	}
 
 	void TestPeriodic()
