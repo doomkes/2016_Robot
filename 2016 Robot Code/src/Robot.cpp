@@ -3,46 +3,37 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <ImageProcessing.h>
-
+#include "TankDrive.h"
+#include "Shooter.h"
+#include "SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 //auto grip = NetworkTable::GetTable("grip");
+
 class Robot: public IterativeRobot
 {
-	CANTalon m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;//m_turretLazy, m_turretLift, m_turretShoot1, m_turretShoot2;
-	Joystick m_driveStickL, m_driveStickR, m_turretStick; //control joysticks
-	//Solenoid m_driveFR, m_driveFL, m_driveRR, m_driveRL; //solenoids that control drive wheel height
+private:
+	TankDrive m_tank;
+	SuspensionDrive m_suspension;
+	Shooter m_shooter;
+	Joystick m_driveStickL, m_driveStickR, m_manStick; //control joysticks
+	UserInterface ui;
+	WedgemoreUserInput wui;
 	//PowerDistributionPanel PDBoard;
 	//Encoder m_lazyCode, m_liftCode, m_shoot1Code, m_shoot2Code;
 	//DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
 
-private:
-	UserInterface ui;
-	struct WedgemoreUserInput wui;
+
 	LiveWindow *lw = LiveWindow::GetInstance();
-	SendableChooser *chooser;
+	SendableChooser *chooser = nullptr;
 	const std::string autoNameDefault = "Default";
 	const std::string autoNameCustom = "My Auto";
 	std::string autoSelected;
 
 public:
-
 	Robot():
-		//m_tank(0, 4, 2, 6),
-		m_leftMotor1(1),
-		m_leftMotor2(2),
-		m_rightMotor1(3),
-		m_rightMotor2(4),
-//		m_turretLazy(1),
-//		m_turretLift(2),
-//		m_turretShoot1(3),
-//		m_turretShoot2(4),
 		m_driveStickL(0),
 		m_driveStickR(1),
-		m_turretStick(2)
-//		m_driveFR(0),
-//		m_driveFL(0),
-//		m_driveRR(0),
-//		m_driveRL(0),
+		m_manStick(2)
 //		PDBoard(0),
 //		m_lazyCode(0),
 //		m_liftCode(0),
@@ -52,15 +43,16 @@ public:
 //		m_lazySwitchF(0),
 //		m_lazySwitchR(0)
 //		m_backLiftSwitch(0)
-{}
+	{
 
+	}
 
 	void RobotInit()
 	{
-//		chooser = new SendableChooser();
-//		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
-//		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
-//		SmartDashboard::PutData("Auto Modes", chooser);
+		chooser = new SendableChooser();
+		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
+		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
+		SmartDashboard::PutData("Auto Modes", chooser);
 	}
 
 
@@ -76,7 +68,7 @@ public:
 	void AutonomousInit()
 	{
 		autoSelected = *((std::string*)chooser->GetSelected());
-		//std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
+		std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 		std::cout << "Auto selected: " << autoSelected << std::endl;
 
 		if(autoSelected == autoNameCustom){
@@ -88,7 +80,6 @@ public:
 
 	void AutonomousPeriodic()
 	{
-
 		if(autoSelected == autoNameCustom){
 			//Custom Auto goes here
 		} else {
@@ -98,18 +89,11 @@ public:
 
 	void TeleopInit()
 	{
-
 	}
 
 	void TeleopPeriodic()
 	{
-		ui.GetData(&wui);
-		float yValueL = m_driveStickL.GetY();
-		float yValueR = m_driveStickR.GetY();
-		m_leftMotor1.Set(yValueL);
-		m_leftMotor2.Set(yValueL);
-		m_rightMotor1.Set(yValueR);
-		m_rightMotor2.Set(yValueR);
+		m_tank.Drive(m_driveStickL.GetY(), m_driveStickR.GetY());
 	}
 
 	void TestPeriodic()
