@@ -22,6 +22,9 @@ private:
 	//Encoder m_lazyCode, m_liftCode, m_shoot1Code, m_shoot2Code;
 	//DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
 
+    const char *JAVA = "/usr/local/frc/JRE/bin/java";
+    char *GRIP_ARGS[5] = { "java", "-jar", "/home/lvuser/grip.jar",
+            "/home/lvuser/project.grip", NULL };
 
 	LiveWindow *lw = LiveWindow::GetInstance();
 	SendableChooser *chooser = nullptr;
@@ -53,6 +56,13 @@ public:
 		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
 		SmartDashboard::PutData("Auto Modes", chooser);
+
+        if (fork() == 0) {
+            if (execv(JAVA, GRIP_ARGS) == -1) {
+                perror("Error running GRIP");
+            }
+        }
+
 	}
 
 
@@ -85,6 +95,21 @@ public:
 		} else {
 			//Default Auto goes here
 		}
+
+        auto grip = NetworkTable::GetTable("GRIP");
+
+        /* Get published values from GRIP using NetworkTables */
+        auto areas = grip->GetNumberArray("targets/area", llvm::ArrayRef<double>());
+        static int i = 0;
+
+       if ( i++ % 10 == 0) {
+			std::cout << "areas size:" << areas.size() << std::endl;
+
+			for (auto area : areas) {
+				std::cout << "Got contour with area=" << area << std::endl;
+			}
+       }
+
 	}
 
 	void TeleopInit()
@@ -94,6 +119,7 @@ public:
 	void TeleopPeriodic()
 	{
 		m_tank.Drive(m_driveStickL.GetY(), m_driveStickR.GetY());
+
 	}
 
 	void TestPeriodic()
