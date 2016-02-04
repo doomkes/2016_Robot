@@ -28,8 +28,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1261239456" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.680635682" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.143320011" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.654013693" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.654013693" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1793678673" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -40,6 +41,7 @@
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.dialect.flags.1518551306" name="Other dialect flags" superClass="gnu.cpp.compiler.option.dialect.flags" useByScannerDiscovery="true" value="-std=c++1y" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1033680971" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -51,6 +53,7 @@
 								</option>
 								<option id="gnu.cpp.link.option.paths.1566479969" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${WPILIB}/cpp/current/lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.675338432" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="-Wl,-rpath,/opt/GenICam_v2_3/bin/Linux_armv7-a,-rpath,/usr/local/frc/rpath-lib" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.132949138" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -60,8 +63,9 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.412234585" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.1047448065" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
-								<option id="gnu.both.asm.option.include.paths.413170739" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+								<option id="gnu.both.asm.option.include.paths.413170739" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1542016468" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -100,6 +104,7 @@
 									<listOptionValue builtIn="false" value="/usr/include/ignition/math2"/>
 									<listOptionValue builtIn="false" value="/usr/include/sdformat-3.7"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1648211502" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.937474733" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
@@ -112,8 +117,9 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.2100353684" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1900634657" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.dialect.std.1352883605" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" value="gnu.c.compiler.dialect.default" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.164170257" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.164170257" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1197133064" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -125,10 +131,12 @@
 									<listOptionValue builtIn="false" value="ntcore"/>
 									<listOptionValue builtIn="false" value="gazebo_client"/>
 									<listOptionValue builtIn="false" value="boost_system"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="leddar"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1677933356" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/usr/lib/x86_64-linux-gnu"/>
 									<listOptionValue builtIn="false" value="${WPILIB}/simulation/lib"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.other.1549699992" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other" valueType="stringList">
 									<listOptionValue builtIn="false" value="-rpath ${WPILIB}/simulation/lib"/>
@@ -139,8 +147,9 @@
 								</inputType>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.base.2105089872" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base">
-								<option id="gnu.both.asm.option.include.paths.78091258" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+								<option id="gnu.both.asm.option.include.paths.78091258" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.254601899" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -177,8 +186,9 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.172352140" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.273333971" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.default" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.misc.other.1387357347" name="Other flags" superClass="gnu.c.compiler.option.misc.other" useByScannerDiscovery="false" value="-c" valueType="string"/>
-								<option id="gnu.c.compiler.option.include.paths.1107453344" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.1107453344" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1953150292" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -201,6 +211,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files\Gazebo\pthread-w32\include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files\Gazebo\boost_1_56_0&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1265709272" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.1058836115" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
@@ -219,8 +230,12 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1090661906" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
 							<tool command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\vc\bin\link&quot;" commandLinePattern="${COMMAND} /ignore:4099 /LIBPATH:&quot;C:\Program Files\Gazebo\FreeImage-vc12-x64-release-debug\x64\Debug\DLL&quot; /LIBPATH:&quot;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x64&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\boost_1_56_0\lib64-msvc-12.0&quot;  /LIBPATH:&quot;${WPILIB}\simulation\lib&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\dlfcn-win32-vc12-x64-release-debug\build\install\Debug\lib&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\pthread-w32\lib\x64&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\ign-math\build\install\Debug\lib&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\libcurl-vc12-x64-release-debug-static-ipv6-sspi-winssl\Debug\lib&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\sdformat\build\install\Debug\lib&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\protobuf-2.6.0-win64-vc12\vsprojects\Debug&quot; /LIBPATH:&quot;C:\Program Files\Gazebo\gazebo\build\install\Debug\lib&quot;  /LIBPATH:&quot;C:\Program Files\Gazebo\tbb43_20141023oss\lib\intel64\vc12&quot;   /LIBPATH:&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\lib\amd64&quot; /LIBPATH:&quot;C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x64&quot; ${FLAGS} /OUT:${OUTPUT_PREFIX}${OUTPUT} ${INPUTS} /DEBUG WPILibSim.lib gazebo.lib gazebo_transport.lib gazebo_msgs.lib  gazebo_common.lib gazebo_util.lib gazebo_client.lib gazebo_math.lib libprotobuf.lib sdformat.lib dl.lib libcurl_a_debug.lib ignition-math2.lib pthreadVC2.lib gz_msgs.lib IPHlpApi.lib /NODEFAULTLIB:libboost_system-vc120-mt-gd-1_56.lib /NODEFAULTLIB:libboost_thread-vc120-mt-gd-1_56.lib FreeImaged.lib" errorParsers="" id="cdt.managedbuild.tool.gnu.cross.cpp.linker.680547965" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
-								<option id="gnu.cpp.link.option.libs.231732731" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs"/>
-								<option id="gnu.cpp.link.option.paths.122555745" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths"/>
+								<option id="gnu.cpp.link.option.libs.231732731" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="leddar"/>
+								</option>
+								<option id="gnu.cpp.link.option.paths.122555745" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
+								</option>
 								<option id="gnu.cpp.link.option.shared.1816604740" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.flags.761367792" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
 								<option id="gnu.cpp.link.option.other.715702568" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other"/>
@@ -233,8 +248,9 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.976699519" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
 							<tool command="as" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="" id="cdt.managedbuild.tool.gnu.cross.assembler.10555843" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
-								<option id="gnu.both.asm.option.include.paths.504920847" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+								<option id="gnu.both.asm.option.include.paths.504920847" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\National Instruments\Vision\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files\LeddarTech\xtec&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.219135409" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>

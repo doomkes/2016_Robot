@@ -2,9 +2,11 @@
 #include "UserInterface.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <string>
 #include <ImageProcessing.h>
 #include "TankDrive.h"
 #include "Shooter.h"
+#include "Leddar.h"
 #include "SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 //auto grip = NetworkTable::GetTable("grip");
@@ -15,6 +17,7 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
+	Leddar m_leddar;
 	Joystick m_driveStickL, m_driveStickR, m_manStick; //control joysticks
 	UserInterface ui;
 	WedgemoreUserInput wui;
@@ -56,6 +59,8 @@ public:
 		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
 		SmartDashboard::PutData("Auto Modes", chooser);
+
+		m_leddar.GetRawDetections();
 
         if (fork() == 0) {
             if (execv(JAVA, GRIP_ARGS) == -1) {
