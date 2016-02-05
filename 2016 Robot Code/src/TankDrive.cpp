@@ -20,14 +20,16 @@ TankDrive::~TankDrive() {
 	// TODO Auto-generated destructor stub
 }
 
-void TankDrive::Drive(float leftSpeed, float rightSpeed){
+void TankDrive::Drive(float leftSpeed, float rightSpeed)
+{
 	m_leftMotor1.Set(leftSpeed);
 	m_leftMotor2.Set(leftSpeed);
 	m_rightMotor1.Set(rightSpeed);
 	m_rightMotor2.Set(rightSpeed);
 }
 
-void TankDrive::Stop() {
+void TankDrive::Stop()
+{
 	m_leftMotor1.StopMotor();
 	m_leftMotor2.StopMotor();
 	m_rightMotor1.StopMotor();

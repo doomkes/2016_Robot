@@ -6,6 +6,7 @@
 #include <ImageProcessing.h>
 #include "TankDrive.h"
 #include "Shooter.h"
+#include "Camera.h"
 #include "Leddar.h"
 #include "SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
@@ -17,10 +18,11 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
-	Leddar m_leddar;
+	//Leddar m_leddar;
 	Joystick m_driveStickL, m_driveStickR, m_manStick; //control joysticks
 	UserInterface ui;
 	WedgemoreUserInput wui;
+	Camera m_camera;
 	//PowerDistributionPanel PDBoard;
 	//Encoder m_lazyCode, m_liftCode, m_shoot1Code, m_shoot2Code;
 	//DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
@@ -60,7 +62,7 @@ public:
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
 		SmartDashboard::PutData("Auto Modes", chooser);
 
-		m_leddar.GetRawDetections();
+		//m_leddar.GetRawDetections();
 
         if (fork() == 0) {
             if (execv(JAVA, GRIP_ARGS) == -1) {
@@ -100,21 +102,6 @@ public:
 		} else {
 			//Default Auto goes here
 		}
-
-        auto grip = NetworkTable::GetTable("GRIP");
-
-        /* Get published values from GRIP using NetworkTables */
-        auto areas = grip->GetNumberArray("targets/area", llvm::ArrayRef<double>());
-        static int i = 0;
-
-       if ( i++ % 10 == 0) {
-			std::cout << "areas size:" << areas.size() << std::endl;
-
-			for (auto area : areas) {
-				std::cout << "Got contour with area=" << area << std::endl;
-			}
-       }
-
 	}
 
 	void TeleopInit()
@@ -124,7 +111,7 @@ public:
 	void TeleopPeriodic()
 	{
 		m_tank.Drive(m_driveStickL.GetY(), m_driveStickR.GetY());
-
+		m_camera.CameraPeriodic();
 	}
 
 	void TestPeriodic()

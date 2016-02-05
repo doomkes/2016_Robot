@@ -17,6 +17,16 @@ Shooter::~Shooter() {
 }
 
 void Shooter::Rotate(float degrees) {
+	float currPos = 0;
+	m_susan.Set(1);
+
+	while(true)
+	{
+		if(currPos == degrees) {
+			break;
+		}
+	}
+	m_susan.StopMotor();
 }
 
 void Shooter::Shoot() {
