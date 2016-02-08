@@ -10,7 +10,8 @@
 
 #include <wpilib.h>
 
-class TankDrive {
+class TankDrive
+{
 private:
 	CANTalon m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 public:

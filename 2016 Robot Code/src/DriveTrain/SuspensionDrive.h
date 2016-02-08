@@ -10,7 +10,8 @@
 
 #include <wpilib.h>
 
-class SuspensionDrive {
+class SuspensionDrive
+{
 private:
 	Solenoid m_driveFR, m_driveFL, m_driveBR, m_driveBL;
 public:
