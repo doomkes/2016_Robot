@@ -10,24 +10,22 @@
 
 #include "WPILib.h"
 
-//The Robot's name is "Wedgemore"
-
-struct WedgemoreUserInput{
-
-
+struct WedgemoreUserInput
+{
+	bool DropFR = false, DropFL = false, DropBR = false, DropBL = false;
+	float LeftSpeed = 0.0, RightSpeed = 0.0;
 
 };
 
-class UserInterface {
+class UserInterface
+{
 private:
-		Joystick lStick, rStick, shootStick;
-
+	Joystick m_lStick, m_rStick, m_manStick;
 public:
 	UserInterface();
 	virtual ~UserInterface();
 	void Init(void);
 	void GetData(WedgemoreUserInput *);
-
 };
 
 #endif /* SRC_USERINTERFACE_H_ */
