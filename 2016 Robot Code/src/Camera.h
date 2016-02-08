@@ -9,15 +9,12 @@
 #define SRC_CAMERA_H_
 #include <wpilib.h>
 
-class Camera {
+class Camera
+{
 private:
-
-	std::shared_ptr< NetworkTable > m_grip;
-	bool m_autoTrack;
+	std::shared_ptr<NetworkTable> m_grip;
 public:
-	void AutoTrack(bool);
-
-	void CameraPeriodic();
+	void AutoTrack();
 
 	Camera();
 	virtual ~Camera();

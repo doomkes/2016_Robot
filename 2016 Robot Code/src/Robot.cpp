@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string>
-#include <ImageProcessing.h>
 #include "TankDrive.h"
 #include "Shooter.h"
 #include "Camera.h"
 #include "Leddar.h"
 #include "SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
-//auto grip = NetworkTable::GetTable("grip");
 
 class Robot: public IterativeRobot
 {
@@ -19,38 +17,18 @@ private:
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
 	//Leddar m_leddar;
-	Joystick m_driveStickL, m_driveStickR, m_manStick; //control joysticks
 	UserInterface ui;
 	WedgemoreUserInput wui;
-	Camera m_camera;
-	//PowerDistributionPanel PDBoard;
-	//Encoder m_lazyCode, m_liftCode, m_shoot1Code, m_shoot2Code;
-	//DigitalInput m_homeLiftSwitch, m_lazySwitchF, m_lazySwitchR, m_backLiftSwitch;
 
-    const char *JAVA = "/usr/local/frc/JRE/bin/java";
-    char *GRIP_ARGS[5] = { "java", "-jar", "/home/lvuser/grip.jar",
-            "/home/lvuser/project.grip", NULL };
+	Camera m_camera;
 
 	LiveWindow *lw = LiveWindow::GetInstance();
 	SendableChooser *chooser = nullptr;
 	const std::string autoNameDefault = "Default";
 	const std::string autoNameCustom = "My Auto";
 	std::string autoSelected;
-
 public:
-	Robot():
-		m_driveStickL(0),
-		m_driveStickR(1),
-		m_manStick(2)
-//		PDBoard(0),
-//		m_lazyCode(0),
-//		m_liftCode(0),
-//		m_shoot1Code(0),
-//		m_shoot2Code(0),
-//		m_homeLiftSwitch(0),
-//		m_lazySwitchF(0),
-//		m_lazySwitchR(0)
-//		m_backLiftSwitch(0)
+	Robot()
 	{
 
 	}
@@ -63,15 +41,7 @@ public:
 		SmartDashboard::PutData("Auto Modes", chooser);
 
 		//m_leddar.GetRawDetections();
-
-        if (fork() == 0) {
-            if (execv(JAVA, GRIP_ARGS) == -1) {
-                perror("Error running GRIP");
-            }
-        }
-
 	}
-
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
@@ -85,21 +55,26 @@ public:
 	void AutonomousInit()
 	{
 		autoSelected = *((std::string*)chooser->GetSelected());
-		std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
+		std::string autoSelected = SmartDashboard::GetString("Auto Selector",
+				autoNameDefault);
 		std::cout << "Auto selected: " << autoSelected << std::endl;
 
-		if(autoSelected == autoNameCustom){
+		if(autoSelected == autoNameCustom)
+		{
 			//Custom Auto goes here
-		} else {
+		} else
+		{
 			//Default Auto goes here
 		}
 	}
 
 	void AutonomousPeriodic()
 	{
-		if(autoSelected == autoNameCustom){
+		if(autoSelected == autoNameCustom)
+		{
 			//Custom Auto goes here
-		} else {
+		} else
+		{
 			//Default Auto goes here
 		}
 	}
@@ -110,8 +85,17 @@ public:
 
 	void TeleopPeriodic()
 	{
-		m_tank.Drive(m_driveStickL.GetY(), m_driveStickR.GetY());
-		m_camera.CameraPeriodic();
+		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
+		m_camera.AutoTrack();
+
+		if(wui.DropFL())
+			m_suspension.SetFrontLeft(true);
+		if(wui.DropBL())
+			m_suspension.SetBackLeft(true);
+		if(wui.DropFR())
+			m_suspension.SetFrontRight(true);
+		if(wui.DropBR())
+			m_suspension.SetBackLeft(true);
 	}
 
 	void TestPeriodic()

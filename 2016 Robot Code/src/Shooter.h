@@ -9,14 +9,15 @@
 #define SRC_SHOOTER_H_
 #include <wpilib.h>
 
-class Shooter {
+class Shooter
+{
 private:
 	CANTalon m_susan, m_lift, m_shoot1, m_shoot2;
 public:
 	Shooter();
 	virtual ~Shooter();
 
-	void Rotate(float degrees);
+	void Rotate(float speed);
 	void Shoot();
 	void Pickup();
 };
