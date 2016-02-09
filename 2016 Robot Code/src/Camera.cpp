@@ -18,13 +18,13 @@ Camera::Camera() :
 			{ "java", "-jar", "/home/lvuser/grip.jar",
 					"/home/lvuser/project.grip", NULL };
 
-	if(fork() == 0)
-	{  //Start a new proccess, and exucute grip.
-		if(execv(JAVA, GRIP_ARGS) == -1)
-		{
-			perror("Error running GRIP");
-		}
-	}
+//	if(fork() == 0)
+//	{  //Start a new proccess, and exucute grip.
+//		if(execv(JAVA, GRIP_ARGS) == -1)
+//		{
+//			perror("Error running GRIP");
+//		}
+//	}
 }
 
 Camera::~Camera()
@@ -34,12 +34,12 @@ Camera::~Camera()
 
 void Camera::AutoTrack()
 {
-	auto centerXs = m_grip->GetNumberArray("targets/centerX",
-			llvm::ArrayRef<double>());
-	int centerX = centerXs[0]; // assumes only one target found.
-
-	if(centerX < 640 / 2) // assuming camera width is 640 pixels
-		cout << "found target on the left." << endl;
-	else
-		cout << "found target on the right." << endl;
+//	auto centerXs = m_grip->GetNumberArray("targets/centerX",
+//			llvm::ArrayRef<double>());
+//	int centerX = centerXs[0]; // assumes only one target found.
+//
+//	if(centerX < 640 / 2) // assuming camera width is 640 pixels
+//		cout << "found target on the left." << endl;
+//	else
+//		cout << "found target on the right." << endl;
 }

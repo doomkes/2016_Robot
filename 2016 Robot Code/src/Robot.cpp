@@ -18,7 +18,7 @@ private:
 	//Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
-
+	//Joystick m_lStick, m_rStick, m_manStick;
 	Camera m_camera;
 
 	LiveWindow *lw = LiveWindow::GetInstance();
@@ -84,17 +84,16 @@ public:
 
 	void TeleopPeriodic()
 	{
+		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
-		m_camera.AutoTrack();
 
-		if(wui.DropFL)
-			m_suspension.SetFrontLeft(true);
-		if(wui.DropBL)
-			m_suspension.SetBackLeft(true);
-		if(wui.DropFR)
-			m_suspension.SetFrontRight(true);
-		if(wui.DropBR)
-			m_suspension.SetBackLeft(true);
+//		m_camera.AutoTrack();
+
+		m_suspension.SetFrontLeft(wui.DropFL);
+		m_suspension.SetBackLeft(wui.DropBL);
+		m_suspension.SetFrontRight(wui.DropFR);
+		m_suspension.SetBackLeft(wui.DropBR);
+
 	}
 
 	void TestPeriodic()

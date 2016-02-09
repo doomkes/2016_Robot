@@ -21,7 +21,10 @@ UserInterface::~UserInterface()
 
 void UserInterface::GetData(WedgemoreUserInput *wui)
 {
-	memset(wui, 0, sizeof(WedgemoreUserInput));
+	wui->DropFL = false;
+	wui->DropFR = false;
+	wui->DropBL = false;
+	wui->DropBR = false;
 	/* GET LSTICK VALUES */
 	if(m_lStick.GetRawButton(2))
 	{
