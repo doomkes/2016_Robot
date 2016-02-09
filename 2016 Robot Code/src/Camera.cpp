@@ -6,6 +6,7 @@
  */
 
 #include <Camera.h>
+#include <unistd.h>
 #include <iostream>
 using namespace std;
 

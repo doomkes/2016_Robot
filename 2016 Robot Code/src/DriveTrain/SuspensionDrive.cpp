@@ -5,7 +5,7 @@
  *      Author: Joey172
  */
 
-#include <SuspensionDrive.h>
+#include <DriveTrain/SuspensionDrive.h>
 
 SuspensionDrive::SuspensionDrive() :
 		m_driveFR(0), m_driveFL(1), m_driveBR(2), m_driveBL(3)

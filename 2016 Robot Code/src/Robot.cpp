@@ -1,13 +1,12 @@
 #include "WPILib.h"
 #include "UserInterface.h"
 #include <stdio.h>
-#include <unistd.h>
 #include <string>
-#include "TankDrive.h"
+#include "DriveTrain/TankDrive.h"
 #include "Shooter.h"
 #include "Camera.h"
 #include "Leddar.h"
-#include "SuspensionDrive.h"
+#include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 
 class Robot: public IterativeRobot
@@ -88,13 +87,13 @@ public:
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 		m_camera.AutoTrack();
 
-		if(wui.DropFL())
+		if(wui.DropFL)
 			m_suspension.SetFrontLeft(true);
-		if(wui.DropBL())
+		if(wui.DropBL)
 			m_suspension.SetBackLeft(true);
-		if(wui.DropFR())
+		if(wui.DropFR)
 			m_suspension.SetFrontRight(true);
-		if(wui.DropBR())
+		if(wui.DropBR)
 			m_suspension.SetBackLeft(true);
 	}
 

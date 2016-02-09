@@ -5,7 +5,7 @@
  *      Author: Joey172
  */
 
-#include <TankDrive.h>
+#include <DriveTrain/TankDrive.h>
 
 TankDrive::TankDrive() :
 		m_leftMotor1(1), m_leftMotor2(2), m_rightMotor1(3), m_rightMotor2(4)
