@@ -13,13 +13,19 @@ class Shooter
 {
 private:
 	CANTalon m_susan, m_lift, m_shoot1, m_shoot2;
+	Timer m_runtime; // XXX: Replace with global timer?
+	double m_stopAt;
 public:
 	Shooter();
 	virtual ~Shooter();
 
-	void Rotate(float speed);
+	void RotateTo(float position);
 	void Shoot();
 	void Pickup();
+	/**
+	 * Call every loop to update async actions.
+	 */
+	void Update();
 };
 
 #endif /* SRC_SHOOTER_H_ */
