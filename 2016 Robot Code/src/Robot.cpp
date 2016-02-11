@@ -92,7 +92,7 @@ public:
 		m_suspension.SetFrontLeft(wui.DropFL);
 		m_suspension.SetBackLeft(wui.DropBL);
 		m_suspension.SetFrontRight(wui.DropFR);
-		m_suspension.SetBackLeft(wui.DropBL);
+		m_suspension.SetBackRight(wui.DropBR);
 
 	}
 
