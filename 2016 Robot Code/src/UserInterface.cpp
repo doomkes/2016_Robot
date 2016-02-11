@@ -34,7 +34,7 @@ void UserInterface::GetData(WedgemoreUserInput *wui)
 	if(m_lStick.GetRawButton(3))
 	{
 		wui->DropFL = true;
-		wui->DropBL = true;
+		wui->DropFR = true;
 	}
 	if(m_lStick.GetRawButton(4))
 	{
