@@ -15,7 +15,7 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
-	//Leddar m_leddar;
+	Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	//Joystick m_lStick, m_rStick, m_manStick;
@@ -38,7 +38,7 @@ public:
 		chooser->AddDefault(autoNameDefault, (void*)&autoNameDefault);
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
 		SmartDashboard::PutData("Auto Modes", chooser);
-
+		SmartDashboard::PutString("hello", "I'm here");
 		//m_leddar.GetRawDetections();
 	}
 
@@ -80,6 +80,7 @@ public:
 
 	void TeleopInit()
 	{
+
 	}
 
 	void TeleopPeriodic()
@@ -93,6 +94,9 @@ public:
 		m_suspension.SetBackLeft(wui.DropBL);
 		m_suspension.SetFrontRight(wui.DropFR);
 		m_suspension.SetBackRight(wui.DropBR);
+		cout << "stuff is happening" << endl;
+		SmartDashboard::PutString("hi", "teleop periodic");
+		m_leddar.GetDetections();
 
 	}
 
