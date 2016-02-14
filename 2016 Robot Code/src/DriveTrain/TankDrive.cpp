@@ -8,7 +8,10 @@
 #include <DriveTrain/TankDrive.h>
 
 TankDrive::TankDrive() :
-		m_leftMotor1(1), m_leftMotor2(2), m_rightMotor1(3), m_rightMotor2(4)
+		m_leftMotor1(LEFTDRIVE1),
+		m_leftMotor2(LEFTDRIVE2),
+		m_rightMotor1(RIGHTDRIVE1),
+		m_rightMotor2(RIGHTDRIVE2)
 {
 	// TODO Auto-generated constructor stub
 }

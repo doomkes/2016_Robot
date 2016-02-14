@@ -6,22 +6,32 @@
  */
 
 #include <Shooter.h>
+#include "robotmap.h"
 
 Shooter::Shooter() :
-		m_susan(5), m_lift(6), m_shoot1(7), m_shoot2(8), m_stopAt(1e100)
+		m_susan(SUSAN),
+		m_lift(LIFT),
+		m_shoot1(SHOOT1),
+		m_shoot2(SHOOT2),
+		m_kicker(SHOOTERSOL),
+		m_stopAt(1e100)
 {
 	m_susan.SetControlMode(CANSpeedController::kPosition);
-	m_susan.SetFeedbackDevice(CANTalon::AnalogPot);
-	m_susan.SetPID(1,0,0);//TODO calibrate.
+	m_susan.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_susan.SetPID(1.0,0.0,0.0);//TODO calibrate.
 
 	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
 
 	m_lift.SetControlMode(CANSpeedController::kPosition);
-	m_lift.SetFeedbackDevice(CANTalon::AnalogPot);
-	m_lift.SetPID(1,0,0);//TODO calibrate.
+	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_lift.SetPID(1.0,0.0,0.0);//TODO calibrate.
 
 	m_runtime.Start();
+}
+
+void Shooter::Rotate(float incr) {
+	m_susan.Set(m_susan.Get()+incr);
 }
 
 Shooter::~Shooter()
@@ -47,6 +57,14 @@ void Shooter::Pickup()
 	m_shoot2.Set(-1);
 
 	m_stopAt = m_runtime.Get() + 1.0;
+}
+
+void Shooter::Lift(float increment) {
+	m_lift.Set(m_lift.Get()+increment);
+}
+
+void Shooter::LiftTo(float position) {
+	m_lift.Set(position);
 }
 
 void Shooter::Update() {

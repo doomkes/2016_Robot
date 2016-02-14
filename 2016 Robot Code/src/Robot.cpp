@@ -88,7 +88,14 @@ public:
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-//		m_camera.AutoTrack();
+		m_shooter.Rotate(wui.RotateSpeed*3); //70 degrees per second at full value
+		m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
+		if(wui.Shoot) {
+			m_shooter.Shoot();
+		}
+		if(wui.Pickup) {
+			m_shooter.Pickup();
+		}
 
 		m_suspension.SetFrontLeft(wui.DropFL);
 		m_suspension.SetBackLeft(wui.DropBL);

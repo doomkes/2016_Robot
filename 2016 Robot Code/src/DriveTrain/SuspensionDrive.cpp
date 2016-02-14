@@ -6,9 +6,12 @@
  */
 
 #include <DriveTrain/SuspensionDrive.h>
-
+#include "robotmap.h"
 SuspensionDrive::SuspensionDrive() :
-		m_driveFR(0), m_driveFL(1), m_driveBR(2), m_driveBL(3)
+		m_driveFR(FRONTRIGHTSOL),
+		m_driveFL(FRONTLEFTSOL),
+		m_driveBR(BACKRIGHTSOL),
+		m_driveBL(BACKLEFTSOL)
 {
 }
 
