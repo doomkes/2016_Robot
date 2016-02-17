@@ -6,7 +6,7 @@
  */
 
 #include <DriveTrain/TankDrive.h>
-
+#include "robotmap.h"
 TankDrive::TankDrive() :
 		m_leftMotor1(LEFTDRIVE1),
 		m_leftMotor2(LEFTDRIVE2),

@@ -45,10 +45,13 @@ void Shooter::RotateTo(float position)
 
 void Shooter::Shoot()
 {
-	m_shoot1.Set(1);
-	m_shoot2.Set(1);
-
+	m_kicker.Set(true);
 	m_stopAt = m_runtime.Get() + 1.0;
+}
+
+void Shooter::Spinup(float speed) {
+	m_shoot1.Set(speed);
+	m_shoot2.Set(speed);
 }
 
 void Shooter::Pickup()
@@ -71,5 +74,6 @@ void Shooter::Update() {
 	if(m_runtime.Get() >= m_stopAt) {
 		m_shoot1.Set(0);
 		m_shoot2.Set(0);
+		m_kicker.Set(false);
 	}
 }

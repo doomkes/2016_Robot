@@ -39,7 +39,6 @@ public:
 		chooser->AddObject(autoNameCustom, (void*)&autoNameCustom);
 		SmartDashboard::PutData("Auto Modes", chooser);
 		SmartDashboard::PutString("hello", "I'm here");
-		//m_leddar.GetRawDetections();
 	}
 
 	/**
@@ -90,6 +89,9 @@ public:
 
 		m_shooter.Rotate(wui.RotateSpeed*3); //70 degrees per second at full value
 		m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
+		if(wui.SpinUp) {
+			m_shooter.Spinup(1);
+		}
 		if(wui.Shoot) {
 			m_shooter.Shoot();
 		}
@@ -104,7 +106,7 @@ public:
 		cout << "stuff is happening" << endl;
 		SmartDashboard::PutString("hi", "teleop periodic");
 		m_leddar.GetDetections();
-
+//		m_shooter.Update();
 	}
 
 	void TestPeriodic()

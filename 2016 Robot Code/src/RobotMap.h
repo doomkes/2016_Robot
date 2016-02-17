@@ -16,7 +16,7 @@ enum ManStickMap {
 	HIGOAL = 4,
 	AUTOTRACK = 2,
 	LIFTAXIS = 1,
-	ROTATEAXIS = 4
+	ROTATEAXIS = 4,
 	SPINUP = 3
 };
 

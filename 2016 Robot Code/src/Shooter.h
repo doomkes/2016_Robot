@@ -25,6 +25,7 @@ public:
 	void Lift(float increment);
 	void LiftTo(float position);
 	void Shoot();
+	void Spinup(float speed);
 	void Pickup();
 	/**
 	 * Call every loop to update async actions.

@@ -22,7 +22,7 @@ Leddar::~Leddar() {
 
 
 vector<Detection> Leddar::GetDetections() {
-	char function[] = {0x01, 0x41, 0x00, 0x00, 0xCC, 0x51};
+	char function[] = {0x01, 0x41, 0x00, 0x00, 0x51, 0xCC};
 	m_RS_232.Reset();
 	m_RS_232.Write(function, sizeof function);
 	Wait(0.1);
