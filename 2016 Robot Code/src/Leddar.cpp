@@ -22,21 +22,46 @@ Leddar::~Leddar() {
 
 
 vector<Detection> Leddar::GetDetections() {
-	char function[] = {0x01, 0x41, 0x00, 0x00, 0x51, 0xCC};
+	vector<Detection> detections;
 	m_RS_232.Reset();
-	m_RS_232.Write(function, sizeof function);
-	Wait(0.1);
+	char query[] = {0x01, 0x41,0xC0,0x10};
+	m_RS_232.Write(query, 4);
 
-	//char numDetections;
-	//m_RS_232.Read(&numDetections, 1);
+	Wait(0.05);
+	unsigned bytesRecived = m_RS_232.GetBytesReceived();
+	SmartDashboard::PutNumber("bytes recived", bytesRecived);
 
-	SmartDashboard::PutNumber("bytes recived", m_RS_232.GetBytesReceived());
-//	char buff[numDetections*5] = {0};
+	char response[bytesRecived];
+	m_RS_232.Read(response, bytesRecived);
+	SmartDashboard::PutNumber("byte 6", response[5]);
+	SmartDashboard::PutNumber("byte 7", response[6]);
+	SmartDashboard::PutNumber("byte 8", response[7]);
+	SmartDashboard::PutNumber("byte 9", response[8]);
+	SmartDashboard::PutNumber("byte A", response[9]);
+
+
+
+//	cout << "bytes recived: " << bytesRecived << endl;
+//	for(int i = 0; i < bytesRecived; i++) {
+//		cout << hex << response[i] << " ";
+//	}
+//	cout << endl;
+
+//	char numDetections;
+//	m_RS_232.Read(&numDetections, 1);
+//
+//	cout << "Num Detections: " << numDetections << endl;
+//	SmartDashboard::PutNumber("numDetections", numDetections);
+//	char buff[numDetections] = {0};
 //	m_RS_232.Read(buff, numDetections*5);
 //
-//	vector<Detection> detections(numDetections*5);
+//	detections.resize(numDetections);
 //	memcpy(detections.data(), buff, numDetections*5);
+//
+//	for(unsigned i = 0; i < detections.size(); i++) {
+//		cout << "distance of detection " << i
+//			<<": " << detections[i].distance << endl;
+//	}
 
-	vector<Detection> asdf;
-	return asdf;
+	return detections;
 }
