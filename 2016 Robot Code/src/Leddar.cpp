@@ -6,8 +6,7 @@
  */
 
 #include <Leddar.h>
-
-
+#include <sstream>
 
 Leddar::Leddar() :
 	m_RS_232(115200)
@@ -24,48 +23,34 @@ Leddar::~Leddar() {
 vector<Detection> Leddar::GetDetections() {
 	vector<Detection> detections;
 	m_RS_232.Reset();
+	//sending the bytes to the leddar sensor
 	char query[] = {0x01, 0x41,0xC0,0x10};
 	m_RS_232.Write(query, 4);
-	//sending the bytes to the leddar sensor
 
-	Wait(0.05);
+
+	Wait(0.02);
+	char Detections[16*5];
 	unsigned bytesRecived = m_RS_232.GetBytesReceived();
 	SmartDashboard::PutNumber("bytes recived", bytesRecived);
 
+	//saving the data recived back from the leddar
 	char response[bytesRecived];
 	m_RS_232.Read(response, bytesRecived);
-	//saving the data recived back from the leddar
-
-	SmartDashboard::PutNumber("byte 6", response[5]);
-	SmartDashboard::PutNumber("byte 7", response[6]);
-	SmartDashboard::PutNumber("byte 8", response[7]);
-	SmartDashboard::PutNumber("byte 9", response[8]);
-	SmartDashboard::PutNumber("byte A", response[9]);
+	memcpy(Detections, response+3, 16*5);
 	//putting it on the SmartDashboard so that we could see a few of the bytes we were getting back
+	SmartDashboard::PutNumber("byte 0 address", response[0]);
+	SmartDashboard::PutNumber("byte 1 function code", response[1]);
+	SmartDashboard::PutNumber("byte 2 # of detections", response[2]);
 
-
-
-//	cout << "bytes recived: " << bytesRecived << endl;
-//	for(int i = 0; i < bytesRecived; i++) {
-//		cout << hex << response[i] << " ";
-//	}
-//	cout << endl;
-
-//	char numDetections;
-//	m_RS_232.Read(&numDetections, 1);
-//
-//	cout << "Num Detections: " << numDetections << endl;
-//	SmartDashboard::PutNumber("numDetections", numDetections);
-//	char buff[numDetections] = {0};
-//	m_RS_232.Read(buff, numDetections*5);
-//
-//	detections.resize(numDetections);
-//	memcpy(detections.data(), buff, numDetections*5);
-//
-//	for(unsigned i = 0; i < detections.size(); i++) {
-//		cout << "distance of detection " << i
-//			<<": " << detections[i].distance << endl;
-//	}
+	//store distancez in an array
+	unsigned short distances[16];
+	for(unsigned i = 0; i < 16; i++){
+		distances[i] = Detections[i*5] | (Detections[i*5+1] << 8);
+	}
+	//unsigned short distance1 = response[3] | (response[4] << 8);
+	for(unsigned i = 0; i < 16; i++) {
+		SmartDashboard::PutNumber("distance of detection " + to_string(i+1), distances[i]);
+	}
 
 	return detections;
 }
