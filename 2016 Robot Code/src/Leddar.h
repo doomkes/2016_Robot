@@ -26,7 +26,7 @@ private:
 public:
 	Leddar();
 	virtual ~Leddar();
-	vector<Detection> GetDetections();
+	void GetDetections();
 };
 
 #endif /* SRC_LEDDAR_H_ */
