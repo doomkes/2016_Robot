@@ -50,14 +50,14 @@ void Shooter::Shoot()
 }
 
 void Shooter::Spinup(float speed) {
-	m_shoot1.Set(speed);
+	m_shoot1.Set(-speed);
 	m_shoot2.Set(speed);
 }
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-1);
-	m_shoot2.Set(-1);
+	m_shoot1.Set(9);
+	m_shoot2.Set(-9);
 
 	m_stopAt = m_runtime.Get() + 1.0;
 }
@@ -76,4 +76,9 @@ void Shooter::Update() {
 		m_shoot2.Set(0);
 		m_kicker.Set(false);
 	}
+}
+
+void Shooter::Stop() {
+	m_shoot1.StopMotor();
+	m_shoot2.StopMotor();
 }

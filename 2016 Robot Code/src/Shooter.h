@@ -27,6 +27,7 @@ public:
 	void Shoot();
 	void Spinup(float speed);
 	void Pickup();
+	void Stop();
 	/**
 	 * Call every loop to update async actions.
 	 */
