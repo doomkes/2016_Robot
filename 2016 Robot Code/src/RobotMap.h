@@ -21,17 +21,17 @@ enum ManStickMap {
 };
 
 enum LStickMap {
-	DROPLEFT = 3,
-	DROPRIGHT = 4,
-	DROPFRONT = 1,
+	DROPLEFT = 4,
+	DROPRIGHT = 5,
+	DROPFRONT = 3,
 	DROPBACK = 2,
 };
 
 enum RStickMap {
-	DROPFRONTRIGHT = 4,
-	DROPBACKRIGHT = 1,
-	DROPFRONTLEFT = 3,
-	DROPBACKLEFT = 2,
+	DROPFRONTRIGHT = 5,
+	DROPBACKRIGHT = 2,
+	DROPFRONTLEFT = 4,
+	DROPBACKLEFT = 3,
 };
 
 enum SolenoidMap {
