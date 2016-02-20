@@ -30,6 +30,7 @@ void Leddar::GetDetections() {
 
 
 	Wait(0.250);
+	//This is causing too much of a delay on the drive
 
 	bytesRecived = m_RS_232.GetBytesReceived();
 	SmartDashboard::PutNumber("bytes recived", bytesRecived);

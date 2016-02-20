@@ -76,7 +76,8 @@ public:
 		m_suspension.SetFrontRight(wui.DropFR);
 		m_suspension.SetBackRight(wui.DropBR);
 
-		m_leddar.GetDetections();
+		//m_leddar.GetDetections();
+		//THE DELAY IN LEDDAR.CPP IS CAUSING TOO MUCH LAG ON THE ROBOT DRIVE
 	}
 
 	void TestPeriodic()
