@@ -23,10 +23,10 @@ TankDrive::~TankDrive()
 
 void TankDrive::Drive(float leftSpeed, float rightSpeed)
 {
-	m_leftMotor1.Set(leftSpeed);
-	m_leftMotor2.Set(leftSpeed);
-	m_rightMotor1.Set(-rightSpeed);
-	m_rightMotor2.Set(-rightSpeed);
+	m_leftMotor1.Set(-leftSpeed);
+	m_leftMotor2.Set(-leftSpeed);
+	m_rightMotor1.Set(rightSpeed);
+	m_rightMotor2.Set(rightSpeed);
 }
 
 void TankDrive::Stop()
