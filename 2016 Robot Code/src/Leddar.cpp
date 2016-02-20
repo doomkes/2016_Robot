@@ -21,6 +21,7 @@ Leddar::~Leddar() {
 
 
 void Leddar::GetDetections() {
+	unsigned bytesRecived, numDetections;
 
 	m_RS_232.Reset();
 	//sending the bytes to the leddar sensor
@@ -28,19 +29,14 @@ void Leddar::GetDetections() {
 	m_RS_232.Write(query, 4);
 
 
-	Wait(0.5);
+	Wait(0.250);
 
-	unsigned bytesRecived = m_RS_232.GetBytesReceived();
+	bytesRecived = m_RS_232.GetBytesReceived();
 	SmartDashboard::PutNumber("bytes recived", bytesRecived);
 
 	//saving the data recived back from the leddar
 	char response[bytesRecived];
 	m_RS_232.Read(response, bytesRecived);
-
-	unsigned numDetections = response[2];
-
-	char Detections[numDetections*5];
-	memcpy(Detections, response+3, numDetections*5);
 
 	if(response[0] != 0x01 || response[1] != 0x41) {
 		return;
@@ -51,15 +47,20 @@ void Leddar::GetDetections() {
 	SmartDashboard::PutNumber("byte 1 function code", response[1]);
 	SmartDashboard::PutNumber("byte 2 # of detections", response[2]);
 
-	//store distancez in an array
+	//store detections in arrays
+
+	numDetections = response[2];
 	unsigned short distances[numDetections];
 	unsigned short amplitudes[numDetections];
+	unsigned char  flags[numDetections];
+	char *rawDetections = response + 3;
 	for(unsigned i = 0; i < numDetections; i++){
-		distances[i]	= Detections[i*5] | (Detections[i*5+1] << 8);
-		amplitudes[i]	= (Detections[i*5+2] | (Detections[i*5+1+2] << 8))/64;
-	}
-	for(unsigned i = 0; i < numDetections; i++) {
+		distances[i] = rawDetections[i*5] | (rawDetections[i*5+1] << 8);
+		amplitudes[i] = (rawDetections[i*5+2] | (rawDetections[i*5+1+2] << 8))/64;
+		flags[i] = rawDetections[i*5+4];
 		SmartDashboard::PutNumber("distance of detection " + to_string(i+1), distances[i]);
 		SmartDashboard::PutNumber("amplitude of detection " + to_string(i+1), amplitudes[i]);
+		SmartDashboard::PutNumber("flags of detection " + to_string(i+1), flags[i] & 0x0F);
 	}
+
 }

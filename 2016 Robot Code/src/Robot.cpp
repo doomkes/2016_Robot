@@ -56,28 +56,27 @@ public:
 
 	void TeleopPeriodic()
 	{
-//		ui.GetData(&wui);
-//		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
-//
-//		m_shooter.Rotate(wui.RotateSpeed*3); //70 degrees per second at full value
-//		m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
-//		if(wui.SpinUp) {
-//			m_shooter.Spinup(1);
-//		}
-//		if(wui.Shoot) {
-//			m_shooter.Shoot();
-//		}
-//		if(wui.Pickup) {
-//			m_shooter.Pickup();
-//		}
-//
-//		m_suspension.SetFrontLeft(wui.DropFL);
-//		m_suspension.SetBackLeft(wui.DropBL);
-//		m_suspension.SetFrontRight(wui.DropFR);
-//		m_suspension.SetBackRight(wui.DropBR);
+		ui.GetData(&wui);
+		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
+
+		m_shooter.Rotate(wui.RotateSpeed*3); //70 degrees per second at full value
+		m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
+		if(wui.SpinUp) {
+			m_shooter.Spinup(1);
+		}
+		if(wui.Shoot) {
+			m_shooter.Shoot();
+		}
+		if(wui.Pickup) {
+			m_shooter.Pickup();
+		}
+
+		m_suspension.SetFrontLeft(wui.DropFL);
+		m_suspension.SetBackLeft(wui.DropBL);
+		m_suspension.SetFrontRight(wui.DropFR);
+		m_suspension.SetBackRight(wui.DropBR);
 
 		m_leddar.GetDetections();
-//		m_shooter.Update();
 	}
 
 	void TestPeriodic()
