@@ -23,7 +23,7 @@ Shooter::Shooter() :
 	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
 
-	m_lift.SetControlMode(CANSpeedController::kPosition);
+	m_lift.SetControlMode(CANSpeedController::kVoltage);
 	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
 	m_lift.SetPID(1.0,0.0,0.0);//TODO calibrate.
 
