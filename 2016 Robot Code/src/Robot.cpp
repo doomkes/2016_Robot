@@ -47,8 +47,19 @@ public:
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-		m_shooter.Lift(wui.LiftSpeed);
-
+		//m_shooter.Lift(wui.LiftSpeed);
+		if(wui.StartPos) {
+			m_shooter.LiftTo(-14);
+		}
+		if(wui.PickupPos) {
+			m_shooter.LiftTo(-1936);
+		}
+		if(wui.LowGoal) {
+			m_shooter.LiftTo((-1936-14)/3*2+14);
+		}
+		if(wui.HiGoal) {
+			m_shooter.LiftTo((-1936-14)/3+14);
+		}
 		//m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
 		if(wui.SpinUp) {
 			m_shooter.Spinup(12);

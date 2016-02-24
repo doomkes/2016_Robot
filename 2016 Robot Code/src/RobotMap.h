@@ -9,14 +9,14 @@
 #define SRC_ROBOTMAP_H_
 
 enum ManStickMap {
-	HOME = 0,
 	SHOOT = 6,
 	PICKUP = 5,
-	LOWGOAL = 1,
-	HIGOAL = 4,
-	AUTOTRACK = 2,
+	PICKUPPOS = 2,
+	LOWGOALPOS = 1,
+	HIGOALPOS = 7,
+	STARTPOS = 8,
+	//AUTOTRACK = 2,
 	LIFTAXIS = 1,
-	ROTATEAXIS = 4,
 	SPINUP = 3
 };
 

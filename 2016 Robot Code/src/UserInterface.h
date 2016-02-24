@@ -18,7 +18,7 @@ struct WedgemoreUserInput
 	float LiftSpeed = 0;
 	bool Shoot = false, Pickup = false;
 	bool SpinUp = false;
-	bool LowGoal = false, HiGoal = false, AutoTrack = false, PickupPosition = false;
+	bool LowGoal = false, HiGoal = false, AutoTrack = false, PickupPos = false, StartPos = false;
 
 };
 
