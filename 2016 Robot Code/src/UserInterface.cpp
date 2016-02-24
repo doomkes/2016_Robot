@@ -65,6 +65,13 @@ void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 		wui->DropFR = true;
 		wui->DropBR = true;
 	}
+	if(m_lStick.GetRawButton(DROPALL))
+		{
+			wui->DropFR = true;
+			wui->DropBR = true;
+			wui->DropFL = true;
+			wui->DropBL = true;
+		}
 }
 void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
 	if(m_rStick.GetRawButton(DROPBACKRIGHT))

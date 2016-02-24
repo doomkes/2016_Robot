@@ -9,7 +9,7 @@
 #include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 
-class Robot: public IterativeRobot
+class Wedgemore: public IterativeRobot
 {
 private:
 	TankDrive m_tank;
@@ -18,29 +18,17 @@ private:
 	Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
-	//Joystick m_lStick, m_rStick, m_manStick;
 	Camera m_camera;
 
 public:
-	Robot()
+	Wedgemore()
 	{
-
 	}
 
 	void RobotInit()
 	{
-
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select between different autonomous modes
-	 * using the dashboard. The sendable chooser code works with the Java SmartDashboard. If you prefer the LabVIEW
-	 * Dashboard, remove all of the chooser code and uncomment the GetString line to get the auto name from the text box
-	 * below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional comparisons to the if-else structure below with additional strings.
-	 * If using the SendableChooser make sure to add them to the chooser code above as well.
-	 */
 	void AutonomousInit()
 	{
 	}
@@ -59,8 +47,8 @@ public:
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-		m_shooter.Rotate(wui.RotateSpeed*3); //70 degrees per second at full value
-		m_shooter.Lift(wui.LiftSpeed/8);
+		m_shooter.Lift(wui.LiftSpeed);
+
 		//m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
 		if(wui.SpinUp) {
 			m_shooter.Spinup(12);
@@ -68,9 +56,7 @@ public:
 		else {
 			m_shooter.Stop();
 		}
-		if(wui.Shoot) {
-			m_shooter.Shoot();
-		}
+		m_shooter.Shoot(wui.Shoot);
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
@@ -90,4 +76,4 @@ public:
 	}
 };
 
-START_ROBOT_CLASS(Robot)
+START_ROBOT_CLASS(Wedgemore)

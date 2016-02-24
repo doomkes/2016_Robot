@@ -10,7 +10,7 @@
 
 enum ManStickMap {
 	HOME = 0,
-	SHOOT = 4,
+	SHOOT = 6,
 	PICKUP = 5,
 	LOWGOAL = 1,
 	HIGOAL = 4,
@@ -25,13 +25,14 @@ enum LStickMap {
 	DROPRIGHT = 5,
 	DROPFRONT = 3,
 	DROPBACK = 2,
+	DROPALL = 1,
 };
 
 enum RStickMap {
-	DROPFRONTRIGHT = 5,
-	DROPBACKRIGHT = 2,
+	DROPFRONTRIGHT = 3,
+	DROPBACKRIGHT = 5,
 	DROPFRONTLEFT = 4,
-	DROPBACKLEFT = 3,
+	DROPBACKLEFT = 2,
 };
 
 enum SolenoidMap {
@@ -47,7 +48,6 @@ enum CANTalonMap {
 	RIGHTDRIVE2,
 	LEFTDRIVE1,
 	LEFTDRIVE2,
-	SUSAN,
 	LIFT,
 	SHOOT1,
 	SHOOT2,
