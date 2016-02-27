@@ -15,11 +15,12 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
+	SendableChooser *autoChooser;
 	Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Camera m_camera;
-
+	Defense selectedDefense;
 public:
 	Wedgemore()
 	{
@@ -27,14 +28,30 @@ public:
 
 	void RobotInit()
 	{
+	autoChooser = new SendableChooser();
+	autoChooser->AddDefault("NO AUTO",			&NO_AUTO);
+	autoChooser->AddObject("LOW_BAR",			&LOW_BAR);
+	autoChooser->AddObject("PORTCULLIS",		&PORTCULLIS);
+	autoChooser->AddObject("RAMPARTS",			&RAMPARTS);
+	autoChooser->AddObject("ROCK_WALL",			&ROCK_WALL);
+	autoChooser->AddObject("MOTE",				&MOTE);
+	autoChooser->AddObject("SALLY_PORT",		&SALLY_PORT);
+	autoChooser->AddObject("DRAW_BRIDGE",		&DRAW_BRIDGE);
+	autoChooser->AddObject("ROUGH_TERRAIN",		&ROUGH_TERRAIN);
+	autoChooser->AddObject("CHEVAL_DE_FRISE",	&SHOVEL_THE_FRIES);
+	SmartDashboard::PutData("AUTO", autoChooser);
 	}
 
 	void AutonomousInit()
 	{
+		selectedDefense = autoChooser->GetSelected();
+		Cross(selectedDefense, m_tank, m_suspension);
 	}
 
 	void AutonomousPeriodic()
 	{
+
+
 	}
 
 	void TeleopInit()

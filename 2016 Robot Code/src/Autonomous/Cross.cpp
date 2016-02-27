@@ -14,26 +14,48 @@ bool CrossChevalDeFrise(TankDrive*, SuspensionDrive*);
 
 bool Cross(Defense defense, TankDrive *tank, SuspensionDrive *suspension)
 {
+
 	switch(defense)
 	{
+		case NO_AUTO:
+			SmartDashboard::PutString("selected auto:", "none");
+		break;
 		case LOW_BAR:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossLowBar(tank, suspension);
+			break;
 		case PORTCULLIS:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossPortcullis(tank, suspension);
+			break;
 		case ROCK_WALL:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossRockWall(tank, suspension);
+			break;
 		case RAMPARTS:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossRamparts(tank, suspension);
+			break;
 		case MOTE:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossMote(tank, suspension);
+			break;
 		case SALLY_PORT:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossSallyPort(tank, suspension);
+			break;
 		case DRAW_BRIDGE:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossDrawBridge(tank, suspension);
+			break;
 		case ROUGH_TERRAIN:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossRoughTerrain(tank, suspension);
+			break;
 		case CHEVAL_DE_FRISE:
+			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossChevalDeFrise(tank, suspension);
+			break;
 		default:
 			return false;
 	}
