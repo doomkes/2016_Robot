@@ -17,7 +17,7 @@ bool Cross(Defense defense, TankDrive *tank, SuspensionDrive *suspension)
 
 	switch(defense)
 	{
-		case NO_AUTO:
+		case NO_DEFENSE:
 			SmartDashboard::PutString("selected auto:", "none");
 		break;
 		case LOW_BAR:

@@ -5,6 +5,7 @@
 #include "DriveTrain/TankDrive.h"
 #include "Shooter.h"
 #include "Camera.h"
+#include "Autonomous/Cross.h"
 #include "Leddar.h"
 #include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
@@ -15,12 +16,12 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
-	SendableChooser *autoChooser;
+	SendableChooser *autoChooser = nullptr;
 	Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Camera m_camera;
-	Defense selectedDefense;
+	Defense selectedDefense = NO_DEFENSE;
 public:
 	Wedgemore()
 	{
@@ -29,23 +30,23 @@ public:
 	void RobotInit()
 	{
 	autoChooser = new SendableChooser();
-	autoChooser->AddDefault("NO AUTO",			&NO_AUTO);
-	autoChooser->AddObject("LOW_BAR",			&LOW_BAR);
-	autoChooser->AddObject("PORTCULLIS",		&PORTCULLIS);
-	autoChooser->AddObject("RAMPARTS",			&RAMPARTS);
-	autoChooser->AddObject("ROCK_WALL",			&ROCK_WALL);
-	autoChooser->AddObject("MOTE",				&MOTE);
-	autoChooser->AddObject("SALLY_PORT",		&SALLY_PORT);
-	autoChooser->AddObject("DRAW_BRIDGE",		&DRAW_BRIDGE);
-	autoChooser->AddObject("ROUGH_TERRAIN",		&ROUGH_TERRAIN);
-	autoChooser->AddObject("CHEVAL_DE_FRISE",	&SHOVEL_THE_FRIES);
+	autoChooser->AddDefault("NO DEFENSE",		(void*)NO_DEFENSE);
+	autoChooser->AddObject("LOW BAR",			(void*)LOW_BAR);
+	autoChooser->AddObject("PORTCULLIS",		(void*)PORTCULLIS);
+	autoChooser->AddObject("RAMPARTS",			(void*)RAMPARTS);
+	autoChooser->AddObject("ROCK WALL",			(void*)ROCK_WALL);
+	autoChooser->AddObject("MOTE",				(void*)MOTE);
+	autoChooser->AddObject("SALLY PORT",		(void*)SALLY_PORT);
+	autoChooser->AddObject("DRAW BRIDGE",		(void*)DRAW_BRIDGE);
+	autoChooser->AddObject("ROUGH TERRAIN",		(void*)ROUGH_TERRAIN);
+	autoChooser->AddObject("CHEVAL DE FRISE",	(void*)SHOVEL_THE_FRIES);
 	SmartDashboard::PutData("AUTO", autoChooser);
 	}
 
 	void AutonomousInit()
 	{
-		selectedDefense = autoChooser->GetSelected();
-		Cross(selectedDefense, m_tank, m_suspension);
+		selectedDefense = *(Defense*)autoChooser->GetSelected();
+		Cross(selectedDefense, &m_tank, &m_suspension);
 	}
 
 	void AutonomousPeriodic()
