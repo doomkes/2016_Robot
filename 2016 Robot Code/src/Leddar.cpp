@@ -20,26 +20,31 @@ Leddar::~Leddar() {
 }
 
 void Leddar::StartAutomaticDetections() {
+	SmartDashboard::PutString("Leddar State", "About to about to run");
 	m_running = true;
+	SmartDashboard::PutString("Leddar State", "About to run");
 	std::thread leddarThread(&Leddar::GetDetections, this);
 	SmartDashboard::PutString("Leddar State", "Running");
+
 }
 
 void Leddar::StopAutomaticDetections() {
 	m_running = false;
-	SmartDashboard::PutString("Leddar State", "Stopped");
+	//SmartDashboard::PutString("Leddar State", "Stopped");
 }
 
 void Leddar::GetDetections() {
 	unsigned bytesRecived, numDetections;
-
+	SmartDashboard::PutString("Leddar State", "In leddar");
 	while(m_running) {
+		SmartDashboard::PutString("Leddar State", "In loop");
 		m_RS_232.Reset();
 		//sending the bytes to the leddar sensor
 		char query[] = {0x01, 0x41,0xC0,0x10};
 		m_RS_232.Write(query, 4);
 
 		Wait(0.250);
+
 
 		bytesRecived = m_RS_232.GetBytesReceived();
 		SmartDashboard::PutNumber("bytes recived", bytesRecived);

@@ -47,12 +47,12 @@ public:
 
 	void AutonomousInit()
 	{
-		m_leddar.StartAutomaticDetections();
+		//m_leddar.StartAutomaticDetections();
 		selectedDefense = *(Defense*)autoChooser->GetSelected();
 		Cross(selectedDefense, &m_tank, &m_suspension);
 	}
 	void DisabledInit() {
-		m_leddar.StopAutomaticDetections();
+		//m_leddar.StopAutomaticDetections();
 	}
 	void AutonomousPeriodic()
 	{
@@ -61,7 +61,9 @@ public:
 
 	void TeleopInit()
 	{
-		m_leddar.StartAutomaticDetections();
+		SmartDashboard::PutString("Teleop State", "TeleopInit");
+		//m_leddar.StartAutomaticDetections();
+
 	}
 
 	void TeleopPeriodic()
