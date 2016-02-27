@@ -20,7 +20,7 @@ Shooter::Shooter() :
 
 	m_lift.SetControlMode(CANSpeedController::kPosition);
 	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-	m_lift.SetPID(4.0, 0.01, 0);
+	m_lift.SetPID(1.0, 0.01, 0);
 
 	m_runtime.Start();
 }
