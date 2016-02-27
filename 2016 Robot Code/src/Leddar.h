@@ -23,10 +23,13 @@ struct Detection {
 class Leddar {
 private:
 	SerialPort m_RS_232;
+	bool m_running = false;
 public:
 	Leddar();
 	virtual ~Leddar();
 	void GetDetections();
+	void StartAutomaticDetections();
+	void StopAutomaticDetections();
 };
 
 #endif /* SRC_LEDDAR_H_ */

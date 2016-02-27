@@ -43,24 +43,25 @@ public:
 	autoChooser->AddObject("CHEVAL DE FRISE",	(void*)SHOVEL_THE_FRIES);
 	SmartDashboard::PutData("AUTO", autoChooser);
 
-	std::thread leddarThread(&Leddar::GetDetections, &m_leddar);
 	}
 
 	void AutonomousInit()
 	{
+		m_leddar.StartAutomaticDetections();
 		selectedDefense = *(Defense*)autoChooser->GetSelected();
 		Cross(selectedDefense, &m_tank, &m_suspension);
 	}
-
+	void DisabledInit() {
+		m_leddar.StopAutomaticDetections();
+	}
 	void AutonomousPeriodic()
 	{
-
 
 	}
 
 	void TeleopInit()
 	{
-
+		m_leddar.StartAutomaticDetections();
 	}
 
 	void TeleopPeriodic()

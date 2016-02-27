@@ -19,11 +19,21 @@ Leddar::~Leddar() {
 
 }
 
+void Leddar::StartAutomaticDetections() {
+	m_running = true;
+	std::thread leddarThread(&Leddar::GetDetections, this);
+	SmartDashboard::PutString("Leddar State", "Running");
+}
+
+void Leddar::StopAutomaticDetections() {
+	m_running = false;
+	SmartDashboard::PutString("Leddar State", "Stopped");
+}
 
 void Leddar::GetDetections() {
 	unsigned bytesRecived, numDetections;
 
-	while(true) {
+	while(m_running) {
 		m_RS_232.Reset();
 		//sending the bytes to the leddar sensor
 		char query[] = {0x01, 0x41,0xC0,0x10};
