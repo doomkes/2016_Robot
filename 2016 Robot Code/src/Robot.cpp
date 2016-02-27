@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Autonomous/Cross.h"
 #include "Leddar.h"
+#include <thread>
 #include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 
@@ -41,6 +42,8 @@ public:
 	autoChooser->AddObject("ROUGH TERRAIN",		(void*)ROUGH_TERRAIN);
 	autoChooser->AddObject("CHEVAL DE FRISE",	(void*)SHOVEL_THE_FRIES);
 	SmartDashboard::PutData("AUTO", autoChooser);
+
+	std::thread leddarThread(&Leddar::GetDetections, &m_leddar);
 	}
 
 	void AutonomousInit()
@@ -95,7 +98,7 @@ public:
 		m_suspension.SetFrontRight(wui.DropFR);
 		m_suspension.SetBackRight(wui.DropBR);
 
-		//m_leddar.GetDetections();
+
 		//THE DELAY IN LEDDAR.CPP IS CAUSING TOO MUCH LAG ON THE ROBOT DRIVE.
 	}
 
