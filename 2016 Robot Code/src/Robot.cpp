@@ -20,6 +20,7 @@ private:
 	WedgemoreUserInput wui;
 	Camera m_camera;
 
+
 public:
 	Wedgemore()
 	{
@@ -27,6 +28,9 @@ public:
 
 	void RobotInit()
 	{
+		SmartDashboard::PutNumber("a", 20);
+		SmartDashboard::PutNumber("ShooterSpeed", 12);
+		SmartDashboard::PutNumber("ShooterAngle", 0);
 	}
 
 	void AutonomousInit()
@@ -39,39 +43,42 @@ public:
 
 	void TeleopInit()
 	{
-
 	}
 
 	void TeleopPeriodic()
 	{
+		SmartDashboard::PutNumber("position", m_shooter.GetLiftPosition());
+		m_shooter.ShooterLiftZero();
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
-
-		//m_shooter.Lift(wui.LiftSpeed);
-		if(wui.StartPos) {
-			m_shooter.LiftTo(-14);
+		if ((wui.LiftSpeed > 0.1) || (wui.LiftSpeed < -0.1)) {	//manual down
+			m_shooter.LiftTo(m_shooter.GetLiftPosition() + wui.LiftSpeed * 0.003 );
 		}
 		if(wui.PickupPos) {
-			m_shooter.LiftTo(-1936);
+			m_shooter.LiftTo(0);
 		}
-		if(wui.LowGoal) {
-			m_shooter.LiftTo((-1936-14)/3*2+14);
+		if(wui.StartPosition) {
+			m_shooter.LiftTo(-0.5);
 		}
-		if(wui.HiGoal) {
-			m_shooter.LiftTo((-1936-14)/3+14);
-		}
-		//m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
+
 		if(wui.SpinUp) {
-			m_shooter.Spinup(12);
+//			m_shooter.Spinup(12);
+			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
 		}
 		else {
 			m_shooter.Stop();
 		}
 		m_shooter.Shoot(wui.Shoot);
 		if(wui.Pickup) {
+
 			m_shooter.Pickup();
 		}
-
+		if(wui.Custom) {
+			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
+		}
+		if(wui.Zero) {
+			m_shooter.shooter_zero = 1;
+		}
 		m_suspension.SetFrontLeft(wui.DropFL);
 		m_suspension.SetBackLeft(wui.DropBL);
 		m_suspension.SetFrontRight(wui.DropFR);

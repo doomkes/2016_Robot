@@ -12,12 +12,12 @@ enum ManStickMap {
 	SHOOT = 6,
 	PICKUP = 5,
 	PICKUPPOS = 2,
-	LOWGOALPOS = 1,
-	HIGOALPOS = 7,
-	STARTPOS = 8,
+	STARTPOS = 1,
 	//AUTOTRACK = 2,
 	LIFTAXIS = 1,
-	SPINUP = 3
+	SPINUP = 3,
+	ZERO = 7,
+	CUSTOMSHOT = 4
 };
 
 enum LStickMap {

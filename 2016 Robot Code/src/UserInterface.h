@@ -14,11 +14,14 @@ struct WedgemoreUserInput
 {
 	bool DropFR = false, DropFL = false, DropBR = false, DropBL = false;
 	float LeftSpeed = 0.0, RightSpeed = 0.0;
-	float RotateSpeed = 0;
 	float LiftSpeed = 0;
 	bool Shoot = false, Pickup = false;
 	bool SpinUp = false;
-	bool LowGoal = false, HiGoal = false, AutoTrack = false, PickupPos = false, StartPos = false;
+	bool StartPosition = false;
+	bool AutoTrack = false;
+	bool PickupPos = false;
+	bool Zero = false;
+	bool Custom = false;
 
 };
 

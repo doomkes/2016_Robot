@@ -6,7 +6,6 @@
  */
 
 #include <UserInterface.h>
-#include <array>
 #include "robotmap.h"
 //The Robot's name is "Wedgemore"
 
@@ -20,23 +19,16 @@ UserInterface::~UserInterface()
 
 }
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
-	wui->RotateSpeed = m_manStick.GetRawAxis(4);
 	wui->LiftSpeed = m_manStick.GetRawAxis(1);
 	if(m_manStick.GetRawButton(PICKUPPOS)) {
 		wui->PickupPos = true;
 	}
 	if(m_manStick.GetRawButton(STARTPOS)) {
-		wui->StartPos = true;
-	}
-	if(m_manStick.GetRawButton(LOWGOALPOS)) {
-		wui->LowGoal = true;
+		wui->StartPosition = true;
 	}
 //	if(m_manStick.GetRawButton(AUTOTRACK)) {
 //		wui->AutoTrack = true;
 //	}
-	if(m_manStick.GetRawButton(HIGOALPOS)){
-		wui->HiGoal = true;
-	}
 	if(m_manStick.GetRawButton(SHOOT)) {
 		wui->Shoot = true;
 	}
@@ -45,6 +37,12 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	}
 	if(m_manStick.GetRawButton(PICKUP)) {
 		wui->Pickup = true;
+	}
+	if(m_manStick.GetRawButton(ZERO)) {
+		wui->Zero = true;
+	}
+	if(m_manStick.GetRawButton(CUSTOMSHOT)) {
+		wui->Custom = true;
 	}
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
@@ -103,7 +101,13 @@ void UserInterface::GetData(WedgemoreUserInput *wui)
 	wui->DropBR = false;
 	wui->SpinUp = false;
 	wui->Shoot = false;
-	wui->Pickup = false, wui->SpinUp = false, wui->LowGoal = false, wui->HiGoal = false, wui->AutoTrack = false, wui->PickupPos = false, wui->StartPos = false;
+	wui->Pickup = false;
+	wui->SpinUp = false;
+	wui->StartPosition = false;
+	wui->AutoTrack = false;
+	wui->PickupPos = false;
+	wui->Zero = false;
+	wui->Custom = false;
 	GetLStickValues(wui);
 	GetRStickValues(wui);
 	GetManStickValues(wui);

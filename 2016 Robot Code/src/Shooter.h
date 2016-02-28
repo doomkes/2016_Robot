@@ -14,16 +14,18 @@ class Shooter
 private:
 	CANTalon /*m_susan,8*/ m_lift, m_shoot1, m_shoot2;
 	Solenoid m_kicker;
-	Timer m_runtime; // XXX: Replace with global timer?
-	double m_stopAt;
+	float max_speed = 0.5;
+	float delta_time = 0;
+	float last_time = 0;
+	float current_position = 0;
+	float target_position = 0;
 public:
 	Shooter();
 	virtual ~Shooter();
 
 	//void RotateTo(float position);
 	//void Rotate(float increment);
-	void Lift(float increment);
-	void LiftTo(float position);
+	void LiftTo(float angle);
 	void Shoot(bool val);
 	void Spinup(float speed);
 	void Pickup();
@@ -32,6 +34,9 @@ public:
 	 * Call every loop to update async actions.
 	 */
 	void Update();
+	void ShooterLiftZero();
+	double GetLiftPosition();
+	int shooter_zero = 0;
 };
 
 #endif /* SRC_SHOOTER_H_ */
