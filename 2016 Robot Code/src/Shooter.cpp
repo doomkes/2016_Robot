@@ -12,8 +12,7 @@ Shooter::Shooter() :
 		m_lift(LIFT),
 		m_shoot1(SHOOT1),
 		m_shoot2(SHOOT2),
-		m_kicker(SHOOTERSOL),
-		m_liftMove(0.02, 0.02, 0, 0)
+		m_kicker(SHOOTERSOL)
 {
 	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
