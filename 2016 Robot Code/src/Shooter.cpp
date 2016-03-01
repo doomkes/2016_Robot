@@ -58,6 +58,7 @@ void Shooter::LiftTo(float angle) {
 	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 0.01));
 
 	m_liftMove.SetInitialPos(m_lift.Get());
+	m_liftMove.SetInitialVel(m_lift.GetSpeed());
 	m_liftMove.SetTargetPos(position);
 	m_liftMove.CalcParams();
 	m_timer.Reset();

@@ -45,6 +45,10 @@ void TrapezoidalMove::SetInitialPos(float initialPos) {
 	m_initialPos = initialPos;
 }
 
+void TrapezoidalMove::SetInitialVel(float initialVel) {
+	m_initialVel = initialVel;
+}
+
 void TrapezoidalMove::SetAccel (float value) {
 	m_accel = value;
 }
@@ -64,7 +68,7 @@ void TrapezoidalMove::SetDistance(float value) {
 void TrapezoidalMove::CalcParams(void) {
 	float accel_time, decel_time, min_dist, accel_dist, decel_dist;
 
-	accel_time = m_max_speed / m_accel;
+	accel_time = (m_max_speed-fabs(m_initialVel)) / m_accel;
 	decel_time = m_max_speed / m_decel;
 	accel_dist = 0.5*m_accel * accel_time*accel_time;
 	decel_dist = 0.5*m_decel * decel_time*decel_time;
@@ -93,17 +97,27 @@ float TrapezoidalMove::Position(float time) {
 		position = 0.5*m_accel*m_t1*m_t1 + (time - m_t1)*m_max_speed;
 	else if (time <= m_t3)
 		position = 0.5*m_accel*m_t1*m_t1
-		+ (m_t2 - m_t1)*m_max_speed
-		+ 0.5*m_decel*(m_t3 - m_t2)*(m_t3 - m_t2) - 0.5*m_decel*(m_t3 - time)*(m_t3 - time);
+				 + (m_t2 - m_t1)*m_max_speed
+				 + 0.5*m_decel*(m_t3 - m_t2)*(m_t3 - m_t2) - 0.5*m_decel*(m_t3 - time)*(m_t3 - time);
 	else position = m_distance;
 
+	if(m_initialPos < m_targetPos){
+		position = -position;
+	}
 	return m_initialPos + position;
 }
 
-float TrapezoidalMove::Velocity(float time)
+float TrapezoidalMove::Velocity(float t)
 {
-	//TODO: Implement.
-	return 0;
+	float velocity;
+	if (t < m_t1)
+		velocity = m_accel*t;
+	else if (t < m_t2)
+		velocity = m_max_speed;
+	else if (t < m_t3)
+		velocity = (-m_decel * (t - m_t2)) + (m_accel*m_t1);
+
+	return velocity;
 }
 
 float TrapezoidalMove::Acceleration(float time)

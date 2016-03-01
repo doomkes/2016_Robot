@@ -16,6 +16,7 @@ public:
 	TrapezoidalMove(float Accel, float Decel, float MaxSpeed, float InitialVel = 0, float InitialPos = 0, float TargetPos = 0);
 	void SetInitialPos(float);
 	void SetTargetPos(float);
+	void SetInitialVel(float);
 	void SetAccel(float);
 	void SetDecel(float);
 	void SetMaxSpeed(float);
