@@ -30,6 +30,10 @@ public:
 
 	void RobotInit()
 	{
+	SmartDashboard::PutNumber("Drive P", 0);
+	SmartDashboard::PutNumber("Drive I", 0);
+	SmartDashboard::PutNumber("Drive D", 0);
+
 	autoChooser = new SendableChooser();
 	autoChooser->AddDefault("NO DEFENSE",		(void*)NO_DEFENSE);
 	autoChooser->AddObject("LOW BAR",			(void*)LOW_BAR);
