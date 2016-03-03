@@ -15,7 +15,7 @@ enum Defense
 	ROCK_WALL,
 	// Catagory B:
 	RAMPARTS,
-	MOTE,
+	MOAT,
 	//Catagory C:
 	SALLY_PORT,
 	DRAW_BRIDGE,

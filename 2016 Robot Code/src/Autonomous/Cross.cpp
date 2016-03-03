@@ -36,7 +36,7 @@ bool Cross(Defense defense, TankDrive *tank, SuspensionDrive *suspension)
 			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossRamparts(tank, suspension);
 			break;
-		case MOTE:
+		case MOAT:
 			SmartDashboard::PutString("selected auto:", "none");
 			//return CrossMote(tank, suspension);
 			break;

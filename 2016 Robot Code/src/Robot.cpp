@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "Autonomous/Cross.h"
 #include "Leddar.h"
-#include <thread>
+
 #include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
 
@@ -30,18 +30,19 @@ public:
 
 	void RobotInit()
 	{
-	autoChooser = new SendableChooser();
-	autoChooser->AddDefault("NO DEFENSE",		(void*)NO_DEFENSE);
-	autoChooser->AddObject("LOW BAR",			(void*)LOW_BAR);
-	autoChooser->AddObject("PORTCULLIS",		(void*)PORTCULLIS);
-	autoChooser->AddObject("RAMPARTS",			(void*)RAMPARTS);
-	autoChooser->AddObject("ROCK WALL",			(void*)ROCK_WALL);
-	autoChooser->AddObject("MOTE",				(void*)MOTE);
-	autoChooser->AddObject("SALLY PORT",		(void*)SALLY_PORT);
-	autoChooser->AddObject("DRAW BRIDGE",		(void*)DRAW_BRIDGE);
-	autoChooser->AddObject("ROUGH TERRAIN",		(void*)ROUGH_TERRAIN);
-	autoChooser->AddObject("CHEVAL DE FRISE",	(void*)SHOVEL_THE_FRIES);
-	SmartDashboard::PutData("AUTO", autoChooser);
+		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		autoChooser = new SendableChooser();
+		autoChooser->AddDefault("NO DEFENSE",		(void*)NO_DEFENSE);
+		autoChooser->AddObject("LOW BAR",			(void*)LOW_BAR);
+		autoChooser->AddObject("PORTCULLIS",		(void*)PORTCULLIS);
+		autoChooser->AddObject("RAMPARTS",			(void*)RAMPARTS);
+		autoChooser->AddObject("ROCK WALL",			(void*)ROCK_WALL);
+		autoChooser->AddObject("MOAT",				(void*)MOAT);
+		autoChooser->AddObject("SALLY PORT",		(void*)SALLY_PORT);
+		autoChooser->AddObject("DRAW BRIDGE",		(void*)DRAW_BRIDGE);
+		autoChooser->AddObject("ROUGH TERRAIN",		(void*)ROUGH_TERRAIN);
+		autoChooser->AddObject("CHEVAL DE FRISE",	(void*)SHOVEL_THE_FRIES);
+		SmartDashboard::PutData("AUTO", autoChooser);
 
 	}
 
@@ -84,7 +85,6 @@ public:
 		if(wui.HiGoal) {
 			m_shooter.LiftTo((-1936-14)/3+14);
 		}
-		//m_shooter.Lift(wui.LiftSpeed*1.193); //4 seconds for 180 degree revolution
 		if(wui.SpinUp) {
 			m_shooter.Spinup(12);
 		}
@@ -101,8 +101,6 @@ public:
 		m_suspension.SetFrontRight(wui.DropFR);
 		m_suspension.SetBackRight(wui.DropBR);
 
-
-		//THE DELAY IN LEDDAR.CPP IS CAUSING TOO MUCH LAG ON THE ROBOT DRIVE.
 	}
 
 	void TestPeriodic()
