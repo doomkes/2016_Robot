@@ -24,9 +24,6 @@ Shooter::Shooter() :
 	m_lift.Enable();
 	m_lift.SetPID(1, 0.0, 0.0);
 
-	SmartDashboard::PutNumber("lift accel",		0.01);
-	SmartDashboard::PutNumber("lift decel",		0.01);
-	SmartDashboard::PutNumber("lift max speed",	0.01);
 }
 
 
@@ -53,9 +50,9 @@ void Shooter::Pickup()
 void Shooter::LiftTo(float angle) {
 	float position = angle; // * 0.00277778; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
 	//delta_time = Timer::GetFPGATimestamp() - last_time;
-	m_liftMove.SetAccel(SmartDashboard::GetNumber("lift accel", 0.01));
-	m_liftMove.SetDecel(SmartDashboard::GetNumber("lift decel", 0.01));
-	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 0.01));
+	m_liftMove.SetAccel(SmartDashboard::GetNumber("lift accel", 0));
+	m_liftMove.SetDecel(SmartDashboard::GetNumber("lift decel", 0));
+	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 0));
 
 	m_liftMove.SetInitialPos(m_lift.Get());
 	m_liftMove.SetInitialVel(m_lift.GetSpeed());
@@ -86,8 +83,11 @@ void Shooter::LiftTo(float angle) {
 }
 
 void Shooter::Update() {
-	m_lift.SetPID(SmartDashboard::GetNumber("a", 1), 0.0, 0.0);
-
+	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 0.0) ,
+				  SmartDashboard::GetNumber("Shooter I", 0.0),
+				  SmartDashboard::GetNumber("Shooter D", 0.0));
+	SmartDashboard::PutNumber("position", m_lift.Get());
+	SmartDashboard::PutNumber("target position", target_position);
 	m_lift.Set(m_liftMove.Position(m_timer.Get()));
 }
 

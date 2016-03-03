@@ -28,9 +28,16 @@ public:
 
 	void RobotInit()
 	{
-		SmartDashboard::PutNumber("a", 20);
 		SmartDashboard::PutNumber("ShooterSpeed", 12);
 		SmartDashboard::PutNumber("ShooterAngle", 0);
+
+		SmartDashboard::PutNumber("lift accel",		0);
+		SmartDashboard::PutNumber("lift decel",		0);
+		SmartDashboard::PutNumber("lift max speed",	0);
+
+		SmartDashboard::PutNumber("Shooter P",		0);
+		SmartDashboard::PutNumber("Shooter I",		0);
+		SmartDashboard::PutNumber("Shooter D",		0);
 	}
 
 	void AutonomousInit()
@@ -47,7 +54,7 @@ public:
 
 	void TeleopPeriodic()
 	{
-		SmartDashboard::PutNumber("position", m_shooter.GetLiftPosition());
+		//SmartDashboard::PutNumber("position", m_shooter.GetLiftPosition());
 		m_shooter.ShooterLiftZero();
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
@@ -79,6 +86,9 @@ public:
 		if(wui.Zero) {
 			m_shooter.shooter_zero = 1;
 		}
+
+		m_shooter.Update();
+
 		m_suspension.SetFrontLeft(wui.DropFL);
 		m_suspension.SetBackLeft(wui.DropBL);
 		m_suspension.SetFrontRight(wui.DropFR);
