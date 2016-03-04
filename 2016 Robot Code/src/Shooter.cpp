@@ -22,7 +22,7 @@ Shooter::Shooter() :
 	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
 	m_lift.SetSensorDirection(true);
 	m_lift.Enable();
-	m_lift.SetPID(1, 0.0, 0.0);
+	m_lift.SetPID(1.0, 0.0, 0.0);
 
 }
 
@@ -50,16 +50,16 @@ void Shooter::Pickup()
 void Shooter::LiftTo(float angle) {
 	float position = angle; // * 0.00277778; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
 	//delta_time = Timer::GetFPGATimestamp() - last_time;
-	m_liftMove.SetAccel(SmartDashboard::GetNumber("lift accel", 0));
-	m_liftMove.SetDecel(SmartDashboard::GetNumber("lift decel", 0));
-	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 0));
-
-	m_liftMove.SetInitialPos(m_lift.Get());
-	m_liftMove.SetInitialVel(m_lift.GetSpeed());
-	m_liftMove.SetTargetPos(position);
+	m_liftMove.SetAccel(SmartDashboard::GetNumber("lift accel", 1));
+	m_liftMove.SetDecel(SmartDashboard::GetNumber("lift decel", 1));
+	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 1));
+	m_liftMove.SetDistance(-position);
+	//m_liftMove.SetInitialPos(0);
+	//m_liftMove.SetInitialVel(0);
+	//m_liftMove.SetTargetPos(position);
 	m_liftMove.CalcParams();
 	m_timer.Reset();
-
+	m_timer.Start();
 //	if (current_position < position)
 //	{
 //		current_position = current_position + max_speed * delta_time;
@@ -88,7 +88,9 @@ void Shooter::Update() {
 				  SmartDashboard::GetNumber("Shooter D", 0.0));
 	SmartDashboard::PutNumber("position", m_lift.Get());
 	SmartDashboard::PutNumber("target position", target_position);
-	m_lift.Set(m_liftMove.Position(m_timer.Get()));
+	SmartDashboard::PutNumber("Time", m_timer.Get());
+	m_lift.Set(-m_liftMove.Position(m_timer.Get()));
+	SmartDashboard::PutNumber("trapezoidal Position", m_liftMove.Position(m_timer.Get()));
 }
 
 void Shooter::Stop() {
