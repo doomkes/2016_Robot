@@ -7,6 +7,8 @@
 
 #include <Shooter.h>
 #include "robotmap.h"
+#include <iostream>
+using namespace std;
 /*
  *  On each iteration, you feed this module
  *  1) the time change since the last update
@@ -24,30 +26,39 @@ float Velocity(float delta_t, float error, float current_v, float accel, float m
 	float time2stop = 0;
 	float dist2stop = 0;
 	float Velocity = 0;
+	float lifeState = 0;
 	if(accel == 0) { //divide by zero protection.
-		return 0.0000001;
+		accel = 0.000001;
 	}
 	time2stop = (fabs(current_v) + accel * delta_t) / accel;
 	dist2stop = 0.5*accel*time2stop*time2stop;
 	if(error < 0) { // target position is in pos direction.
 		if(current_v < 0) { //going wrong way.
 			Velocity = current_v+delta_t*accel;
+			lifeState = 1;
 		} else if(dist2stop >= fabs(error)) {
 			Velocity = current_v - delta_t*accel;
+			lifeState = 2;
 		} else if(current_v + delta_t * accel > max_v ) {
 			Velocity = max_v;
+			lifeState = 3;
 		} else {
 			Velocity = current_v + delta_t * accel;
+			lifeState = 4;
 		}
 	} else if(current_v > 0) {  //Error > 0.
 		Velocity = current_v - delta_t * accel;
+		lifeState = 5;
 	} else if(dist2stop >= fabs(error)) {
 		Velocity = current_v + delta_t * accel;
+		lifeState = 6;
 	} else if (current_v - delta_t * accel < -max_v) {
 		Velocity = -max_v;
+		lifeState = 7;
 	} else {
 		Velocity = current_v - delta_t * accel;
 	}
+	SmartDashboard::PutNumber("State of shooter loop", lifeState);
 	return Velocity;
 }
 
