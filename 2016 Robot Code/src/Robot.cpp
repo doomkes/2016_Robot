@@ -31,9 +31,9 @@ public:
 		SmartDashboard::PutNumber("ShooterSpeed", 12);
 		SmartDashboard::PutNumber("ShooterAngle", 0);
 
-		SmartDashboard::PutNumber("lift accel",		1);
+		SmartDashboard::PutNumber("lift accel",		0.5);
 		SmartDashboard::PutNumber("lift decel",		1);
-		SmartDashboard::PutNumber("lift max speed",	1);
+		SmartDashboard::PutNumber("lift max speed",	0.25);
 
 		SmartDashboard::PutNumber("Shooter P",		0);
 		SmartDashboard::PutNumber("Shooter I",		0);

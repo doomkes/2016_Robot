@@ -92,57 +92,32 @@ void Shooter::Pickup()
 
 void Shooter::LiftTo(float angle) {
 	float position = angle; // * 0.00277778; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
-	//delta_time = Timer::GetFPGATimestamp() - last_time;
-	m_liftMove.SetAccel(SmartDashboard::GetNumber("lift accel", 1));
-	m_liftMove.SetDecel(SmartDashboard::GetNumber("lift decel", 1));
-	m_liftMove.SetMaxSpeed(SmartDashboard::GetNumber("lift max speed", 1));
-	m_liftMove.SetDistance(-position);
-	//m_liftMove.SetInitialPos(0);
-	//m_liftMove.SetInitialVel(0);
-	//m_liftMove.SetTargetPos(position);
-	m_liftMove.CalcParams();
-	m_timer.Reset();
-	m_timer.Start();
-//	if (current_position < position)
-//	{
-//		current_position = current_position + max_speed * delta_time;
-//		if (current_position > position)
-//		{
-//			current_position = position;
-//		}
-//	}
-//	else if (current_position > position)
-//	{
-//		current_position = current_position - max_speed * delta_time;
-//		if (current_position < position)
-//		{
-//			current_position = position;
-//		}
-//	}
-//	m_lift.Set(current_position);
-	//last_time = Timer::GetFPGATimestamp();
 
 	target_position = position;
 }
-
 void Shooter::Update() {
 	static Timer timer;
-
+	float dt, error, velocity;
 	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 0.0) ,
 				  SmartDashboard::GetNumber("Shooter I", 0.0),
 				  SmartDashboard::GetNumber("Shooter D", 0.0));
-	SmartDashboard::PutNumber("position", m_lift.Get());
-	SmartDashboard::PutNumber("target position", target_position);
-	//m_lift.Set(m_liftMove.Position(m_timer.Get()));
-	m_lift.Set(m_lift.Get() +
-			Velocity(timer.Get(),
-					m_lift.Get() - target_position,
-					m_lift.GetSpeed(),
-					SmartDashboard::GetNumber("lift accel", 0),
-					SmartDashboard::GetNumber("lift max speed", 0)));
+	error = target_position - m_lift.Get();
+	dt = timer.Get();
+	velocity = Velocity(dt, error, m_lift.GetSpeed(),
+			SmartDashboard::GetNumber("lift accel", 0),
+			SmartDashboard::GetNumber("lift max speed", 0));
+
+	m_lift.Set(m_lift.Get() + velocity);
 
 	timer.Reset();
 	timer.Start();
+
+	SmartDashboard::PutNumber("lift velocity", velocity);
+	SmartDashboard::PutNumber("position", m_lift.Get());
+	SmartDashboard::PutNumber("target position", target_position);
+	SmartDashboard::PutNumber("lift motor velocity", m_lift.GetSpeed());
+	SmartDashboard::PutNumber("lift error", error);
+	SmartDashboard::PutNumber("delta t", dt);
 }
 
 
