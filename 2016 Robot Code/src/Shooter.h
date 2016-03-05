@@ -9,19 +9,18 @@
 #define SRC_SHOOTER_H_
 #include <wpilib.h>
 #include "TrapezoidalMove.h"
-
+#define SHOOTER_SCALE (1.0/360.0)
 class Shooter
 {
 private:
 	CANTalon m_lift, m_shoot1, m_shoot2;
 	Solenoid m_kicker;
 	float max_speed = 0.5;
-	float delta_time = 0;
-	float last_time = 0;
 	float m_startTime = 0;
+	float m_liftAccel, m_liftMaxSpeed;
 	Timer m_timer;
-	float current_position = 0;
-	float target_position = 0;
+	float m_currentPosition = 0;
+	float m_targetPosition = 0;
 	TrapezoidalMove m_liftMove;
 public:
 	Shooter();
@@ -29,6 +28,7 @@ public:
 
 	//void RotateTo(float position);
 	//void Rotate(float increment);
+	void Lift(float incrAngle);
 	void LiftTo(float angle);
 	void Shoot(bool val);
 	void Spinup(float speed);
@@ -39,6 +39,7 @@ public:
 	 */
 	void Update();
 	void ShooterLiftZero();
+	void Zero();
 	double GetLiftPosition();
 	double GetLiftAngle();
 	int shooter_zero = 0;

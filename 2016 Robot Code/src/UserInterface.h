@@ -15,6 +15,7 @@ struct WedgemoreUserInput
 	bool DropFR = false, DropFL = false, DropBR = false, DropBL = false;
 	float LeftSpeed = 0.0, RightSpeed = 0.0;
 	float LiftSpeed = 0;
+	float SliderValue = 0;
 	bool Shoot = false, Pickup = false;
 	bool SpinUp = false;
 	bool StartPosition = false;
@@ -22,7 +23,8 @@ struct WedgemoreUserInput
 	bool PickupPos = false;
 	bool Zero = false;
 	bool Custom = false;
-
+	bool BatterHiGoal = false;
+	bool DefenseHiGoal = false;
 };
 
 class UserInterface

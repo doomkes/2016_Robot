@@ -35,9 +35,11 @@ public:
 		SmartDashboard::PutNumber("lift decel",		1);
 		SmartDashboard::PutNumber("lift max speed",	0.25);
 
-		SmartDashboard::PutNumber("Shooter P",		0);
+		SmartDashboard::PutNumber("Shooter P",		1);
 		SmartDashboard::PutNumber("Shooter I",		0);
 		SmartDashboard::PutNumber("Shooter D",		0);
+
+		m_shooter.Zero();
 	}
 
 	void AutonomousInit()
@@ -51,33 +53,40 @@ public:
 	void TeleopInit()
 	{
 	}
-
+	enum ShooterMode {
+		STOW_MODE,
+		PICKUP_MODE,
+		BATTER_HIGOAL_MODE,
+		DEFENSE_HIGOAL_MODE
+	};
 	void TeleopPeriodic()
 	{
-		//SmartDashboard::PutNumber("position", m_shooter.GetLiftPosition());
-		m_shooter.ShooterLiftZero();
+		static ShooterMode shooterMode = STOW_MODE;
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
-		if ((wui.LiftSpeed > 0.1) || (wui.LiftSpeed < -0.1)) {	//manual down
-			m_shooter.LiftTo(m_shooter.GetLiftPosition() + wui.LiftSpeed * 0.003 );
-		}
-		if(wui.PickupPos) {
-			m_shooter.LiftTo(0);
-		}
-		if(wui.StartPosition) {
-			m_shooter.LiftTo(-0.5);
-		}
 
+//		if (fabs(wui.LiftSpeed) < 0.05) {
+//			wui.LiftSpeed = 0;
+//		}
+
+		if(wui.PickupPos) {
+			shooterMode = PICKUP_MODE;
+		}
+		if(wui.StartPosition) {	//start & stow pos
+			shooterMode = STOW_MODE;
+		}
+		if(wui.BatterHiGoal) {
+			shooterMode = BATTER_HIGOAL_MODE;
+		}
 		if(wui.SpinUp) {
-//			m_shooter.Spinup(12);
 			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
 		}
 		else {
 			m_shooter.Stop();
 		}
 		m_shooter.Shoot(wui.Shoot);
-		if(wui.Pickup) {
 
+		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
 		if(wui.Custom) {
@@ -85,6 +94,22 @@ public:
 		}
 		if(wui.Zero) {
 			m_shooter.shooter_zero = 1;
+		}
+		SmartDashboard::PutNumber("slider val", wui.SliderValue);
+		float AngleAdjust = wui.LiftSpeed * (-(wui.SliderValue) + 1);
+		switch(shooterMode) {
+			case STOW_MODE:
+				m_shooter.LiftTo(AngleAdjust * 30);
+				break;
+			case PICKUP_MODE:
+				m_shooter.LiftTo(180 - AngleAdjust * 35);//TODO use preferences for values.
+				break;
+			case BATTER_HIGOAL_MODE:
+				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
+				break;
+			case DEFENSE_HIGOAL_MODE:
+				m_shooter.LiftTo(30 + AngleAdjust*20); //TODO use preferences for values.
+				break;
 		}
 
 		m_shooter.Update();

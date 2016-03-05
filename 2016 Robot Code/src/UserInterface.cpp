@@ -19,16 +19,14 @@ UserInterface::~UserInterface()
 
 }
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
-	wui->LiftSpeed = m_manStick.GetRawAxis(1);
+	wui->LiftSpeed = m_manStick.GetRawAxis(LIFTAXIS);
+	wui->SliderValue = m_manStick.GetRawAxis(SLIDERAXIS);
 	if(m_manStick.GetRawButton(PICKUPPOS)) {
 		wui->PickupPos = true;
 	}
 	if(m_manStick.GetRawButton(STARTPOS)) {
 		wui->StartPosition = true;
 	}
-//	if(m_manStick.GetRawButton(AUTOTRACK)) {
-//		wui->AutoTrack = true;
-//	}
 	if(m_manStick.GetRawButton(SHOOT)) {
 		wui->Shoot = true;
 	}
@@ -43,6 +41,12 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	}
 	if(m_manStick.GetRawButton(CUSTOMSHOT)) {
 		wui->Custom = true;
+	}
+	if(m_manStick.GetRawButton(BATTERHIGOALPOS)) {
+		wui->BatterHiGoal = true;
+	}
+	if(m_manStick.GetRawButton(DEFENSEHIGOALPOS)) {
+		wui->DefenseHiGoal = true;
 	}
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
@@ -104,6 +108,8 @@ void UserInterface::GetData(WedgemoreUserInput *wui)
 	wui->Pickup = false;
 	wui->SpinUp = false;
 	wui->StartPosition = false;
+	wui->BatterHiGoal = false;
+	wui->DefenseHiGoal = false;
 	wui->AutoTrack = false;
 	wui->PickupPos = false;
 	wui->Zero = false;

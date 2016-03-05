@@ -35,28 +35,38 @@ float Velocity(float delta_t, float error, float current_v, float accel, float m
 	if(error < 0) { // target position is in pos direction.
 		if(current_v < 0) { //going wrong way.
 			Velocity = current_v+delta_t*accel;
-			lifeState = 1;
-		} else if(dist2stop >= fabs(error)) {
-			Velocity = current_v - delta_t*accel;
-			lifeState = 2;
-		} else if(current_v + delta_t * accel > max_v ) {
-			Velocity = max_v;
-			lifeState = 3;
-		} else {
-			Velocity = current_v + delta_t * accel;
-			lifeState = 4;
 		}
-	} else if(current_v > 0) {  //Error > 0.
-		Velocity = current_v - delta_t * accel;
-		lifeState = 5;
-	} else if(dist2stop >= fabs(error)) {
-		Velocity = current_v + delta_t * accel;
-		lifeState = 6;
-	} else if (current_v - delta_t * accel < -max_v) {
-		Velocity = -max_v;
-		lifeState = 7;
-	} else {
-		Velocity = current_v - delta_t * accel;
+		else {
+			if(dist2stop >= fabs(error)) {
+				Velocity = current_v - delta_t*accel;
+			}
+			else {
+				if(current_v + delta_t * accel > max_v ) {
+					Velocity = max_v;
+				}
+				else {
+					Velocity = current_v + delta_t * accel;
+				}
+			}
+		}
+	}
+	else {
+		if(current_v > 0) {  //Error > 0.
+			Velocity = current_v - delta_t * accel;
+		}
+		else {
+			if(dist2stop >= fabs(error)) {
+				Velocity = current_v + delta_t * accel;
+			}
+			else {
+				if (current_v - delta_t * accel < -max_v) {
+					Velocity = -max_v;
+				}
+				else {
+					Velocity = current_v - delta_t * accel;
+				}
+			}
+		}
 	}
 	SmartDashboard::PutNumber("State of shooter loop", lifeState);
 	return Velocity;
@@ -102,30 +112,44 @@ void Shooter::Pickup()
 }
 
 void Shooter::LiftTo(float angle) {
-	float position = angle; // * 0.00277778; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
-
-	target_position = position;
+	if(angle > 170)
+		angle = 170;
+	if(angle < 0)
+		angle = 0;
+	float position = angle*SHOOTER_SCALE; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
+	m_liftAccel = SmartDashboard::GetNumber("lift accel", 0);
+	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0);
+	m_targetPosition = position;
 }
 void Shooter::Update() {
 	static Timer timer;
-	float dt, error, velocity;
-	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 0.0) ,
-				  SmartDashboard::GetNumber("Shooter I", 0.0),
-				  SmartDashboard::GetNumber("Shooter D", 0.0));
-	error = target_position - m_lift.Get();
-	dt = timer.Get();
-	velocity = Velocity(dt, error, m_lift.GetSpeed(),
-			SmartDashboard::GetNumber("lift accel", 0),
-			SmartDashboard::GetNumber("lift max speed", 0));
 
-	m_lift.Set(m_lift.Get() + velocity);
+	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 0),
+				  SmartDashboard::GetNumber("Shooter I", 0),
+				  SmartDashboard::GetNumber("Shooter D", 0));
+	float dt, error;
+	static float velocity = 0, incr_position = 0;
+
+	error = incr_position - m_targetPosition;
+	dt = timer.Get();
+
+	if(dt > 0.050)
+		dt = 0.050;
+
+	velocity = Velocity(dt, error, velocity, m_liftAccel, m_liftMaxSpeed);
+
+	SmartDashboard::PutNumber("incr position", incr_position);
+
+	incr_position = incr_position + velocity*dt;
+	m_lift.Set(incr_position);
 
 	timer.Reset();
 	timer.Start();
-
+	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
+	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
 	SmartDashboard::PutNumber("lift velocity", velocity);
 	SmartDashboard::PutNumber("position", m_lift.Get());
-	SmartDashboard::PutNumber("target position", target_position);
+	SmartDashboard::PutNumber("target position", m_targetPosition);
 	SmartDashboard::PutNumber("lift motor velocity", m_lift.GetSpeed());
 	SmartDashboard::PutNumber("lift error", error);
 	SmartDashboard::PutNumber("delta t", dt);
@@ -135,6 +159,10 @@ void Shooter::Update() {
 void Shooter::Stop() {
 	m_shoot1.Set(0);
 	m_shoot2.Set(0);
+}
+
+void Shooter::Zero() {
+	m_lift.SetPosition(0);
 }
 
 void Shooter::ShooterLiftZero()
@@ -149,7 +177,7 @@ void Shooter::ShooterLiftZero()
 			break;
 		case 2:	//stop it,zero encoder, and bring to position 1
 			m_lift.SetPosition(0);
-			current_position = 0;
+			m_currentPosition = 0;
 			LiftTo(0);
 			shooter_zero = 0;
 			break;
@@ -157,9 +185,9 @@ void Shooter::ShooterLiftZero()
 }
 double Shooter::GetLiftPosition()
 {
-	return target_position;
+	return m_targetPosition;
 }
 
 double Shooter::GetLiftAngle() {
-	return target_position / 0.00277778;
+	return m_targetPosition / 0.00277778;
 }
