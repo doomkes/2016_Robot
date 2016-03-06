@@ -20,6 +20,7 @@ enum ManStickMap {
 	CUSTOMSHOT = 8,
 	BATTERHIGOALPOS = 11, //Button to press to shoot from the batter.
 	DEFENSEHIGOALPOS = 12,//Button to press to shoot from the defenses.
+	SPINANDSHOOT = 4,
 };
 
 enum LStickMap {

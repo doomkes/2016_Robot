@@ -32,6 +32,7 @@ public:
 	void LiftTo(float angle);
 	void Shoot(bool val);
 	void Spinup(float speed);
+	void SpinShoot();
 	void Pickup();
 	void Stop();
 	/**

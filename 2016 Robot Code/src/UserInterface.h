@@ -25,6 +25,7 @@ struct WedgemoreUserInput
 	bool Custom = false;
 	bool BatterHiGoal = false;
 	bool DefenseHiGoal = false;
+	bool SpinAndShoot = false;
 };
 
 class UserInterface

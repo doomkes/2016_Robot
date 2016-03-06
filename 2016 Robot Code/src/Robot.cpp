@@ -28,6 +28,8 @@ public:
 
 	void RobotInit()
 	{
+		SmartDashboard::PutNumber("Driver P", 0);
+
 		SmartDashboard::PutNumber("ShooterSpeed", 12);
 		SmartDashboard::PutNumber("ShooterAngle", 0);
 
@@ -52,6 +54,7 @@ public:
 
 	void TeleopInit()
 	{
+		m_tank.Zero();
 	}
 	enum ShooterMode {
 		STOW_MODE,
@@ -69,6 +72,9 @@ public:
 //			wui.LiftSpeed = 0;
 //		}
 
+		if(wui.SpinAndShoot) {
+			m_shooter.SpinShoot();
+		}
 		if(wui.PickupPos) {
 			shooterMode = PICKUP_MODE;
 		}
@@ -126,6 +132,9 @@ public:
 	void TestPeriodic()
 	{
 
+	}
+	void DisabledInit(){
+		m_tank.Zero();
 	}
 };
 

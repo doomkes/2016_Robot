@@ -48,6 +48,9 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	if(m_manStick.GetRawButton(DEFENSEHIGOALPOS)) {
 		wui->DefenseHiGoal = true;
 	}
+	if(m_manStick.GetRawButton(SPINANDSHOOT)) {
+		wui->SpinAndShoot = true;
+	}
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 	if(m_lStick.GetRawButton(DROPBACK))

@@ -13,28 +13,30 @@ TankDrive::TankDrive() :
 		m_rightMotor1(RIGHTDRIVE1),
 		m_rightMotor2(RIGHTDRIVE2)
 {
-//	m_leftMotor1.SetControlMode(CANSpeedController::kSpeed);
-//	m_leftMotor2.SetControlMode(CANSpeedController::kFollower);
-//	m_rightMotor1.SetControlMode(CANSpeedController::kSpeed);
-//	m_rightMotor2.SetControlMode(CANSpeedController::kFollower);
-	m_leftMotor1.SetControlMode(CANSpeedController::kPercentVbus);
-	m_leftMotor2.SetControlMode(CANSpeedController::kPercentVbus);
-	m_rightMotor1.SetControlMode(CANSpeedController::kPercentVbus);
-	m_rightMotor2.SetControlMode(CANSpeedController::kPercentVbus);
+
+	m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
+	m_leftMotor2.SetControlMode(CANSpeedController::kFollower);
+	m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
+	m_rightMotor2.SetControlMode(CANSpeedController::kFollower);
+
+	//m_leftMotor1.SetVoltageRampRate(6);
+	//m_rightMotor1.SetVoltageRampRate(6);
+
+	m_leftMotor1.SetSensorDirection(true);
+	m_rightMotor1.SetSensorDirection(true);
+
+	m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+
+	m_leftMotor1.SetPosition(0);
+	m_rightMotor1.SetPosition(0);
+	m_leftMotor2.Set(LEFTDRIVE1);
+	m_rightMotor2.Set(RIGHTDRIVE1);
 
 	m_leftMotor1.Enable();
 	m_leftMotor2.Enable();
 	m_rightMotor1.Enable();
 	m_rightMotor2.Enable();
-//	m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-//	m_leftMotor1.SetSensorDirection(true);
-//	m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-//	m_rightMotor1.SetSensorDirection(true);
-
-//	m_leftMotor2.Set(0);
-//	m_leftMotor2.SetInverted(true);
-//	m_rightMotor2.Set(2);
-//	m_rightMotor2.SetInverted(true);
 }
 
 TankDrive::~TankDrive()
@@ -44,10 +46,41 @@ TankDrive::~TankDrive()
 void TankDrive::Drive(float leftSpeed, float rightSpeed)
 {
 
-	m_leftMotor1.Set(-leftSpeed);
-	m_leftMotor2.Set(-leftSpeed);
-	m_rightMotor1.Set(rightSpeed);
-	m_rightMotor2.Set(rightSpeed);
+	static Timer timer;
+	static float leftDistance = 0, rightDistance = 0;
+
+	if(fabs(leftSpeed) < 0.1) {
+		leftSpeed = 0;
+	}
+	if(fabs(rightSpeed) < 0.1) {
+		rightSpeed = 0;
+	}
+
+	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 0), 0, 0);
+	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 0), 0, 0);
+
+	float dt = timer.Get();
+
+	if(dt > 0.025) {
+		dt = 0.025;
+	}
+
+	leftDistance += leftSpeed*10*dt;
+	rightDistance += rightSpeed*10*dt;
+	m_leftMotor1.Set(-leftDistance*COUNT_PER_INCH);
+	m_rightMotor1.Set(rightDistance*COUNT_PER_INCH);
+
+	SmartDashboard::PutNumber("left dist", leftDistance);
+	SmartDashboard::PutNumber("right dist", rightDistance);
+
+	timer.Reset();
+	timer.Start();
+}
+
+void TankDrive::Zero()
+{
+	m_leftMotor1.SetPosition(0.0);
+	m_rightMotor1.SetPosition(0.0);
 }
 
 void TankDrive::Stop()

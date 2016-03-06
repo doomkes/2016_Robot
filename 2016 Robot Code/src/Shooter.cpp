@@ -111,6 +111,27 @@ void Shooter::Pickup()
 	m_shoot2.Set(9);
 }
 
+void Shooter::SpinShoot() {
+	static Timer timer;
+	static Timer timer2;
+
+	m_shoot1.Set(12);
+	m_shoot2.Set(-12);
+
+	if(timer.Get() > 1){
+		timer2.Reset();
+		m_kicker.Set(true);
+	}
+	if(timer.Get()){
+
+
+	}
+
+	timer.Reset();
+	timer.Start();
+
+}
+
 void Shooter::LiftTo(float angle) {
 	if(angle > 170)
 		angle = 170;
