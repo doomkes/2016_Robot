@@ -26,7 +26,7 @@ private:
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
 	AutoMode m_mode = DO_NOTHING;
 public:
-	Autonomous();
+	Autonomous(TankDrive*, SuspensionDrive*);
 	virtual ~Autonomous();
 	void Init(AutoMode);
 	void Periodic();

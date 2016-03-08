@@ -85,3 +85,4 @@ float TrapezoidalMove::Position(float time){
 
 	return position;
 }
+

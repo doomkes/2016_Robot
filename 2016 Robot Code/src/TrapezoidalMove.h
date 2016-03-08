@@ -8,6 +8,10 @@
 /*
  * Description:
  */
+
+#ifndef SRC_TRAPEZOIDALMOVE_H_
+#define SRC_TRAPEZOIDALMOVE_H_
+
 class TrapezoidalMove {
 	float m_accel, m_decel, m_max_speed, m_distance;
 	float m_t1, m_t2, m_t3;
@@ -20,5 +24,6 @@ public:
 	void SetDistance(float);
 	void CalcParams(void);
 	float Position(float time);
-
 };
+
+#endif /* SRC_TRAPEZOIDALMOVE_H_ */

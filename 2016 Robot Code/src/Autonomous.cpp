@@ -7,9 +7,9 @@
 
 #include <Autonomous.h>
 
-Autonomous::Autonomous() {
+Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension)
+	: m_tank(tank), m_suspension(suspension) {
 	// TODO Auto-generated constructor stub
-
 }
 
 Autonomous::~Autonomous() {

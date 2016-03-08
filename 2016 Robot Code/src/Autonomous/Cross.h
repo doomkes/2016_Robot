@@ -25,10 +25,4 @@ enum Defense
 	LOW_BAR,
 	SHOVEL_THE_FRIES = CHEVAL_DE_FRISE,
 };
-
-class TankDrive;
-class SuspensionDrive;
-
-bool Cross(Defense, TankDrive*, SuspensionDrive*);
-
 #endif /* SRC_AUTONOMOUS_CROSSERS_CROSS_H_ */

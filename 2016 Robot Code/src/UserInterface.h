@@ -26,6 +26,10 @@ struct WedgemoreUserInput
 	bool BatterHiGoal = false;
 	bool DefenseHiGoal = false;
 	bool SpinAndShoot = false;
+	bool SpeedMode = false;
+	bool VBusMode = false;
+	bool ToggleLight = false;
+	bool ReverseDrive = false;
 };
 
 class UserInterface
@@ -38,7 +42,7 @@ private:
 public:
 	UserInterface();
 	virtual ~UserInterface();
-	void Init(void);
+	void Init(WedgemoreUserInput *wui);
 	void GetData(WedgemoreUserInput *);
 };
 

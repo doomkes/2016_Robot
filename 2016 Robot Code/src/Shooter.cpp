@@ -76,10 +76,13 @@ Shooter::Shooter() :
 		m_lift(LIFT),
 		m_shoot1(SHOOT1),
 		m_shoot2(SHOOT2),
-		m_kicker(SHOOTERSOL)
+		m_kicker(SHOOTERSOL),
+		m_aimLight(AIM_LIGHT)
 {
 	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
+
+	m_aimLight.Set(false);
 
 	m_lift.Reset();
 	m_lift.SetControlMode(CANSpeedController::kPosition);
@@ -90,6 +93,12 @@ Shooter::Shooter() :
 
 }
 
+void Shooter::ToggleLight() {
+	static bool state = false;
+	m_aimLight.Set(!state);
+	state = !state;
+	SmartDashboard::PutBoolean("Light on", state);
+}
 
 Shooter::~Shooter()
 {
@@ -101,8 +110,20 @@ void Shooter::Shoot(bool val)
 }
 
 void Shooter::Spinup(float speed) {
+	static float lastSpeed = 0;
 	m_shoot1.Set(speed);
 	m_shoot2.Set(-speed);
+
+	if(speed == 0) {
+		m_spinUpTimer.Stop();
+	}
+
+	if(lastSpeed == 0 && speed != 0) {
+		m_spinUpTimer.Reset();
+		m_spinUpTimer.Start();
+	}
+
+	lastSpeed = speed;
 }
 
 void Shooter::Pickup()
@@ -112,29 +133,15 @@ void Shooter::Pickup()
 }
 
 void Shooter::SpinShoot() {
-	static Timer timer;
-	static Timer timer2;
-
-	m_shoot1.Set(12);
-	m_shoot2.Set(-12);
-
-	if(timer.Get() > 1){
-		timer2.Reset();
-		m_kicker.Set(true);
-	}
-	if(timer.Get()){
-
-
-	}
-
-	timer.Reset();
-	timer.Start();
-
+	Spinup(12);
+	m_spinShootTimer.Reset();
+	m_spinShootTimer.Start();
+	//In Update(), shoot after a period of time has passed.
 }
 
 void Shooter::LiftTo(float angle) {
-	if(angle > 170)
-		angle = 170;
+	if(angle > 175)
+		angle = 175;
 	if(angle < 0)
 		angle = 0;
 	float position = angle*SHOOTER_SCALE; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
@@ -142,10 +149,11 @@ void Shooter::LiftTo(float angle) {
 	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0);
 	m_targetPosition = position;
 }
+
 void Shooter::Update() {
 	static Timer timer;
 
-	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 0),
+	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 4),
 				  SmartDashboard::GetNumber("Shooter I", 0),
 				  SmartDashboard::GetNumber("Shooter D", 0));
 	float dt, error;
@@ -166,6 +174,15 @@ void Shooter::Update() {
 
 	timer.Reset();
 	timer.Start();
+
+	if(m_spinShootTimer.HasPeriodPassed(2.5)) {
+		Shoot(true);
+		Wait(0.5);
+		Shoot(false);
+		Spinup(0);
+	}
+
+	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
 	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
 	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
 	SmartDashboard::PutNumber("lift velocity", velocity);
@@ -178,12 +195,26 @@ void Shooter::Update() {
 
 
 void Shooter::Stop() {
-	m_shoot1.Set(0);
-	m_shoot2.Set(0);
+	Spinup(0);
 }
 
 void Shooter::Zero() {
-	m_lift.SetPosition(0);
+	if(m_lift.IsRevLimitSwitchClosed()) {
+		m_lift.SetPosition(0);
+	}
+	else {
+		m_lift.SetPosition(0);
+		m_lift.Set(0);
+
+		float loopCount = 0;
+		while(!m_lift.IsRevLimitSwitchClosed() && loopCount > -0.5) {
+			m_lift.Set(loopCount);
+			loopCount -= 0.01; // 18 deg / sec
+			Wait(0.1);
+		}
+		m_lift.Set(0);
+		m_lift.SetPosition(0);
+	}
 }
 
 void Shooter::ShooterLiftZero()
