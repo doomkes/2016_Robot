@@ -7,6 +7,7 @@
 
 #include <DriveTrain/TankDrive.h>
 #include "robotmap.h"
+using namespace std;
 TankDrive::TankDrive() :
 		m_leftMotor1(LEFTDRIVE1),
 		m_leftMotor2(LEFTDRIVE2),
@@ -19,9 +20,6 @@ TankDrive::TankDrive() :
 	m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
 	m_rightMotor2.SetControlMode(CANSpeedController::kFollower);
 
-	//m_leftMotor1.SetVoltageRampRate(6);
-	//m_rightMotor1.SetVoltageRampRate(6);
-
 	m_leftMotor1.SetSensorDirection(true);
 	m_rightMotor1.SetSensorDirection(true);
 
@@ -33,60 +31,117 @@ TankDrive::TankDrive() :
 	m_leftMotor2.Set(LEFTDRIVE1);
 	m_rightMotor2.Set(RIGHTDRIVE1);
 
-	m_leftMotor1.Enable();
-	m_leftMotor2.Enable();
-	m_rightMotor1.Enable();
-	m_rightMotor2.Enable();
+	SetMode(VBUS_MODE);
 }
 
 TankDrive::~TankDrive()
 {
 }
 
-void TankDrive::Drive(float leftSpeed, float rightSpeed)
-{
+void TankDrive::SetMode(DriveMode mode) {
+	Zero();
+	m_mode = mode;
+	switch(mode) {
+		case SPEED_MODE:
+			Zero();
+			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
 
+			m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+			m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+			break;
+		case VBUS_MODE:
+			m_leftMotor1.SetControlMode(CANSpeedController::kPercentVbus);
+			m_rightMotor1.SetControlMode(CANSpeedController::kPercentVbus);
+			break;
+		case POSITION_MODE:
+			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
+			break;
+	}
+}
+
+void TankDrive::SpeedDrive(float leftSpeed, float rightSpeed) {
 	static Timer timer;
-	static float leftDistance = 0, rightDistance = 0;
-
-	if(fabs(leftSpeed) < 0.1) {
-		leftSpeed = 0;
-	}
-	if(fabs(rightSpeed) < 0.1) {
-		rightSpeed = 0;
-	}
-
-	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 0), 0, 0);
-	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 0), 0, 0);
-
 	float dt = timer.Get();
 
 	if(dt > 0.025) {
 		dt = 0.025;
 	}
 
-	leftDistance += leftSpeed*10*dt;
-	rightDistance += rightSpeed*10*dt;
-	m_leftMotor1.Set(-leftDistance*COUNT_PER_INCH);
-	m_rightMotor1.Set(rightDistance*COUNT_PER_INCH);
+	m_leftDistance += leftSpeed*40*dt;
+	m_rightDistance += rightSpeed*40*dt;
 
-	SmartDashboard::PutNumber("left dist", leftDistance);
-	SmartDashboard::PutNumber("right dist", rightDistance);
+	m_leftMotor1.Set(-m_leftDistance*COUNT_PER_INCH);
+	m_rightMotor1.Set(m_rightDistance*COUNT_PER_INCH);
 
 	timer.Reset();
 	timer.Start();
 }
 
+void TankDrive::PositionDrive(float leftSpeed, float rightSpeed) {
+	static Timer timer;
+	float dt = timer.Get();
+
+	if(dt > 0.025) {
+		dt = 0.025;
+	}
+
+	m_leftMotor1.Set(-m_leftDistance*COUNT_PER_INCH);
+	m_rightMotor1.Set(m_rightDistance*COUNT_PER_INCH);
+
+
+	timer.Reset();
+	timer.Start();
+}
+
+void TankDrive::VBusDrive(float leftSpeed, float rightSpeed) {
+	m_leftMotor1.Set(-leftSpeed);
+	m_rightMotor1.Set(rightSpeed);
+}
+
+void TankDrive::Drive(float leftSpeed, float rightSpeed)
+{
+	if(fabs(leftSpeed) < 0.1) {
+		leftSpeed = 0;
+	}
+	if(fabs(rightSpeed) < 0.1) {
+		rightSpeed = 0;
+	}
+	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1),  0, 0);
+	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), 0, 0);
+
+	if(m_reverse) {
+		leftSpeed = -leftSpeed;
+		rightSpeed = -rightSpeed;
+		swap(leftSpeed, rightSpeed);
+	}
+
+	switch(m_mode) {
+		case SPEED_MODE:
+			SpeedDrive(leftSpeed, rightSpeed);
+			break;
+		case VBUS_MODE:
+			VBusDrive(leftSpeed, rightSpeed);
+			break;
+		case POSITION_MODE:
+			PositionDrive(leftSpeed, rightSpeed);
+			break;
+	}
+	SmartDashboard::PutNumber("left dist", m_leftDistance);
+	SmartDashboard::PutNumber("right dist", m_rightDistance);
+	SmartDashboard::PutNumber("left drive error", m_leftDistance*COUNT_PER_INCH - m_leftMotor1.Get());
+	SmartDashboard::PutNumber("right drive error", m_rightDistance*COUNT_PER_INCH - m_rightMotor1.Get());
+}
+
+void TankDrive::Reverse(bool reverse) {
+	m_reverse = reverse;
+}
 void TankDrive::Zero()
 {
 	m_leftMotor1.SetPosition(0.0);
 	m_rightMotor1.SetPosition(0.0);
+	m_leftDistance = 0;
+	m_rightDistance = 0;
 }
 
-void TankDrive::Stop()
-{
-	//m_leftMotor1.StopMotor();
-	//m_leftMotor2.StopMotor();
-	//m_rightMotor1.StopMotor();
-	//m_rightMotor2.StopMotor();
-}
