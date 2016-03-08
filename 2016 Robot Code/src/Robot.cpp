@@ -6,8 +6,15 @@
 #include "Shooter.h"
 #include "Camera.h"
 #include "Leddar.h"
+#include "Autonomous.h"
 #include "DriveTrain/SuspensionDrive.h"
 //The Robot's name is "Wedgemore"
+enum ShooterMode {
+	STOW_MODE,
+	PICKUP_MODE,
+	BATTER_HIGOAL_MODE,
+	DEFENSE_HIGOAL_MODE
+};
 
 class Wedgemore: public IterativeRobot
 {
@@ -18,8 +25,9 @@ private:
 	Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
+	Autonomous m_auto;
 	Camera m_camera;
-
+	ShooterMode m_shooterMode = STOW_MODE;
 
 public:
 	Wedgemore()
@@ -28,43 +36,44 @@ public:
 
 	void RobotInit()
 	{
-		SmartDashboard::PutNumber("Driver P", 0);
+		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		SmartDashboard::PutNumber("Driver P", 1);
 
 		SmartDashboard::PutNumber("ShooterSpeed", 12);
 		SmartDashboard::PutNumber("ShooterAngle", 0);
 
-		SmartDashboard::PutNumber("lift accel",		0.5);
+		SmartDashboard::PutNumber("lift accel",		1);
 		SmartDashboard::PutNumber("lift decel",		1);
-		SmartDashboard::PutNumber("lift max speed",	0.25);
+		SmartDashboard::PutNumber("lift max speed",	0.5);
 
-		SmartDashboard::PutNumber("Shooter P",		1);
+		SmartDashboard::PutNumber("Shooter P",		4);
 		SmartDashboard::PutNumber("Shooter I",		0);
 		SmartDashboard::PutNumber("Shooter D",		0);
 
-		m_shooter.Zero();
+
 	}
 
 	void AutonomousInit()
 	{
+		m_auto.Init(REACH_DEFENSE);
 	}
 
 	void AutonomousPeriodic()
 	{
+		m_auto.Periodic();
 	}
 
 	void TeleopInit()
 	{
+		m_shooterMode = STOW_MODE;
+		m_shooter.Zero();
 		m_tank.Zero();
+		ui.Init(&wui);
 	}
-	enum ShooterMode {
-		STOW_MODE,
-		PICKUP_MODE,
-		BATTER_HIGOAL_MODE,
-		DEFENSE_HIGOAL_MODE
-	};
+
 	void TeleopPeriodic()
 	{
-		static ShooterMode shooterMode = STOW_MODE;
+
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
@@ -76,13 +85,16 @@ public:
 			m_shooter.SpinShoot();
 		}
 		if(wui.PickupPos) {
-			shooterMode = PICKUP_MODE;
+			m_shooterMode = PICKUP_MODE;
 		}
 		if(wui.StartPosition) {	//start & stow pos
-			shooterMode = STOW_MODE;
+			m_shooterMode = STOW_MODE;
 		}
 		if(wui.BatterHiGoal) {
-			shooterMode = BATTER_HIGOAL_MODE;
+			m_shooterMode = BATTER_HIGOAL_MODE;
+		}
+		if(wui.DefenseHiGoal) {
+			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
 		if(wui.SpinUp) {
 			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
@@ -99,11 +111,23 @@ public:
 			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
 		}
 		if(wui.Zero) {
-			m_shooter.shooter_zero = 1;
+			m_shooter.Zero();
 		}
+		if(wui.ToggleLight) {
+			m_shooter.ToggleLight();
+		}
+		if(wui.SpeedMode) {
+			m_tank.SetMode(SPEED_MODE);
+			SmartDashboard::PutBoolean("VBus Mode", false);
+		}
+		if(wui.VBusMode) {
+			m_tank.SetMode(VBUS_MODE);
+			SmartDashboard::PutBoolean("VBus Mode", true);
+		}
+		m_tank.Reverse(wui.ReverseDrive);
 		SmartDashboard::PutNumber("slider val", wui.SliderValue);
 		float AngleAdjust = wui.LiftSpeed * (-(wui.SliderValue) + 1);
-		switch(shooterMode) {
+		switch(m_shooterMode) {
 			case STOW_MODE:
 				m_shooter.LiftTo(AngleAdjust * 30);
 				break;
@@ -114,7 +138,7 @@ public:
 				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(30 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(31 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 		}
 
@@ -124,9 +148,6 @@ public:
 		m_suspension.SetBackLeft(wui.DropBL);
 		m_suspension.SetFrontRight(wui.DropFR);
 		m_suspension.SetBackRight(wui.DropBR);
-
-		//m_leddar.GetDetections();
-		//THE DELAY IN LEDDAR.CPP IS CAUSING TOO MUCH LAG ON THE ROBOT DRIVE.
 	}
 
 	void TestPeriodic()

@@ -16,11 +16,12 @@ enum ManStickMap {
 	LIFTAXIS = 1,
 	SLIDERAXIS = 3,
 	SPINUP = 2,
-	ZERO = 7,
-	CUSTOMSHOT = 8,
+	ZERO = 8,
+	CUSTOMSHOT = 33, //Not currently used
 	BATTERHIGOALPOS = 11, //Button to press to shoot from the batter.
 	DEFENSEHIGOALPOS = 12,//Button to press to shoot from the defenses.
-	SPINANDSHOOT = 4,
+	SPINANDSHOOT = 3,
+	TOGGLE_LIGHT = 7,
 };
 
 enum LStickMap {
@@ -31,13 +32,18 @@ enum LStickMap {
 	DROPALL = 1,
 };
 
-enum RStickMap {
-	DROPFRONTRIGHT = 3,
-	DROPBACKRIGHT = 5,
-	DROPFRONTLEFT = 4,
-	DROPBACKLEFT = 2,
+enum DIOMap {
+	AIM_LIGHT = 9
 };
-
+enum RStickMap {
+	REVERSE_DRIVE = 1,
+//	DROPFRONTRIGHT = 3,
+//	DROPBACKRIGHT = 5,
+//	DROPFRONTLEFT = 4,
+//	DROPBACKLEFT = 2,
+	SET_SPEED_MODE = 10,
+	SET_VBUS_MODE = 11,
+};
 enum SolenoidMap {
 	FRONTLEFTSOL,
 	FRONTRIGHTSOL,
