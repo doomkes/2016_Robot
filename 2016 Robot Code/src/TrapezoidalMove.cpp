@@ -85,4 +85,7 @@ float TrapezoidalMove::Position(float time){
 
 	return position;
 }
+float TrapezoidalMove::GetTotalTime() {
+	return m_t3;
+}
 

@@ -31,7 +31,7 @@ private:
 
 public:
 	Wedgemore()
-	{
+		: m_auto(&m_tank, &m_suspension){
 	}
 
 	void RobotInit()
@@ -66,6 +66,7 @@ public:
 	void TeleopInit()
 	{
 		m_shooterMode = STOW_MODE;
+		m_tank.SetMode(VBUS_MODE);
 		m_shooter.Zero();
 		m_tank.Zero();
 		ui.Init(&wui);

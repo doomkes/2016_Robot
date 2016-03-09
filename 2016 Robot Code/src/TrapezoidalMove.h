@@ -23,6 +23,7 @@ public:
 	void SetMaxSpeed(float);	// feet per second
 	void SetDistance(float);
 	void CalcParams(void);
+	float GetTotalTime();
 	float Position(float time);
 };
 

@@ -18,6 +18,7 @@ Autonomous::~Autonomous() {
 
 void Autonomous::Init(AutoMode mode) {
 	m_mode = mode;
+	m_tank->Zero();
 	m_autoTime.Reset();
 	m_autoTime.Start();
 	switch(mode) {
@@ -30,21 +31,27 @@ void Autonomous::Init(AutoMode mode) {
 			break;
 		case REACH_DEFENSE:
 			m_tank->SetMode(POSITION_MODE);
-			m_move.SetAccel(10);
-			m_move.SetDecel(10);
-			m_move.SetMaxSpeed(20);
-			m_move.SetDistance(50);
+			m_tank->Zero();
+			m_move.SetAccel(0.5);
+			m_move.SetDecel(0.5);
+			m_move.SetMaxSpeed(1);
+			m_move.SetDistance(5);
 			m_move.CalcParams();
 			break;
 	}
 }
 
 void Autonomous::Periodic() {
+	if(m_autoTime.Get() >= 2 || m_autoTime.Get() > m_move.GetTotalTime()) {
+		return;
+	}
 	switch(m_mode){
 	case DO_NOTHING:
+		SmartDashboard::PutString("Auto Mode", "do nothing");
 
 		break;
 	case REACH_DEFENSE:
+		SmartDashboard::PutString("Auto Mode", "Reach Defense");
 		m_tank->Drive(m_move.Position(m_autoTime.Get()),
 					  m_move.Position(m_autoTime.Get()));
 		break;
