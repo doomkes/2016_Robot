@@ -37,12 +37,14 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->SpeedMode = false;
 	wui->VBusMode = false;
 	wui->ToggleLight = false;
+	wui->GiveManControl = false;
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	static bool lastLightButton = false;
 	wui->LiftSpeed = m_manStick.GetRawAxis(LIFTAXIS);
 	wui->SliderValue = m_manStick.GetRawAxis(SLIDERAXIS);
+	wui->YawValue = 0;
 
 	wui->PickupPos = m_manStick.GetRawButton(PICKUPPOS);
 	wui->StartPosition = m_manStick.GetRawButton(STARTPOS);
@@ -103,6 +105,7 @@ void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
 //	{
 //		wui->DropFR = true;
 //	}
+	wui->GiveManControl = m_rStick.GetRawButton(GIVE_MAN_CONTROL);
 	wui->ReverseDrive = m_rStick.GetRawButton(REVERSE_DRIVE);
 	wui->SpeedMode = m_rStick.GetRawButton(SET_SPEED_MODE);
 	wui->VBusMode = m_rStick.GetRawButton(SET_VBUS_MODE);

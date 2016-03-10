@@ -28,7 +28,8 @@ TankDrive::TankDrive() :
 	m_leftMotor2.Set(LEFTDRIVE1);
 	m_rightMotor2.Set(RIGHTDRIVE1);
 
-	SetMode(VBUS_MODE);
+	m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
 }
 
 TankDrive::~TankDrive()
@@ -38,28 +39,21 @@ TankDrive::~TankDrive()
 void TankDrive::SetMode(DriveMode mode) {
 	Zero();
 	m_mode = mode;
+	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1),  0, 0);
+	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), 0, 0);
 	switch(mode) {
 		case SPEED_MODE:
 			Zero();
 			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
-
-			m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-			m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
 			break;
 		case VBUS_MODE:
 			m_leftMotor1.SetControlMode(CANSpeedController::kPercentVbus);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPercentVbus);
-
-			m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
-			m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
 			break;
 		case POSITION_MODE:
 			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
-
-			m_leftMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
-			m_rightMotor1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
 			break;
 	}
 }
@@ -82,9 +76,11 @@ void TankDrive::SpeedDrive(float leftSpeed, float rightSpeed) {
 	timer.Start();
 }
 
-void TankDrive::PositionDrive(float leftSpeed, float rightSpeed) {
-	SmartDashboard::PutNumber("left drive target pos", leftSpeed*COUNT_PER_INCH);
-	SmartDashboard::PutNumber("left drive pos", m_leftMotor1.Get());
+void TankDrive::PositionDrive(float leftDist, float rightDist) {
+//	SmartDashboard::PutNumber("left drive target pos", leftSpeed*COUNT_PER_INCH);
+//	SmartDashboard::PutNumber("left drive pos", m_leftMotor1.Get());
+	m_leftDistance = leftDist;
+	m_rightDistance = rightDist;
 	m_leftMotor1.Set(-m_leftDistance*COUNT_PER_INCH);
 	m_rightMotor1.Set(m_rightDistance*COUNT_PER_INCH);
 }
@@ -102,8 +98,6 @@ void TankDrive::Drive(float leftSpeed, float rightSpeed)
 	if(fabs(rightSpeed) < 0.1) {
 		rightSpeed = 0;
 	}
-	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1),  0, 0);
-	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), 0, 0);
 
 	if(m_reverse) {
 		leftSpeed = -leftSpeed;

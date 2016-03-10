@@ -10,25 +10,28 @@
 #include "TrapezoidalMove.h"
 #include "DriveTrain/TankDrive.h"
 #include "DriveTrain/SuspensionDrive.h"
+#include "Shooter.h"
 #include <wpilib.h>
 enum AutoMode {
 	DO_NOTHING,
-	REACH_DEFENSE,
+	CROSS_DEFENSE,
+	LOW_BAR
 };
 
 class Autonomous {
 private:
-	Timer m_autoTime;
-
+	//Timer m_autoTime;
+	double m_autoStartTime = 0;
 	TankDrive *m_tank;
 	SuspensionDrive *m_suspension;
+	Shooter *m_shooter;
 	TrapezoidalMove m_move;
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
-	AutoMode m_mode = DO_NOTHING;
+	int m_mode = DO_NOTHING;
 public:
-	Autonomous(TankDrive*, SuspensionDrive*);
+	Autonomous(TankDrive*, SuspensionDrive*,Shooter*);
 	virtual ~Autonomous();
-	void Init(AutoMode);
+	void Init(int mode);
 	void Periodic();
 };
 

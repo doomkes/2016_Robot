@@ -7,8 +7,8 @@
 
 #include <Autonomous.h>
 
-Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension)
-	: m_tank(tank), m_suspension(suspension) {
+Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension,Shooter* shooter)
+	: m_tank(tank), m_suspension(suspension), m_shooter(shooter) {
 	// TODO Auto-generated constructor stub
 }
 
@@ -16,44 +16,79 @@ Autonomous::~Autonomous() {
 	// TODO Auto-generated destructor stub
 }
 
-void Autonomous::Init(AutoMode mode) {
+void Autonomous::Init(int mode) {
 	m_mode = mode;
 	m_tank->Zero();
-	m_autoTime.Reset();
-	m_autoTime.Start();
+	m_autoStartTime = Timer::GetFPGATimestamp();
 	switch(mode) {
-		case DO_NOTHING:
+		case 0:
 			m_move.SetAccel(0.00001);
 			m_move.SetDecel(0.00001);
 			m_move.SetMaxSpeed(0.0001);
 			m_move.SetDistance(0);
 			m_move.CalcParams();
 			break;
-		case REACH_DEFENSE:
+		case 1:
 			m_tank->SetMode(POSITION_MODE);
 			m_tank->Zero();
-			m_move.SetAccel(0.5);
-			m_move.SetDecel(0.5);
-			m_move.SetMaxSpeed(1);
-			m_move.SetDistance(5);
+			m_move.SetAccel(12);
+			m_move.SetDecel(12);
+			m_move.SetMaxSpeed(36);
+			m_move.SetDistance(12*14);
+			m_move.CalcParams();
+			break;
+
+		case 2:
+			m_tank->SetMode(POSITION_MODE);
+			m_tank->Zero();
+			m_move.SetAccel(12);
+			m_move.SetDecel(12);
+			m_move.SetMaxSpeed(36);
+			m_move.SetDistance(12*19);
 			m_move.CalcParams();
 			break;
 	}
 }
 
 void Autonomous::Periodic() {
-	if(m_autoTime.Get() >= 2 || m_autoTime.Get() > m_move.GetTotalTime()) {
-		return;
-	}
-	switch(m_mode){
-	case DO_NOTHING:
-		SmartDashboard::PutString("Auto Mode", "do nothing");
+	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+	float leftDist, rightDist;
 
-		break;
-	case REACH_DEFENSE:
-		SmartDashboard::PutString("Auto Mode", "Reach Defense");
-		m_tank->Drive(m_move.Position(m_autoTime.Get()),
-					  m_move.Position(m_autoTime.Get()));
-		break;
+	static float autoCount = 0;
+	switch(m_mode){
+		case 0:
+			SmartDashboard::PutString("Auto Mode", "do nothing");
+			break;
+		case 1:
+			m_suspension->SetFrontLeft(true);
+			m_suspension->SetBackLeft(true);
+			m_suspension->SetFrontRight(true);
+			m_suspension->SetBackRight(true);
+			SmartDashboard::PutString("Auto Mode", "Cross Defense");
+			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+			leftDist = m_move.Position(currentAutoTime);
+			rightDist = m_move.Position(currentAutoTime);
+			SmartDashboard::PutNumber("Auto Left distance", leftDist);
+			SmartDashboard::PutNumber("Auto Right distance", rightDist);
+			SmartDashboard::PutNumber("Auto Count", autoCount);
+			m_tank->PositionDrive(leftDist, rightDist);
+			autoCount++;
+			break;
+		case 2:
+			m_shooter->LiftTo(180);
+			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
+			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+			leftDist = m_move.Position(currentAutoTime);
+			rightDist = m_move.Position(currentAutoTime);
+			SmartDashboard::PutNumber("Auto Left distance", leftDist);
+			SmartDashboard::PutNumber("Auto Right distance", rightDist);
+			SmartDashboard::PutNumber("Auto Count", autoCount);
+			m_tank->PositionDrive(leftDist, rightDist);
+			autoCount++;
+			if (currentAutoTime > m_move.GetTotalTime())
+				m_shooter->LiftTo(0);
+
+			break;
+
 	}
 }

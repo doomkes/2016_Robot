@@ -28,10 +28,9 @@ private:
 	Autonomous m_auto;
 	Camera m_camera;
 	ShooterMode m_shooterMode = STOW_MODE;
-
 public:
 	Wedgemore()
-		: m_auto(&m_tank, &m_suspension){
+		: m_auto(&m_tank, &m_suspension, &m_shooter){
 	}
 
 	void RobotInit()
@@ -50,17 +49,22 @@ public:
 		SmartDashboard::PutNumber("Shooter I",		0);
 		SmartDashboard::PutNumber("Shooter D",		0);
 
+		SmartDashboard::PutNumber("Auto Mode Select", 0);
+
 
 	}
 
 	void AutonomousInit()
 	{
-		m_auto.Init(REACH_DEFENSE);
+		int automode = SmartDashboard::GetNumber("Auto Mode Select", 0);
+		m_auto.Init(automode);
+
 	}
 
 	void AutonomousPeriodic()
 	{
 		m_auto.Periodic();
+		m_shooter.Update();
 	}
 
 	void TeleopInit()
@@ -76,6 +80,10 @@ public:
 	{
 
 		ui.GetData(&wui);
+//		float LeftSpeed, RightSpeed;
+//		if(wui.GiveManControl) {
+//			m_tank.Drive(wui.YawValue, -wui.YawValue);
+//		}
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
 //		if (fabs(wui.LiftSpeed) < 0.05) {
@@ -139,7 +147,7 @@ public:
 				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(31 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(33 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 		}
 

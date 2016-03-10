@@ -16,6 +16,7 @@ struct WedgemoreUserInput
 	float LeftSpeed = 0.0, RightSpeed = 0.0;
 	float LiftSpeed = 0;
 	float SliderValue = 0;
+	float YawValue = 0;
 	bool Shoot = false, Pickup = false;
 	bool SpinUp = false;
 	bool StartPosition = false;
@@ -30,6 +31,7 @@ struct WedgemoreUserInput
 	bool VBusMode = false;
 	bool ToggleLight = false;
 	bool ReverseDrive = false;
+	bool GiveManControl = false;
 };
 
 class UserInterface

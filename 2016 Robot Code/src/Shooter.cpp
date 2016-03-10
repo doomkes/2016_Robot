@@ -26,7 +26,6 @@ float Velocity(float delta_t, float error, float current_v, float accel, float m
 	float time2stop = 0;
 	float dist2stop = 0;
 	float Velocity = 0;
-	float lifeState = 0;
 	if(accel == 0) { //divide by zero protection.
 		accel = 0.000001;
 	}
@@ -68,7 +67,6 @@ float Velocity(float delta_t, float error, float current_v, float accel, float m
 			}
 		}
 	}
-	SmartDashboard::PutNumber("State of shooter loop", lifeState);
 	return Velocity;
 }
 
@@ -114,13 +112,11 @@ void Shooter::Spinup(float speed) {
 	m_shoot1.Set(speed);
 	m_shoot2.Set(-speed);
 
-	if(speed == 0) {
-		m_spinUpTimer.Stop();
-	}
-
 	if(lastSpeed == 0 && speed != 0) {
 		m_spinUpTimer.Reset();
 		m_spinUpTimer.Start();
+	} else if(lastSpeed != 0 && speed == 0) {
+		m_spinUpTimer.Reset();
 	}
 
 	lastSpeed = speed;
@@ -175,13 +171,6 @@ void Shooter::Update() {
 	timer.Reset();
 	timer.Start();
 
-	if(m_spinShootTimer.HasPeriodPassed(2.5)) {
-		Shoot(true);
-		Wait(0.5);
-		Shoot(false);
-		Spinup(0);
-	}
-
 	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
 	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
 	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
@@ -192,7 +181,6 @@ void Shooter::Update() {
 	SmartDashboard::PutNumber("lift error", error);
 	SmartDashboard::PutNumber("delta t", dt);
 }
-
 
 void Shooter::Stop() {
 	Spinup(0);

@@ -15,6 +15,7 @@ enum ManStickMap {
 	STARTPOS = 10,
 	LIFTAXIS = 1,
 	SLIDERAXIS = 3,
+	YAWAXIS = 2,
 	SPINUP = 2,
 	ZERO = 8,
 	CUSTOMSHOT = 33, //Not currently used
@@ -41,6 +42,7 @@ enum RStickMap {
 //	DROPBACKRIGHT = 5,
 //	DROPFRONTLEFT = 4,
 //	DROPBACKLEFT = 2,
+	GIVE_MAN_CONTROL = 4,
 	SET_SPEED_MODE = 10,
 	SET_VBUS_MODE = 11,
 };

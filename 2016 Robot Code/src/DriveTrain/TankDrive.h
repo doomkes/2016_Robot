@@ -25,17 +25,19 @@ private:
 	bool m_reverse = false;
 	float m_leftDistance = 0, m_rightDistance = 0;
 
-	void SpeedDrive(float leftSpeed, float rightSpeed);
-	void VBusDrive(float leftSpeed, float rightSpeed);
-	void PositionDrive(float leftSpeed, float rightSpeed);
+
 public:
 	TankDrive();
 	virtual ~TankDrive();
 	void Zero();
+
 	void Reverse(bool);
 
 	void SetMode(DriveMode);
 	void Drive(float leftSpeed, float rightSpeed);
+	void SpeedDrive(float leftSpeed, float rightSpeed);
+	void VBusDrive(float leftSpeed, float rightSpeed);
+	void PositionDrive(float leftSpeed, float rightSpeed);
 };
 
 #endif /* SRC_TANKDRIVE_H_ */
