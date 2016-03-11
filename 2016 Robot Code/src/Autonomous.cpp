@@ -103,25 +103,26 @@ void Autonomous::Periodic() {
 			m_shooter->LiftTo(180);
 			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
 			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
-			leftDist = m_move.Position(currentAutoTime);
+			rightDist = m_move.Position(currentAutoTime);
 			//rightDist = m_move.Position(currentAutoTime);
 			SmartDashboard::PutNumber("Auto Left distance", leftDist);
 			SmartDashboard::PutNumber("Auto Right distance", rightDist);
 			SmartDashboard::PutNumber("Auto Count", autoCount);
 
 			autoCount++;
-			if (leftDist < 146.84){
+			if (rightDist < 146.84){
 				//leftDist = m_move.Position(currentAutoTime);
 				rightDist = m_move.Position(currentAutoTime);
 			}
-			if (leftDist >= 146.84){
+			if (rightDist >= 146.84){
 				//leftDist = m_move.Position(currentAutoTime);
-				rightDist = 146.84 + (leftDist - 146.84) *curveRatio;
+				leftDist = 146.84 + (rightDist - 146.84) *curveRatio;
 				m_shooter->LiftTo(33);
+				m_shooter->Spinup(12);
 			}
 			m_tank->PositionDrive(leftDist, rightDist);
-//			if (currentAutoTime > m_move.GetTotalTime())
-//				m_shooter->LiftTo(0);
+			if (currentAutoTime > m_move.GetTotalTime())
+				m_shooter->Shoot(true);
 
 			break;
 

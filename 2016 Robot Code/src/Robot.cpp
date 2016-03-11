@@ -37,6 +37,7 @@ public:
 	{
 		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
 		SmartDashboard::PutNumber("Driver P", 1);
+		SmartDashboard::PutNumber("Driver I", 0);
 
 		SmartDashboard::PutNumber("ShooterSpeed", 12);
 		SmartDashboard::PutNumber("ShooterAngle", 0);

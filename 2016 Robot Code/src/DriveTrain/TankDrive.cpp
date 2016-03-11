@@ -39,8 +39,8 @@ TankDrive::~TankDrive()
 void TankDrive::SetMode(DriveMode mode) {
 	Zero();
 	m_mode = mode;
-	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1),  0, 0);
-	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), 0, 0);
+	m_leftMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1),  SmartDashboard::GetNumber("Driver I", 0), 0);
+	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), SmartDashboard::GetNumber("Driver I", 0), 0);
 	switch(mode) {
 		case SPEED_MODE:
 			Zero();
