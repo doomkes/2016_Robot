@@ -47,12 +47,22 @@ void Autonomous::Init(int mode) {
 			m_move.SetDistance(12*19);
 			m_move.CalcParams();
 			break;
+		case 3:
+			m_tank->SetMode(POSITION_MODE);
+			m_tank->Zero();
+			m_move.SetAccel(12);
+			m_move.SetDecel(12);
+			m_move.SetMaxSpeed(36);
+			m_move.SetDistance(284.93);
+			m_move.CalcParams();
+			break;
 	}
 }
 
 void Autonomous::Periodic() {
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	float leftDist, rightDist;
+	float  curveRatio = SmartDashboard::GetNumber("Curve Ratio", 0.849084);
 
 	static float autoCount = 0;
 	switch(m_mode){
@@ -87,6 +97,31 @@ void Autonomous::Periodic() {
 			autoCount++;
 			if (currentAutoTime > m_move.GetTotalTime())
 				m_shooter->LiftTo(0);
+
+			break;
+		case 3:
+			m_shooter->LiftTo(180);
+			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
+			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+			leftDist = m_move.Position(currentAutoTime);
+			//rightDist = m_move.Position(currentAutoTime);
+			SmartDashboard::PutNumber("Auto Left distance", leftDist);
+			SmartDashboard::PutNumber("Auto Right distance", rightDist);
+			SmartDashboard::PutNumber("Auto Count", autoCount);
+
+			autoCount++;
+			if (leftDist < 146.84){
+				//leftDist = m_move.Position(currentAutoTime);
+				rightDist = m_move.Position(currentAutoTime);
+			}
+			if (leftDist >= 146.84){
+				//leftDist = m_move.Position(currentAutoTime);
+				rightDist = 146.84 + (leftDist - 146.84) *curveRatio;
+				m_shooter->LiftTo(33);
+			}
+			m_tank->PositionDrive(leftDist, rightDist);
+//			if (currentAutoTime > m_move.GetTotalTime())
+//				m_shooter->LiftTo(0);
 
 			break;
 

@@ -50,6 +50,7 @@ public:
 		SmartDashboard::PutNumber("Shooter D",		0);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
+		SmartDashboard::PutNumber("Curve Ratio", 0.849084);
 
 
 	}
