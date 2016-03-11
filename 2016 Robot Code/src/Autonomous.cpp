@@ -17,6 +17,7 @@ Autonomous::~Autonomous() {
 }
 
 void Autonomous::Init(int mode) {
+	float totalDistance = SmartDashboard::GetNumber("Total Distance", 284.93);
 	m_mode = mode;
 	m_tank->Zero();
 	m_autoStartTime = Timer::GetFPGATimestamp();
@@ -53,7 +54,7 @@ void Autonomous::Init(int mode) {
 			m_move.SetAccel(12);
 			m_move.SetDecel(12);
 			m_move.SetMaxSpeed(36);
-			m_move.SetDistance(284.93);
+			m_move.SetDistance(totalDistance);
 			m_move.CalcParams();
 			break;
 	}
@@ -112,18 +113,24 @@ void Autonomous::Periodic() {
 			autoCount++;
 			if (rightDist < 146.84){
 				//leftDist = m_move.Position(currentAutoTime);
-				rightDist = m_move.Position(currentAutoTime);
+				leftDist = m_move.Position(currentAutoTime);
 			}
 			if (rightDist >= 146.84){
 				//leftDist = m_move.Position(currentAutoTime);
 				leftDist = 146.84 + (rightDist - 146.84) *curveRatio;
-				m_shooter->LiftTo(33);
-				m_shooter->Spinup(12);
+				m_shooter->LiftTo(42);
 			}
+			if ((rightDist >= 200) && (rightDist <= 240)){
+				m_shooter->Spinup(-8);
+						}
 			m_tank->PositionDrive(leftDist, rightDist);
-			if (currentAutoTime > m_move.GetTotalTime())
+			if (currentAutoTime > m_move.GetTotalTime() && currentAutoTime < (m_move.GetTotalTime() + 5))
+				//m_shooter->Shoot(true);
+				m_shooter->Spinup(12);
+			if (currentAutoTime > (m_move.GetTotalTime() + 3))
 				m_shooter->Shoot(true);
-
+			if (currentAutoTime > (m_move.GetTotalTime() + 5))
+				m_shooter->Spinup(0);
 			break;
 
 	}

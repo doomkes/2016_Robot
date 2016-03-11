@@ -51,13 +51,16 @@ public:
 		SmartDashboard::PutNumber("Shooter D",		0);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
-		SmartDashboard::PutNumber("Curve Ratio", 0.849084);
+		SmartDashboard::PutNumber("Curve Ratio", 0.78);
+		SmartDashboard::PutNumber("Total Distance", 260
+				);
 
 
 	}
 
 	void AutonomousInit()
 	{
+		m_shooter.Zero();
 		int automode = SmartDashboard::GetNumber("Auto Mode Select", 0);
 		m_auto.Init(automode);
 
@@ -149,7 +152,7 @@ public:
 				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(33 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(34 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 		}
 
