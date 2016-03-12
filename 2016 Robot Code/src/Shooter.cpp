@@ -198,7 +198,7 @@ void Shooter::Zero() {
 		while(!m_lift.IsRevLimitSwitchClosed() && loopCount > -0.5) {
 			m_lift.Set(loopCount);
 			loopCount -= 0.01; // 18 deg / sec
-			Wait(0.1);
+			Wait(0.04);
 		}
 		m_lift.Set(0);
 		m_lift.SetPosition(0);
@@ -211,14 +211,14 @@ void Shooter::ShooterLiftZero()
 		case 0:
 			break;
 		case 1:	//bring shooter down until it hits the limit switch
-			LiftTo(100);
+			m_currentPosition -= 0.034;
 			if (m_lift.IsFwdLimitSwitchClosed())
 				shooter_zero = 2;
 			break;
 		case 2:	//stop it,zero encoder, and bring to position 1
 			m_lift.SetPosition(0);
 			m_currentPosition = 0;
-			LiftTo(0);
+			//LiftTo(0);
 			shooter_zero = 0;
 			break;
 	}

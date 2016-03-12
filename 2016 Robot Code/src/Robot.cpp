@@ -89,6 +89,7 @@ public:
 //		if(wui.GiveManControl) {
 //			m_tank.Drive(wui.YawValue, -wui.YawValue);
 //		}
+		m_shooter.ShooterLiftZero();
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
 //		if (fabs(wui.LiftSpeed) < 0.05) {
@@ -125,7 +126,9 @@ public:
 			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
 		}
 		if(wui.Zero) {
+			m_shooterMode = STOW_MODE;
 			m_shooter.Zero();
+			//m_shooter.shooter_zero = 1;
 		}
 		if(wui.ToggleLight) {
 			m_shooter.ToggleLight();
