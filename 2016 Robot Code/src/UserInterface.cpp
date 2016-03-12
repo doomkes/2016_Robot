@@ -24,7 +24,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->LiftSpeed = 0;
 	wui->SliderValue = 0;
 	wui->Shoot = false, wui->Pickup = false;
-	wui->SpinUp = false;
+	wui->SpinUp = false, wui->SpinUp = false;
 	wui->ReverseDrive = false;
 	wui->StartPosition = false;
 	wui->AutoTrack = false;
@@ -50,6 +50,7 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	wui->StartPosition = m_manStick.GetRawButton(STARTPOS);
 	wui->Shoot = m_manStick.GetRawButton(SHOOT);
 	wui->SpinUp = m_manStick.GetRawButton(SPINUP);
+	wui->SpinUp = m_manStick.GetRawButton(SLOWSPIN);
 	wui->Pickup = m_manStick.GetRawButton(PICKUP);
 	wui->Zero = m_manStick.GetRawButton(ZERO);
 	wui->Custom = m_manStick.GetRawButton(CUSTOMSHOT);

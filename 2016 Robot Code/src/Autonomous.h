@@ -25,6 +25,7 @@ private:
 	TankDrive *m_tank;
 	SuspensionDrive *m_suspension;
 	Shooter *m_shooter;
+	DigitalInput m_one, m_two, m_three;
 	TrapezoidalMove m_move;
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
 	int m_mode = DO_NOTHING;

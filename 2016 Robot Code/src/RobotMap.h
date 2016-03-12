@@ -17,12 +17,14 @@ enum ManStickMap {
 	SLIDERAXIS = 3,
 	YAWAXIS = 2,
 	SPINUP = 2,
+	SLOWSPIN = 3,
 	ZERO = 8,
 	CUSTOMSHOT = 33, //Not currently used
 	BATTERHIGOALPOS = 11, //Button to press to shoot from the batter.
 	DEFENSEHIGOALPOS = 12,//Button to press to shoot from the defenses.
 	SPINANDSHOOT = 3,
-	TOGGLE_LIGHT = 7,
+	TOGGLE_LIGHT = 7
+
 };
 
 enum LStickMap {

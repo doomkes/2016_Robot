@@ -51,7 +51,6 @@ public:
 		SmartDashboard::PutNumber("Shooter D",		0);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
-		SmartDashboard::PutNumber("Curve Ratio", 0.78);
 		SmartDashboard::PutNumber("Total Distance", 260
 				);
 
@@ -96,9 +95,9 @@ public:
 //			wui.LiftSpeed = 0;
 //		}
 
-		if(wui.SpinAndShoot) {
-			m_shooter.SpinShoot();
-		}
+//		if(wui.SpinAndShoot) {
+//			m_shooter.SpinShoot();
+//		}
 		if(wui.PickupPos) {
 			m_shooterMode = PICKUP_MODE;
 		}
@@ -114,6 +113,9 @@ public:
 		if(wui.SpinUp) {
 			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
 		}
+		if(wui.SpinUpLow) {
+			m_shooter.Spinup(7);
+		}
 		else {
 			m_shooter.Stop();
 		}
@@ -122,9 +124,9 @@ public:
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
-		if(wui.Custom) {
-			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
-		}
+//		if(wui.Custom) {
+//			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
+//		}
 		if(wui.Zero) {
 			m_shooterMode = STOW_MODE;
 			m_shooter.Zero();
@@ -155,7 +157,7 @@ public:
 				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(34 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 		}
 

@@ -8,7 +8,7 @@
 #include <Autonomous.h>
 
 Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension,Shooter* shooter)
-	: m_tank(tank), m_suspension(suspension), m_shooter(shooter) {
+	: m_tank(tank), m_suspension(suspension), m_shooter(shooter), m_one(1), m_two(2), m_three(3) {
 	// TODO Auto-generated constructor stub
 }
 
@@ -18,10 +18,13 @@ Autonomous::~Autonomous() {
 
 void Autonomous::Init(int mode) {
 	float totalDistance = SmartDashboard::GetNumber("Total Distance", 284.93);
-	m_mode = mode;
+	m_mode = 0;
+	if (!m_one.Get()) m_mode = 1;
+	else if (!m_two.Get()) m_mode = 2;
+	else if (!m_three.Get()) m_mode = 3;
 	m_tank->Zero();
 	m_autoStartTime = Timer::GetFPGATimestamp();
-	switch(mode) {
+	switch(m_mode) {
 		case 0:
 			m_move.SetAccel(0.00001);
 			m_move.SetDecel(0.00001);
@@ -63,7 +66,7 @@ void Autonomous::Init(int mode) {
 void Autonomous::Periodic() {
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	float leftDist, rightDist;
-	float  curveRatio = SmartDashboard::GetNumber("Curve Ratio", 0.849084);
+	float  curveRatio = 0.78;
 
 	static float autoCount = 0;
 	switch(m_mode){

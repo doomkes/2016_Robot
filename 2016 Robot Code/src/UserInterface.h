@@ -18,7 +18,7 @@ struct WedgemoreUserInput
 	float SliderValue = 0;
 	float YawValue = 0;
 	bool Shoot = false, Pickup = false;
-	bool SpinUp = false;
+	bool SpinUp = false, SpinUpLow = false;
 	bool StartPosition = false;
 	bool AutoTrack = false;
 	bool PickupPos = false;
