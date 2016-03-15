@@ -144,53 +144,53 @@ void Shooter::LiftTo(float angle) {
 	m_liftAccel = SmartDashboard::GetNumber("lift accel", 0);
 	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0);
 	m_targetPosition = position;
+	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 4), //TODO hard code values/perfernces
+				  SmartDashboard::GetNumber("Shooter I", 0),
+				  SmartDashboard::GetNumber("Shooter D", 0));
 }
 
 void Shooter::Update() {
 	static Timer timer;
 
-	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 4),
-				  SmartDashboard::GetNumber("Shooter I", 0),
-				  SmartDashboard::GetNumber("Shooter D", 0));
 	float dt, error;
-	float velocity = 0;
+	static float velocity = 0;
 	static float incr_position = 0;
+	static unsigned loopCount = 0;
+	if(m_liftZero == 0) {
+		error = incr_position - m_targetPosition;
+		dt = timer.Get();
 
-	error = incr_position - m_targetPosition;
-	dt = timer.Get();
+		if(dt > 0.050) {
+			dt = 0.050;
+		}
+		velocity = Velocity(dt, error, velocity, m_liftAccel, m_liftMaxSpeed);
 
-	if(dt > 0.050)
-		dt = 0.050;
+		SmartDashboard::PutNumber("incr position", incr_position);
 
-	velocity = Velocity(dt, error, velocity, m_liftAccel, m_liftMaxSpeed);
+		incr_position = incr_position + velocity*dt;
 
-	SmartDashboard::PutNumber("incr position", incr_position);
-
-	incr_position = incr_position + velocity*dt;
-	m_lift.Set(incr_position);
-
-	timer.Reset();
-	timer.Start();
-	if(m_liftZero == 1) {
-		incr_position = 0;
-		if(m_lift.IsRevLimitSwitchClosed()) {
+		timer.Reset();
+		timer.Start();
+	}
+	else if(m_liftZero == 1) {
+		if(m_lift.IsRevLimitSwitchClosed() || loopCount < 50) {
 			m_lift.SetPosition(0);
+			incr_position = 0;
+			m_liftZero = 0;
+			velocity = 0;
+			loopCount = 0;
 		}
 		else {
-			m_lift.SetPosition(0);
-			m_lift.Set(0);
-
-			float loopCount = 0;
-			while(!m_lift.IsRevLimitSwitchClosed() && loopCount > -0.5) {
-				m_lift.Set(loopCount);
-				loopCount -= 0.01; // 18 deg / sec
-				Wait(0.04);
+			if(fabs(incr_position - m_lift.Get()) > 0.05) {
+				incr_position = m_lift.Get();
 			}
-			m_lift.Set(0);
-			m_lift.SetPosition(0);
+			incr_position -= 0.01;
+			loopCount++;
 		}
-		m_liftZero = 0;
 	}
+
+	m_lift.Set(incr_position);
+
 	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
 	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
 	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
