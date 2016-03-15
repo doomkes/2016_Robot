@@ -153,7 +153,8 @@ void Shooter::Update() {
 				  SmartDashboard::GetNumber("Shooter I", 0),
 				  SmartDashboard::GetNumber("Shooter D", 0));
 	float dt, error;
-	static float velocity = 0, incr_position = 0;
+	float velocity = 0;
+	static float incr_position = 0;
 
 	error = incr_position - m_targetPosition;
 	dt = timer.Get();
@@ -170,7 +171,26 @@ void Shooter::Update() {
 
 	timer.Reset();
 	timer.Start();
+	if(m_liftZero == 1) {
+		incr_position = 0;
+		if(m_lift.IsRevLimitSwitchClosed()) {
+			m_lift.SetPosition(0);
+		}
+		else {
+			m_lift.SetPosition(0);
+			m_lift.Set(0);
 
+			float loopCount = 0;
+			while(!m_lift.IsRevLimitSwitchClosed() && loopCount > -0.5) {
+				m_lift.Set(loopCount);
+				loopCount -= 0.01; // 18 deg / sec
+				Wait(0.04);
+			}
+			m_lift.Set(0);
+			m_lift.SetPosition(0);
+		}
+		m_liftZero = 0;
+	}
 	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
 	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
 	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
@@ -187,22 +207,8 @@ void Shooter::Stop() {
 }
 
 void Shooter::Zero() {
-	if(m_lift.IsRevLimitSwitchClosed()) {
-		m_lift.SetPosition(0);
-	}
-	else {
-		m_lift.SetPosition(0);
-		m_lift.Set(0);
+	m_liftZero = 1;
 
-		float loopCount = 0;
-		while(!m_lift.IsRevLimitSwitchClosed() && loopCount > -0.5) {
-			m_lift.Set(loopCount);
-			loopCount -= 0.01; // 18 deg / sec
-			Wait(0.04);
-		}
-		m_lift.Set(0);
-		m_lift.SetPosition(0);
-	}
 }
 
 void Shooter::ShooterLiftZero()
