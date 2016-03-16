@@ -108,18 +108,18 @@ void Shooter::Shoot(bool val)
 }
 
 void Shooter::Spinup(float speed) {
-	static float lastSpeed = 0;
+//	static float lastSpeed = 0;
 	m_shoot1.Set(speed);
 	m_shoot2.Set(-speed);
 
-	if(lastSpeed == 0 && speed != 0) {
-		m_spinUpTimer.Reset();
-		m_spinUpTimer.Start();
-	} else if(lastSpeed != 0 && speed == 0) {
-		m_spinUpTimer.Reset();
-	}
+//	if(lastSpeed == 0 && speed != 0) {
+//		m_spinUpTimer.Reset();
+//		m_spinUpTimer.Start();
+//	} else if(lastSpeed != 0 && speed == 0) {
+//		m_spinUpTimer.Reset();
+//	}
 
-	lastSpeed = speed;
+//	lastSpeed = speed;
 }
 
 void Shooter::Pickup()

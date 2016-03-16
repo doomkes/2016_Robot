@@ -51,8 +51,7 @@ public:
 		SmartDashboard::PutNumber("Shooter D",		0);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
-		SmartDashboard::PutNumber("Total Distance", 260
-				);
+		SmartDashboard::PutNumber("Total Distance", 260);
 
 
 	}
@@ -111,7 +110,7 @@ public:
 			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
 		if(wui.SpinUp) {
-			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
+			m_shooter.Spinup(12);
 		}
 		if(wui.SpinUpLow) {
 			m_shooter.Spinup(7);
