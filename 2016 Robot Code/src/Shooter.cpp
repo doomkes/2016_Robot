@@ -145,7 +145,7 @@ void Shooter::LiftTo(float angle) {
 	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0);
 	m_targetPosition = position;
 	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 4), //TODO hard code values/perfernces
-				  SmartDashboard::GetNumber("Shooter I", 0),
+				  SmartDashboard::GetNumber("Shooter I", 0.01),
 				  SmartDashboard::GetNumber("Shooter D", 0));
 }
 
@@ -173,7 +173,7 @@ void Shooter::Update() {
 		timer.Start();
 	}
 	else if(m_liftZero == 1) {
-		if(m_lift.IsRevLimitSwitchClosed() || loopCount < 50) {
+		if(m_lift.IsRevLimitSwitchClosed() || loopCount > 100) {
 			m_lift.SetPosition(0);
 			incr_position = 0;
 			m_liftZero = 0;
@@ -184,7 +184,7 @@ void Shooter::Update() {
 			if(fabs(incr_position - m_lift.Get()) > 0.05) {
 				incr_position = m_lift.Get();
 			}
-			incr_position -= 0.01;
+			incr_position -= 0.005;
 			loopCount++;
 		}
 	}
@@ -211,24 +211,6 @@ void Shooter::Zero() {
 
 }
 
-void Shooter::ShooterLiftZero()
-{
-	switch (shooter_zero) {//automatic zero encoder
-		case 0:
-			break;
-		case 1:	//bring shooter down until it hits the limit switch
-			m_currentPosition -= 0.034;
-			if (m_lift.IsFwdLimitSwitchClosed())
-				shooter_zero = 2;
-			break;
-		case 2:	//stop it,zero encoder, and bring to position 1
-			m_lift.SetPosition(0);
-			m_currentPosition = 0;
-			//LiftTo(0);
-			shooter_zero = 0;
-			break;
-	}
-}
 double Shooter::GetLiftPosition()
 {
 	return m_targetPosition;

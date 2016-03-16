@@ -42,7 +42,6 @@ public:
 	 * Call every loop to update async actions.
 	 */
 	void Update();
-	void ShooterLiftZero();
 	void Zero();
 	double GetLiftPosition();
 	double GetLiftAngle();

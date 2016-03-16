@@ -47,7 +47,7 @@ public:
 		SmartDashboard::PutNumber("lift max speed",	0.5);
 
 		SmartDashboard::PutNumber("Shooter P",		4);
-		SmartDashboard::PutNumber("Shooter I",		0);
+		SmartDashboard::PutNumber("Shooter I",		0.01);
 		SmartDashboard::PutNumber("Shooter D",		0);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
@@ -88,7 +88,7 @@ public:
 //		if(wui.GiveManControl) {
 //			m_tank.Drive(wui.YawValue, -wui.YawValue);
 //		}
-		m_shooter.ShooterLiftZero();
+
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
 //		if (fabs(wui.LiftSpeed) < 0.05) {
