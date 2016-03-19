@@ -4,10 +4,9 @@
  *  Created on: Feb 3, 2016
  *      Author: Win7
  */
-
+#define _USE_MATH_DEFINES
 #include <Leddar.h>
-#include <sstream>
-
+#include <cmath>
 Leddar::Leddar() :
 	m_RS_232(115200)
 {
@@ -20,7 +19,8 @@ Leddar::~Leddar() {
 }
 
 
-void Leddar::GetDetections() {
+vector<Point> Leddar::GetDetections() {
+	vector<Point> detections;
 	unsigned bytesRecived, numDetections;
 
 	m_RS_232.Reset();
@@ -40,7 +40,7 @@ void Leddar::GetDetections() {
 	m_RS_232.Read(response, bytesRecived);
 
 	if(response[0] != 0x01 || response[1] != 0x41) {
-		return;
+		return detections;
 	}
 
 	//putting it on the SmartDashboard so that we could see a few of the bytes we were getting back
@@ -55,13 +55,26 @@ void Leddar::GetDetections() {
 	unsigned short amplitudes[numDetections];
 	unsigned char  flags[numDetections];
 	char *rawDetections = response + 3;
-	for(unsigned i = 0; i < numDetections; i++){
+	Point detectionPosition = {0,0};
+
+	for(unsigned i = 0; i < numDetections; i++) {
 		distances[i] = rawDetections[i*5] | (rawDetections[i*5+1] << 8);
 		amplitudes[i] = (rawDetections[i*5+2] | (rawDetections[i*5+1+2] << 8))/64;
 		flags[i] = rawDetections[i*5+4];
+
+		if(flags[i] != 0) {
+			continue;
+		}
+
+		float angle = 1.4 + (flags[i]&0xF0)*2.8;
+		detectionPosition.x = cos(angle*M_PI/180)*distances[i];
+		detectionPosition.y = sin(angle*M_PI/180)*distances[i];
+
+		detections.push_back(detectionPosition);
+
 		SmartDashboard::PutNumber("distance of detection " + to_string(i+1), distances[i]);
 		SmartDashboard::PutNumber("amplitude of detection " + to_string(i+1), amplitudes[i]);
 		SmartDashboard::PutNumber("flags of detection " + to_string(i+1), flags[i] & 0x0F);
 	}
-
+	return detections;
 }

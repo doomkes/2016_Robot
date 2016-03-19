@@ -14,19 +14,13 @@
 #include <vector>
 using namespace std;
 
-struct Detection {
-	uint16_t distance;
-	uint16_t amplitude;
-	uint8_t flags;
-};
-
 class Leddar {
 private:
 	SerialPort m_RS_232;
 public:
 	Leddar();
 	virtual ~Leddar();
-	void GetDetections();
+	vector<Point> GetDetections();
 };
 
 #endif /* SRC_LEDDAR_H_ */
