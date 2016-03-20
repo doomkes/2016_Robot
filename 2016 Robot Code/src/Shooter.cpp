@@ -73,15 +73,18 @@ float Velocity(float delta_t, float error, float current_v, float accel, float m
 Shooter::Shooter() :
 		m_lift(LIFT),
 		m_shoot1(SHOOT1),
+
 		m_shoot2(SHOOT2),
 		m_kicker(SHOOTERSOL),
-		m_aimLight(AIM_LIGHT)
+		m_aimLight(AIM_LIGHT),
+		m_runNgunLight(RUN_GUN_LIGHT)
+
 {
 	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
 
 	m_aimLight.Set(false);
-
+	m_runNgunLight.Set(false);
 	m_lift.Reset();
 	m_lift.SetControlMode(CANSpeedController::kPosition);
 	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
@@ -96,6 +99,12 @@ void Shooter::ToggleLight() {
 	m_aimLight.Set(!state);
 	state = !state;
 	SmartDashboard::PutBoolean("Light on", state);
+}
+void Shooter::ToggleRunLight() {
+	static bool state = false;
+	m_runNgunLight.Set(!state);
+	state = !state;
+	//SmartDashboard::PutBoolean("Light on", state);
 }
 
 Shooter::~Shooter()

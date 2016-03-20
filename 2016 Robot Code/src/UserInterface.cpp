@@ -36,7 +36,9 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->SpinAndShoot = false;
 	wui->SpeedMode = false;
 	wui->VBusMode = false;
+	wui->RunningHiGoal = false;
 	wui->ToggleLight = false;
+	wui->RunGunLight = false;
 	wui->GiveManControl = false;
 }
 
@@ -56,6 +58,7 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	wui->Custom = m_manStick.GetRawButton(CUSTOMSHOT);
 	wui->BatterHiGoal = m_manStick.GetRawButton(BATTERHIGOALPOS);
 	wui->DefenseHiGoal = m_manStick.GetRawButton(DEFENSEHIGOALPOS);
+	wui->RunningHiGoal = m_manStick.GetRawButton(RUNNINGHIGOALPOS);
 	wui->SpinAndShoot = m_manStick.GetRawButton(SPINANDSHOOT);
 	wui->ToggleLight = m_manStick.GetRawButton(TOGGLE_LIGHT) && !lastLightButton ? true : false;
 	lastLightButton = m_manStick.GetRawButton(TOGGLE_LIGHT);
@@ -90,6 +93,9 @@ void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 	}
 }
 void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
+	static bool lastLightButton = false;
+	wui->RunGunLight = m_rStick.GetRawButton(TOGGLE_RUN_LIGHT) && !lastLightButton ? true : false;
+	lastLightButton = m_rStick.GetRawButton(TOGGLE_RUN_LIGHT);
 //	if(m_rStick.GetRawButton(DROPBACKRIGHT))
 //	{
 //		wui->DropBR = true;

@@ -26,10 +26,11 @@ struct WedgemoreUserInput
 	bool Custom = false;
 	bool BatterHiGoal = false;
 	bool DefenseHiGoal = false;
+	bool RunningHiGoal = false;
 	bool SpinAndShoot = false;
 	bool SpeedMode = false;
 	bool VBusMode = false;
-	bool ToggleLight = false;
+	bool ToggleLight = false, RunGunLight = false;
 	bool ReverseDrive = false;
 	bool GiveManControl = false;
 };

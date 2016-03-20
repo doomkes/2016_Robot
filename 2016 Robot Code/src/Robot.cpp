@@ -13,10 +13,12 @@ enum ShooterMode {
 	STOW_MODE,
 	PICKUP_MODE,
 	BATTER_HIGOAL_MODE,
-	DEFENSE_HIGOAL_MODE
+	DEFENSE_HIGOAL_MODE,
+	RUNNING_HIGOAL_MODE
 };
 
 class Wedgemore: public IterativeRobot
+
 {
 private:
 	TankDrive m_tank;
@@ -35,12 +37,12 @@ public:
 
 	void RobotInit()
 	{
-		CameraServer::GetInstance()->StartAutomaticCapture("cam1");
+		CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-		SmartDashboard::PutNumber("ShooterSpeed", 12);
-		SmartDashboard::PutNumber("ShooterAngle", 0);
+		SmartDashboard::PutNumber("ShooterSpeed", 11);
+		SmartDashboard::PutNumber("ShooterAngle", 65);
 
 		SmartDashboard::PutNumber("lift accel",		1);
 		SmartDashboard::PutNumber("lift decel",		1);
@@ -109,10 +111,18 @@ public:
 		if(wui.DefenseHiGoal) {
 			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
-		if(wui.SpinUp) {
-			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
+		if(wui.RunningHiGoal) {
+			m_shooterMode = RUNNING_HIGOAL_MODE;
 		}
-		else if (wui.SpinUpLow) {
+		if(wui.SpinUp) {
+			if(m_shooterMode != RUNNING_HIGOAL_MODE) {
+				m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
+			}
+			else {
+				m_shooter.Spinup(8);
+			}
+		}
+		else if(wui.SpinUpLow) {
 			m_shooter.Spinup(7);
 		}
 		else {
@@ -133,6 +143,9 @@ public:
 		}
 		if(wui.ToggleLight) {
 			m_shooter.ToggleLight();
+		}
+		if(wui.RunGunLight) {
+			m_shooter.ToggleRunLight();
 		}
 		if(wui.SpeedMode) {
 			m_tank.SetMode(SPEED_MODE);
@@ -157,6 +170,9 @@ public:
 				break;
 			case DEFENSE_HIGOAL_MODE:
 				m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
+				break;
+			case RUNNING_HIGOAL_MODE:
+				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 65)); //TODO use preferences for values.
 				break;
 		}
 

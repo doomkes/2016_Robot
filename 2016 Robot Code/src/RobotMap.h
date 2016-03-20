@@ -22,6 +22,7 @@ enum ManStickMap {
 	CUSTOMSHOT = 33, //Not currently used
 	BATTERHIGOALPOS = 11, //Button to press to shoot from the batter.
 	DEFENSEHIGOALPOS = 12,//Button to press to shoot from the defenses.
+	RUNNINGHIGOALPOS = 6,//Button to press to shoot from the defenses.
 	SPINANDSHOOT = 3,
 	TOGGLE_LIGHT = 7
 
@@ -36,7 +37,8 @@ enum LStickMap {
 };
 
 enum DIOMap {
-	AIM_LIGHT = 9
+	AIM_LIGHT = 9,
+	RUN_GUN_LIGHT = 8
 };
 enum RStickMap {
 	REVERSE_DRIVE = 1,
@@ -47,6 +49,7 @@ enum RStickMap {
 	GIVE_MAN_CONTROL = 4,
 	SET_SPEED_MODE = 10,
 	SET_VBUS_MODE = 11,
+	TOGGLE_RUN_LIGHT = 3
 };
 enum SolenoidMap {
 	FRONTLEFTSOL,
