@@ -112,7 +112,7 @@ public:
 		if(wui.SpinUp) {
 			m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
 		}
-		if(wui.SpinUpLow) {
+		else if (wui.SpinUpLow) {
 			m_shooter.Spinup(7);
 		}
 		else {
