@@ -78,3 +78,63 @@ vector<Point> Leddar::GetDetections() {
 	}
 	return detections;
 }
+
+unsigned Leddar::GetLineSegs(LineSeg lineSeg[], point points[], const unsigned numPoints) {
+	unsigned startIndex = 99;
+	vector<unsigned> startIndexes, endIndexes;
+
+	unsigned foundFlags[numPoints] = {0};
+	unsigned foundFlag = 1;
+	bool lineFound = false;
+
+	for(unsigned i = 0; i < numPoints-2 && numPoints>=2; i++) {
+		float error = fabs((points[i+1].y - points[i].y)*(points[i+2].x - points[i+1].x) - (points[i+2].y-points[i+1].y)*(points[i+1].x-points[i].x));
+		cout << "Error: " << error << endl;
+		if(error < 0.0075) {
+			if (lineFound == false) {
+				startIndex = i;
+			}
+			foundFlags[i]   |= foundFlag;
+			foundFlags[i+1] |= foundFlag;
+			foundFlags[i+2] |= foundFlag;
+			cout << "adding point " << i+2 << " to line" << endl;
+			lineFound = true;
+			if(i == 13) {
+				startIndexes.push_back(startIndex);
+				endIndexes.push_back(i+2);
+			}
+		}
+		else if(lineFound) {
+			cout << "line found" << endl;
+			foundFlag <<= 1;
+			lineFound = false;
+			startIndexes.push_back(startIndex);
+			endIndexes.push_back(i+2);
+		}
+	}
+
+	for(unsigned i = 0; i < numPoints; i++) {
+		cout << "flag " << i << " "<< foundFlags[i] << endl;
+	}
+
+	if(endIndexes.size() < startIndexes.size()) {
+		endIndexes.push_back(15);
+	}
+
+	for(unsigned i = 0; i < startIndexes.size() && i < endIndexes.size(); i++) {
+		lineSeg[i].p1 = points[startIndexes[i]];
+		lineSeg[i].p2 = points[endIndexes[i]];
+
+		float run = lineSeg[i].p2.x - lineSeg[i].p1.x;
+		if(run != 0) {
+			lineSeg[i].slope = (lineSeg[i].p2.y - lineSeg[i].p1.y) / run;
+		}
+		else {
+			lineSeg[i].slope = 99999999; //for out purposes, this will work fine.
+		}
+		lineSeg[i].yIntercept = (lineSeg[i].p1.y-lineSeg[i].slope * lineSeg[i].p1.x);
+		lineSeg[i].angle = atan2(lineSeg[i].p2.y - lineSeg[i].p1.y, run);
+
+	}
+	return min(startIndexes.size(), endIndexes.size());
+}
