@@ -32,7 +32,7 @@ private:
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore()
-		: m_auto(&m_tank, &m_suspension, &m_shooter){
+		: m_auto(&m_tank, &m_suspension, &m_shooter) {
 	}
 
 	void RobotInit()
@@ -55,7 +55,12 @@ public:
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
 
-
+//		Preferences::GetInstance()->PutFloat("Drive P", 1);
+//		Preferences::GetInstance()->PutFloat("Drive I", 0);
+//		Preferences::GetInstance()->PutFloat("Drive D", 0);
+//		Preferences::GetInstance()->PutFloat("Lift P", 4);
+//		Preferences::GetInstance()->PutFloat("Lift I", 0.01);
+//		Preferences::GetInstance()->PutFloat("Lift D", 0);
 	}
 
 	void AutonomousInit()
@@ -79,6 +84,7 @@ public:
 		m_shooter.Zero();
 		m_tank.Zero();
 		ui.Init(&wui);
+		m_leddar.StartAutoDetections(true);
 	}
 
 	void TeleopPeriodic()
