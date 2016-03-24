@@ -7,36 +7,56 @@
 #define _USE_MATH_DEFINES
 #include <Leddar.h>
 #include <cmath>
+
+static void AutoDetect(Leddar *leddar) {
+	printf("Starting thread\n");
+	//cout << "Starting thread, cout" << endl;
+	unsigned leddarCount = 0;
+	while(true) {
+
+		//while(leddar->IsAutoDetectEnabled()) {
+			leddar->FillBuffer();
+			leddarCount += 1;
+			printf("Leddar Count: %i\n", leddarCount);
+			//cout << "Leddar Count(cout) " << leddarCount << endl;
+		//}
+
+		Wait(0.05);
+	}
+}
+
 Leddar::Leddar() :
 	m_RS232(115200),
-	m_task("Leddar Thread", (FUNCPTR)Leddar::AutoDetect)
+	m_task("Leddar Thread", (FUNCPTR)AutoDetect)
 {
 
 }
-
+bool Leddar::IsAutoDetectEnabled() {
+	return m_autoDetect;
+}
 
 Leddar::~Leddar() {
 
 }
 
-void Leddar::AutoDetect(Leddar *leddar) {
-	while(leddar->m_autoDetect) {
-		leddar->FillBuffer();
-	}
-}
+
 void Leddar::StartAutoDetections(bool start) {
 	if(start) {
 		m_autoDetect = true;
+		printf("Leddar auto detect on.");
 	} else {
 		m_autoDetect = false;
+		printf("Leddar auto detect off.");
 	}
 }
 
 vector<point> Leddar::GetDetections() {
 	vector<point> cartesianDetections;
 	//Wait for the array to be safe to access.
-	while(!m_safeToGet)
-	{ }
+//	while(!m_safeToGet)
+//	{
+//		Wait(0.05);
+//	}
 
 	float angle, x, y;
 	for(unsigned i = 0; i < m_detections.size(); i++) {
@@ -45,6 +65,7 @@ vector<point> Leddar::GetDetections() {
 		y = cos(angle*M_PI/180)*m_detections[i].distance;
 		cartesianDetections.push_back({x, y});
 	}
+	SmartDashboard::PutNumber("detections:", m_detections.size());
 	return cartesianDetections;
 }
 
@@ -56,12 +77,13 @@ void Leddar::FillBuffer() {
 	char query[] = {0x01, 0x41, 0xC0, 0x10};
 	m_RS232.Write(query, 4);
 
-	Wait(0.250);
-	//This is causing too much of a delay on the drive
-
+	//Wait(0.250);
+	while(!m_RS232.GetBytesReceived()) //TODO: add timeout.
+	{}
+	Wait(0.010);
 	bytesRecived = m_RS232.GetBytesReceived();
 	//SmartDashboard::PutNumber("bytes recived", bytesRecived);
-
+	printf("Bytes recived: %i", bytesRecived);
 	//saving the data recived back from the leddar
 	char response[bytesRecived];
 	m_RS232.Read(response, bytesRecived);
@@ -75,18 +97,20 @@ void Leddar::FillBuffer() {
 //	SmartDashboard::PutNumber("byte 2 # of detections", response[2]);
 
 	m_safeToGet = false;
-
 	numDetections = response[2];
 	char *rawDetections = response + 3;
 	Detection detection;
-
-	m_detections.resize(numDetections);
+	m_detections.clear();
 	for(unsigned i = 0; i < numDetections; i++) {
 		detection.distance			= rawDetections[i*5] | (rawDetections[i*5+1] << 8);
 		detection.amplitude			= (rawDetections[i*5+2] | (rawDetections[i*5+1+2] << 8))/64;
 		detection.detectionNumber	= rawDetections[i*5+4] & 0xF0;
 		detection.flags				= rawDetections[i*5+4] & 0x0F;
-		m_detections[i] = detection;
+		m_detections.push_back(detection);
+
+	}
+	if(m_detections.size() >=8 ) {
+		SmartDashboard::PutNumber("distance of detection 8", m_detections[8].distance);
 	}
 	m_safeToGet = true;
 }

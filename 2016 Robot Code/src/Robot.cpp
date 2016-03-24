@@ -4,7 +4,6 @@
 #include <string>
 #include "DriveTrain/TankDrive.h"
 #include "Shooter.h"
-#include "Camera.h"
 #include "Leddar.h"
 #include "Autonomous.h"
 #include "DriveTrain/SuspensionDrive.h"
@@ -28,7 +27,6 @@ private:
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
-	Camera m_camera;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore()
@@ -37,7 +35,7 @@ public:
 
 	void RobotInit()
 	{
-		CameraServer::GetInstance()->StartAutomaticCapture("cam0");
+		//CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
@@ -54,7 +52,7 @@ public:
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
-
+		m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
 //		Preferences::GetInstance()->PutFloat("Drive I", 0);
 //		Preferences::GetInstance()->PutFloat("Drive D", 0);
@@ -84,12 +82,14 @@ public:
 		m_shooter.Zero();
 		m_tank.Zero();
 		ui.Init(&wui);
-		m_leddar.StartAutoDetections(true);
+
 	}
 
 	void TeleopPeriodic()
 	{
-
+		//m_leddar.FillBuffer();
+		SmartDashboard::PutNumber("Num detections", m_leddar.GetDetections().size());
+		SmartDashboard::PutString("Test", "Test");
 		ui.GetData(&wui);
 //		float LeftSpeed, RightSpeed;
 //		if(wui.GiveManControl) {

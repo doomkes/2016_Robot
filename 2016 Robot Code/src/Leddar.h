@@ -41,7 +41,6 @@ private:
 	vector<Detection> m_detections;
 
 	bool m_autoDetect = false;
-	static void AutoDetect(Leddar*);
 public:
 	Leddar();
 	virtual ~Leddar();
@@ -53,6 +52,7 @@ public:
 
 	unsigned GetLineSegs(LineSeg lineSeg[], point points[], const unsigned numPoints);
 	void StartAutoDetections(bool start);
+	bool IsAutoDetectEnabled();
 };
 
 #endif /* SRC_LEDDAR_H_ */
