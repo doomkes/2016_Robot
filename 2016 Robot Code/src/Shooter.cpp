@@ -83,21 +83,23 @@ Shooter::Shooter() :
 	//m_shoot1.SetControlMode(CANSpeedController::kVoltage);
 	//m_shoot2.SetControlMode(CANSpeedController::kVoltage);
 
-	m_shoot1.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_shoot1.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot1.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot1.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot1.SetControlMode(CANSpeedController::kSpeed);
+	m_shoot1.ConfigEncoderCodesPerRev(20);
+	m_shoot1.SetPID(1,0.001,0);
+	m_shoot1.SetF(13);
 
-	m_shoot1.SetPID(0,0,0);
-	m_shoot1.SetF(0);
-
-	m_shoot2.SetFeedbackDevice(CANTalon::CtreMagEncoder_Relative);
+	m_shoot2.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot2.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot2.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot2.SetControlMode(CANSpeedController::kSpeed);
+	m_shoot2.ConfigEncoderCodesPerRev(20);
+	m_shoot2.SetPID(1,0.001,0);
+	m_shoot2.SetF(13);
 
-	m_shoot2.SetPID(0,0,0);
-	m_shoot2.SetF(0);
+
 
 	m_aimLight.Set(false);
 	m_runNgunLight.Set(false);
@@ -135,6 +137,7 @@ void Shooter::Shoot(bool val)
 void Shooter::Spinup(float speed) {
 //	static float lastSpeed = 0;
 	m_targetWheelSpeed = speed;
+
 	m_shoot1.Set(speed);
 	m_shoot2.Set(-speed);
 
@@ -150,8 +153,8 @@ void Shooter::Spinup(float speed) {
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-9);
-	m_shoot2.Set(9);
+	m_shoot1.Set(-400);
+	m_shoot2.Set(400);
 }
 
 void Shooter::SpinShoot() {
@@ -178,15 +181,15 @@ void Shooter::LiftTo(float angle) {
 void Shooter::Update() {
 	static Timer timer;
 
-	cout << "Target speed: " << m_targetWheelSpeed << endl;
-
-	cout << "Shoot1 output: " << m_shoot1.GetOutputVoltage()/m_shoot1.GetBusVoltage() << endl;
-	cout << "Shoot1 speed: " << m_shoot1.GetSpeed() << endl;
-	cout << "Shoot1 Error: " << m_shoot1.GetClosedLoopError() << endl;
-
-	cout << "Shoot2 output: " << m_shoot2.GetOutputVoltage()/m_shoot2.GetBusVoltage() << endl;
-	cout << "Shoot2 speed: " << m_shoot2.GetSpeed() << endl;
-	cout << "Shoot2 Error: " << m_shoot2.GetClosedLoopError() << endl;
+//	cout << "Target speed: " << m_targetWheelSpeed << endl;
+//
+//	cout << "Shoot1 output: " << m_shoot1.GetOutputVoltage()/m_shoot1.GetBusVoltage() << endl;
+//	cout << "Shoot1 speed: " << m_shoot1.GetSpeed() << endl;
+//	cout << "Shoot1 Error: " << m_shoot1.GetClosedLoopError() << endl;
+//
+//	cout << "Shoot2 output: " << m_shoot2.GetOutputVoltage()/m_shoot2.GetBusVoltage() << endl;
+//	cout << "Shoot2 speed: " << m_shoot2.GetSpeed() << endl;
+//	cout << "Shoot2 Error: " << m_shoot2.GetClosedLoopError() << endl;
 
 	float dt, error;
 	static float velocity = 0;

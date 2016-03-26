@@ -27,7 +27,7 @@ private:
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
-	ADXRS450_Gyro m_rateSensor;
+	//ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore() :
@@ -41,7 +41,7 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-		SmartDashboard::PutNumber("ShooterSpeed", 11);
+		SmartDashboard::PutNumber("ShooterSpeed", 600);
 		SmartDashboard::PutNumber("ShooterAngle", 65);
 
 		SmartDashboard::PutNumber("lift accel",		1);
@@ -89,23 +89,15 @@ public:
 
 	void TeleopPeriodic()
 	{
-		SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
-		SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
+
+		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
+		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
+
+		SmartDashboard::PutNumber("Num Detections", m_leddar.GetDetections().size());
+
 		ui.GetData(&wui);
-//		float LeftSpeed, RightSpeed;
-//		if(wui.GiveManControl) {
-//			m_tank.Drive(wui.YawValue, -wui.YawValue);
-//		}
-		//m_shooter.ShooterLiftZero();
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-		if (fabs(wui.LiftSpeed) > 0.05) {
-			m_shooter.Spinup(wui.LiftSpeed*1500);
-		}
-
-//		if(wui.SpinAndShoot) {
-//			m_shooter.SpinShoot();
-//		}
 		if(wui.PickupPos) {
 			m_shooterMode = PICKUP_MODE;
 		}
@@ -123,14 +115,14 @@ public:
 		}
 		if(wui.SpinUp) {
 			if(m_shooterMode != RUNNING_HIGOAL_MODE) {
-				m_shooter.Spinup(SmartDashboard::GetNumber("Shooter Speed", 0));
+				m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 600));
 			}
 			else {
-				m_shooter.Spinup(8);
+				m_shooter.Spinup(380);
 			}
 		}
 		else if(wui.SpinUpLow) {
-			m_shooter.Spinup(7);
+			m_shooter.Spinup(300);
 		}
 		else {
 			m_shooter.Stop();
@@ -164,7 +156,7 @@ public:
 		}
 		m_tank.Reverse(wui.ReverseDrive);
 		SmartDashboard::PutNumber("slider val", wui.SliderValue);
-		float AngleAdjust = 0;//wui.LiftSpeed * (-(wui.SliderValue) + 1);
+		float AngleAdjust = wui.LiftSpeed * (-(wui.SliderValue) + 1);
 		switch(m_shooterMode) {
 			case STOW_MODE:
 				m_shooter.LiftTo(AngleAdjust * 30);
@@ -176,10 +168,12 @@ public:
 				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
+
+				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 65));
+				//m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case RUNNING_HIGOAL_MODE:
-				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 65)); //TODO use preferences for values.
+				m_shooter.LiftTo(65); //TODO use preferences for values.
 				break;
 		}
 

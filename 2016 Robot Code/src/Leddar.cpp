@@ -11,17 +11,14 @@
 static void AutoDetect(Leddar *leddar) {
 	printf("Starting thread\n");
 	//cout << "Starting thread, cout" << endl;
-	unsigned leddarCount = 0;
 	while(true) {
 
 		//while(leddar->IsAutoDetectEnabled()) {
 			leddar->FillBuffer();
-			leddarCount += 1;
-			printf("Leddar Count: %i\n", leddarCount);
 			//cout << "Leddar Count(cout) " << leddarCount << endl;
 		//}
 
-		Wait(0.05);
+		Wait(0.0005);
 	}
 }
 
@@ -57,7 +54,7 @@ vector<point> Leddar::GetDetections() {
 //	{
 //		Wait(0.05);
 //	}
-
+	cout << "size: " << m_detections.size() << endl;
 	float angle, x, y;
 	for(unsigned i = 0; i < m_detections.size(); i++) {
 		angle = 1.5 + m_detections[i].detectionNumber*3 - 24;
@@ -65,7 +62,6 @@ vector<point> Leddar::GetDetections() {
 		y = cos(angle*M_PI/180)*m_detections[i].distance;
 		cartesianDetections.push_back({x, y});
 	}
-	SmartDashboard::PutNumber("detections:", m_detections.size());
 	return cartesianDetections;
 }
 
@@ -83,7 +79,7 @@ void Leddar::FillBuffer() {
 	Wait(0.010);
 	bytesRecived = m_RS232.GetBytesReceived();
 	//SmartDashboard::PutNumber("bytes recived", bytesRecived);
-	printf("Bytes recived: %i", bytesRecived);
+	printf("Bytes recived: %i\n", bytesRecived);
 	//saving the data recived back from the leddar
 	char response[bytesRecived];
 	m_RS232.Read(response, bytesRecived);
@@ -109,6 +105,8 @@ void Leddar::FillBuffer() {
 		m_detections.push_back(detection);
 
 	}
+	cout << "Hello" << endl;
+	cout << "size:" << m_detections.size() << endl;
 	if(m_detections.size() >=8 ) {
 		SmartDashboard::PutNumber("distance of detection 8", m_detections[8].distance);
 	}
@@ -170,6 +168,80 @@ unsigned Leddar::GetLineSegs(LineSeg lineSeg[], point points[], const unsigned n
 		}
 		lineSeg[i].yIntercept = (lineSeg[i].p1.y-lineSeg[i].slope * lineSeg[i].p1.x);
 		lineSeg[i].angle = atan2(lineSeg[i].p2.y - lineSeg[i].p1.y, run);
+		lineSeg[i].length = sqrt(pow(lineSeg[i].p1.x - lineSeg[i].p2.x, 2)
+								 + pow(lineSeg[i].p1.y - lineSeg[i].p2.y, 2));
+
+	}
+	return min(startIndexes.size(), endIndexes.size());
+}
+unsigned Leddar::GetDetectionsAsCarteasion(point buff[], unsigned buffSize) {
+	return 0;
+	point detections[m_detections.size()];
+	float angle, x, y;
+	for(unsigned i = 0; i < buffSize; i++) {
+		angle = 1.5 + m_detections[i].detectionNumber*3 - 24;
+		x = sin(angle*M_PI/180)*m_detections[i].distance;
+		y = cos(angle*M_PI/180)*m_detections[i].distance;
+		buff[i] = {x, y};
+	}
+	return m_detections.size();
+}
+unsigned Leddar::GetDetectionsAsLineSegs(LineSeg lineSeg[], unsigned buffSize) {
+	unsigned startIndex = 99;
+
+	vector<unsigned> startIndexes, endIndexes;
+	unsigned numPoints = m_detections.size();
+	point points[numPoints];
+	GetDetectionsAsCarteasion(points, numPoints);
+	unsigned foundFlags[numPoints] = {0};
+	unsigned foundFlag = 1;
+	bool lineFound = false;
+
+	for(unsigned i = 0; i < numPoints-2 && numPoints>=2; i++) {
+		float error = fabs((points[i+1].y - points[i].y)*(points[i+2].x - points[i+1].x) - (points[i+2].y-points[i+1].y)*(points[i+1].x-points[i].x));
+		cout << "Error: " << error << endl;
+		if(error < 0.0075) {
+			if (lineFound == false) {
+				startIndex = i;
+			}
+			foundFlags[i]   |= foundFlag;
+			foundFlags[i+1] |= foundFlag;
+			foundFlags[i+2] |= foundFlag;
+			cout << "adding point " << i+2 << " to line" << endl;
+			lineFound = true;
+			if(i == 13) {
+				startIndexes.push_back(startIndex);
+				endIndexes.push_back(i+2);
+			}
+		}
+		else if(lineFound) {
+			cout << "line found" << endl;
+			foundFlag <<= 1;
+			lineFound = false;
+			startIndexes.push_back(startIndex);
+			endIndexes.push_back(i+2);
+		}
+	}
+
+	if(endIndexes.size() < startIndexes.size()) {
+		endIndexes.push_back(15);
+	}
+
+	for(unsigned i = 0; i < startIndexes.size() && i < endIndexes.size() && i < buffSize; i++) {
+		lineSeg[i].p1 = points[startIndexes[i]];
+		lineSeg[i].p2 = points[endIndexes[i]];
+
+		float run = lineSeg[i].p2.x - lineSeg[i].p1.x;
+		if(run != 0) {
+			lineSeg[i].slope = (lineSeg[i].p2.y - lineSeg[i].p1.y) / run;
+		}
+		else {
+			lineSeg[i].slope = 99999999; //for out purposes, this will work fine.
+		}
+		lineSeg[i].yIntercept = (lineSeg[i].p1.y-lineSeg[i].slope * lineSeg[i].p1.x);
+		lineSeg[i].angle = atan2(lineSeg[i].p2.y - lineSeg[i].p1.y, run);
+		lineSeg[i].length = sqrt(pow(lineSeg[i].p1.x - lineSeg[i].p2.x, 2)
+								 + pow(lineSeg[i].p1.y - lineSeg[i].p2.y, 2));
 
 	}
 	return min(startIndexes.size(), endIndexes.size());

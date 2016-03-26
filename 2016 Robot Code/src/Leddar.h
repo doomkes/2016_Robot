@@ -23,6 +23,7 @@ struct LineSeg {
 	float angle;
 	float slope;
 	float yIntercept;
+	float length;
 };
 
 struct Detection {
@@ -51,6 +52,8 @@ public:
 	void FillBuffer();
 
 	unsigned GetLineSegs(LineSeg lineSeg[], point points[], const unsigned numPoints);
+	unsigned GetDetectionsAsCarteasion(point buff[], unsigned buffSize);
+	unsigned GetDetectionsAsLineSegs(LineSeg buff[], unsigned buffSize);
 	void StartAutoDetections(bool start);
 	bool IsAutoDetectEnabled();
 };
