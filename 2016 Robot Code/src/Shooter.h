@@ -22,6 +22,7 @@ private:
 	Timer m_liftTimer, m_spinUpTimer, m_spinShootTimer;
 	float m_currentPosition = 0;
 	float m_targetPosition = 0;
+	float m_targetWheelSpeed = 0;
 	unsigned m_liftZero = 0;
 	TrapezoidalMove m_liftMove;
 public:

@@ -27,10 +27,12 @@ private:
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
+	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
-	Wedgemore()
-		: m_auto(&m_tank, &m_suspension, &m_shooter) {
+	Wedgemore() :
+		m_auto(&m_tank, &m_suspension, &m_shooter)
+	{
 	}
 
 	void RobotInit()
@@ -87,9 +89,8 @@ public:
 
 	void TeleopPeriodic()
 	{
-		//m_leddar.FillBuffer();
-		SmartDashboard::PutNumber("Num detections", m_leddar.GetDetections().size());
-		SmartDashboard::PutString("Test", "Test");
+		SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
+		SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
 		ui.GetData(&wui);
 //		float LeftSpeed, RightSpeed;
 //		if(wui.GiveManControl) {
@@ -98,9 +99,9 @@ public:
 		//m_shooter.ShooterLiftZero();
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-//		if (fabs(wui.LiftSpeed) < 0.05) {
-//			wui.LiftSpeed = 0;
-//		}
+		if (fabs(wui.LiftSpeed) > 0.05) {
+			m_shooter.Spinup(wui.LiftSpeed*1500);
+		}
 
 //		if(wui.SpinAndShoot) {
 //			m_shooter.SpinShoot();
@@ -122,7 +123,7 @@ public:
 		}
 		if(wui.SpinUp) {
 			if(m_shooterMode != RUNNING_HIGOAL_MODE) {
-				m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 0));
+				m_shooter.Spinup(SmartDashboard::GetNumber("Shooter Speed", 0));
 			}
 			else {
 				m_shooter.Spinup(8);
@@ -163,7 +164,7 @@ public:
 		}
 		m_tank.Reverse(wui.ReverseDrive);
 		SmartDashboard::PutNumber("slider val", wui.SliderValue);
-		float AngleAdjust = wui.LiftSpeed * (-(wui.SliderValue) + 1);
+		float AngleAdjust = 0;//wui.LiftSpeed * (-(wui.SliderValue) + 1);
 		switch(m_shooterMode) {
 			case STOW_MODE:
 				m_shooter.LiftTo(AngleAdjust * 30);
