@@ -80,24 +80,24 @@ Shooter::Shooter() :
 		m_runNgunLight(RUN_GUN_LIGHT)
 
 {
-	//m_shoot1.SetControlMode(CANSpeedController::kVoltage);
-	//m_shoot2.SetControlMode(CANSpeedController::kVoltage);
+	m_shoot1.SetControlMode(CANSpeedController::kVoltage);
+	m_shoot2.SetControlMode(CANSpeedController::kVoltage);
 
 	m_shoot1.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot1.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot1.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot1.SetControlMode(CANSpeedController::kSpeed);
 	m_shoot1.ConfigEncoderCodesPerRev(20);
-	m_shoot1.SetPID(1,0.001,0);
-	m_shoot1.SetF(13);
+	m_shoot1.SetPID(.8,0,0);
+	m_shoot1.SetF(16.620);
 
 	m_shoot2.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot2.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot2.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot2.SetControlMode(CANSpeedController::kSpeed);
 	m_shoot2.ConfigEncoderCodesPerRev(20);
-	m_shoot2.SetPID(1,0.001,0);
-	m_shoot2.SetF(13);
+	m_shoot2.SetPID(.8,0,0);
+	m_shoot2.SetF(16.62);//(16.620);
 
 
 
@@ -137,6 +137,7 @@ void Shooter::Shoot(bool val)
 void Shooter::Spinup(float speed) {
 //	static float lastSpeed = 0;
 	m_targetWheelSpeed = speed;
+
 
 	m_shoot1.Set(speed);
 	m_shoot2.Set(-speed);

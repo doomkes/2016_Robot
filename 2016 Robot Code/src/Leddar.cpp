@@ -7,7 +7,7 @@
 #define _USE_MATH_DEFINES
 #include <Leddar.h>
 #include <cmath>
-
+vector<Detection> Leddar::m_detections;
 static void AutoDetect(Leddar *leddar) {
 	printf("Starting thread\n");
 	//cout << "Starting thread, cout" << endl;
@@ -79,7 +79,7 @@ void Leddar::FillBuffer() {
 	Wait(0.010);
 	bytesRecived = m_RS232.GetBytesReceived();
 	//SmartDashboard::PutNumber("bytes recived", bytesRecived);
-	printf("Bytes recived: %i\n", bytesRecived);
+	//printf("Bytes recived: %i\n", bytesRecived);
 	//saving the data recived back from the leddar
 	char response[bytesRecived];
 	m_RS232.Read(response, bytesRecived);
@@ -105,10 +105,8 @@ void Leddar::FillBuffer() {
 		m_detections.push_back(detection);
 
 	}
-	cout << "Hello" << endl;
-	cout << "size:" << m_detections.size() << endl;
 	if(m_detections.size() >=8 ) {
-		SmartDashboard::PutNumber("distance of detection 8", m_detections[8].distance);
+		//SmartDashboard::PutNumber("distance of detection 8", m_detections[8].distance);
 	}
 	m_safeToGet = true;
 }
@@ -175,8 +173,8 @@ unsigned Leddar::GetLineSegs(LineSeg lineSeg[], point points[], const unsigned n
 	return min(startIndexes.size(), endIndexes.size());
 }
 unsigned Leddar::GetDetectionsAsCarteasion(point buff[], unsigned buffSize) {
-	return 0;
-	point detections[m_detections.size()];
+	//return 0;
+	//point detections[m_detections.size()];
 	float angle, x, y;
 	for(unsigned i = 0; i < buffSize; i++) {
 		angle = 1.5 + m_detections[i].detectionNumber*3 - 24;
@@ -187,6 +185,7 @@ unsigned Leddar::GetDetectionsAsCarteasion(point buff[], unsigned buffSize) {
 	return m_detections.size();
 }
 unsigned Leddar::GetDetectionsAsLineSegs(LineSeg lineSeg[], unsigned buffSize) {
+
 	unsigned startIndex = 99;
 
 	vector<unsigned> startIndexes, endIndexes;
@@ -200,7 +199,7 @@ unsigned Leddar::GetDetectionsAsLineSegs(LineSeg lineSeg[], unsigned buffSize) {
 	for(unsigned i = 0; i < numPoints-2 && numPoints>=2; i++) {
 		float error = fabs((points[i+1].y - points[i].y)*(points[i+2].x - points[i+1].x) - (points[i+2].y-points[i+1].y)*(points[i+1].x-points[i].x));
 		cout << "Error: " << error << endl;
-		if(error < 0.0075) {
+		if(error < 10000) {
 			if (lineFound == false) {
 				startIndex = i;
 			}
@@ -227,7 +226,7 @@ unsigned Leddar::GetDetectionsAsLineSegs(LineSeg lineSeg[], unsigned buffSize) {
 		endIndexes.push_back(15);
 	}
 
-	for(unsigned i = 0; i < startIndexes.size() && i < endIndexes.size() && i < buffSize; i++) {
+	for(unsigned i = 0; i < startIndexes.size() && i < endIndexes.size(); i++) {
 		lineSeg[i].p1 = points[startIndexes[i]];
 		lineSeg[i].p2 = points[endIndexes[i]];
 
@@ -243,6 +242,13 @@ unsigned Leddar::GetDetectionsAsLineSegs(LineSeg lineSeg[], unsigned buffSize) {
 		lineSeg[i].length = sqrt(pow(lineSeg[i].p1.x - lineSeg[i].p2.x, 2)
 								 + pow(lineSeg[i].p1.y - lineSeg[i].p2.y, 2));
 
+	}
+	for(unsigned i = 0; i < m_detections.size(); i++) {
+		cout << m_detections[i].detectionNumber
+			 << ", " << m_detections[i].amplitude
+			 << ", " << m_detections[i].distance
+			 << ", " << m_detections[i].flags
+			 << endl;
 	}
 	return min(startIndexes.size(), endIndexes.size());
 }

@@ -39,7 +39,7 @@ private:
 	Task m_task;
 	// true if the detections array is not being populated.
 	bool m_safeToGet = false;
-	vector<Detection> m_detections;
+	static vector<Detection> m_detections;
 
 	bool m_autoDetect = false;
 public:
@@ -52,6 +52,7 @@ public:
 	void FillBuffer();
 
 	unsigned GetLineSegs(LineSeg lineSeg[], point points[], const unsigned numPoints);
+
 	unsigned GetDetectionsAsCarteasion(point buff[], unsigned buffSize);
 	unsigned GetDetectionsAsLineSegs(LineSeg buff[], unsigned buffSize);
 	void StartAutoDetections(bool start);

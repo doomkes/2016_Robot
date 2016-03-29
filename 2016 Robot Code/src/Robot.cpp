@@ -27,7 +27,7 @@ private:
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
-	//ADXRS450_Gyro m_rateSensor;
+	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore() :
@@ -90,11 +90,17 @@ public:
 	void TeleopPeriodic()
 	{
 
-		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
-		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
-
-		SmartDashboard::PutNumber("Num Detections", m_leddar.GetDetections().size());
-
+		SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
+		SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
+		//m_leddar.FillBuffer();
+		//SmartDashboard::PutNumber("Num Detections", m_leddar.GetDetections().size());
+		LineSeg lineSegs[16];
+		unsigned numSegs = m_leddar.GetDetectionsAsLineSegs(lineSegs, 16);
+		SmartDashboard::PutNumber("Num Linesegs", numSegs);
+		cout << "num segments: " << numSegs << endl;
+		for(unsigned i = 0; i < numSegs; i++) {
+			cout << "length of seg " << i <<": " << lineSegs[i].length << endl;
+		}
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
