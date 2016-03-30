@@ -87,17 +87,23 @@ Shooter::Shooter() :
 	m_shoot1.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot1.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot1.SetControlMode(CANSpeedController::kSpeed);
+	m_shoot1.SetSensorDirection(true);
+	m_shoot1.SetInverted(true);
+	m_shoot1.SetIzone(200);
 	m_shoot1.ConfigEncoderCodesPerRev(20);
-	m_shoot1.SetPID(.8,0,0);
-	m_shoot1.SetF(16.620);
+	m_shoot1.SetPID(4,0.01,0);
+	m_shoot1.SetF(1.5);
 
 	m_shoot2.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot2.ConfigNominalOutputVoltage(+0.0, -0.0);
 	m_shoot2.ConfigPeakOutputVoltage(+12.0, -12.0);
 	m_shoot2.SetControlMode(CANSpeedController::kSpeed);
+	m_shoot2.SetSensorDirection(true);
+	m_shoot2.SetInverted(true);
+	m_shoot2.SetIzone(200);
 	m_shoot2.ConfigEncoderCodesPerRev(20);
-	m_shoot2.SetPID(.8,0,0);
-	m_shoot2.SetF(16.62);//(16.620);
+	m_shoot2.SetPID(4,0.01,0);
+	m_shoot2.SetF(1.5);//(16.620);
 
 
 
@@ -154,8 +160,8 @@ void Shooter::Spinup(float speed) {
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-400);
-	m_shoot2.Set(400);
+	m_shoot1.Set(-3000);
+	m_shoot2.Set(3000);
 }
 
 void Shooter::SpinShoot() {

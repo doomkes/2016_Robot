@@ -31,6 +31,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->PickupPos = false;
 	wui->Zero = false;
 	wui->Custom = false;
+	wui->ShooterDown = false;
 	wui->BatterHiGoal = false;
 	wui->DefenseHiGoal = false;
 	wui->SpinAndShoot = false;
@@ -39,7 +40,6 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->RunningHiGoal = false;
 	wui->ToggleLight = false;
 	wui->RunGunLight = false;
-	wui->GiveManControl = false;
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
@@ -96,23 +96,7 @@ void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
 	static bool lastLightButton = false;
 	wui->RunGunLight = m_rStick.GetRawButton(TOGGLE_RUN_LIGHT) && !lastLightButton ? true : false;
 	lastLightButton = m_rStick.GetRawButton(TOGGLE_RUN_LIGHT);
-//	if(m_rStick.GetRawButton(DROPBACKRIGHT))
-//	{
-//		wui->DropBR = true;
-//	}
-//	if(m_rStick.GetRawButton(DROPBACKLEFT))
-//	{
-//		wui->DropBL = true;
-//	}
-//	if(m_rStick.GetRawButton(DROPFRONTLEFT))
-//	{
-//		wui->DropFL = true;
-//	}
-//	if(m_rStick.GetRawButton(DROPFRONTRIGHT))
-//	{
-//		wui->DropFR = true;
-//	}
-	wui->GiveManControl = m_rStick.GetRawButton(GIVE_MAN_CONTROL);
+	wui->ShooterDown = m_rStick.GetRawButton(SHOOTER_DOWN);
 	wui->ReverseDrive = m_rStick.GetRawButton(REVERSE_DRIVE);
 	wui->SpeedMode = m_rStick.GetRawButton(SET_SPEED_MODE);
 	wui->VBusMode = m_rStick.GetRawButton(SET_VBUS_MODE);

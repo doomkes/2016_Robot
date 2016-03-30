@@ -23,11 +23,11 @@ private:
 	TankDrive m_tank;
 	SuspensionDrive m_suspension;
 	Shooter m_shooter;
-	Leddar m_leddar;
+	//Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
-	ADXRS450_Gyro m_rateSensor;
+	//ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore() :
@@ -41,7 +41,7 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-		SmartDashboard::PutNumber("ShooterSpeed", 600);
+		SmartDashboard::PutNumber("ShooterSpeed", 3000);
 		SmartDashboard::PutNumber("ShooterAngle", 65);
 
 		SmartDashboard::PutNumber("lift accel",		1);
@@ -54,7 +54,7 @@ public:
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
-		m_leddar.StartAutoDetections(true);
+		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
 //		Preferences::GetInstance()->PutFloat("Drive I", 0);
 //		Preferences::GetInstance()->PutFloat("Drive D", 0);
@@ -90,47 +90,51 @@ public:
 	void TeleopPeriodic()
 	{
 
-		SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
-		SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
+		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
+		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
 		//m_leddar.FillBuffer();
 		//SmartDashboard::PutNumber("Num Detections", m_leddar.GetDetections().size());
-		LineSeg lineSegs[16];
-		unsigned numSegs = m_leddar.GetDetectionsAsLineSegs(lineSegs, 16);
-		SmartDashboard::PutNumber("Num Linesegs", numSegs);
-		cout << "num segments: " << numSegs << endl;
-		for(unsigned i = 0; i < numSegs; i++) {
-			cout << "length of seg " << i <<": " << lineSegs[i].length << endl;
-		}
+//		LineSeg lineSegs[16];
+//		unsigned numSegs = m_leddar.GetDetectionsAsLineSegs(lineSegs, 16);
+//		SmartDashboard::PutNumber("Num Linesegs", numSegs);
+//		cout << "num segments: " << numSegs << endl;
+//		for(unsigned i = 0; i < numSegs; i++) {
+//			cout << "length of seg " << i <<": " << lineSegs[i].length << endl;
+//		}
 		ui.GetData(&wui);
 		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
 
-		if(wui.PickupPos) {
+		if(wui.PickupPos || wui.ShooterDown) {
 			m_shooterMode = PICKUP_MODE;
 		}
-		if(wui.StartPosition) {	//start & stow pos
+		else if(wui.StartPosition) {	//start & stow pos
 			m_shooterMode = STOW_MODE;
 		}
-		if(wui.BatterHiGoal) {
+		else if(wui.BatterHiGoal) {
 			m_shooterMode = BATTER_HIGOAL_MODE;
 		}
-		if(wui.DefenseHiGoal) {
+		else if(wui.DefenseHiGoal) {
 			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
-		if(wui.RunningHiGoal) {
+		else if(wui.RunningHiGoal) {
 			m_shooterMode = RUNNING_HIGOAL_MODE;
 		}
 		if(wui.SpinUp) {
-			if(m_shooterMode != RUNNING_HIGOAL_MODE) {
-				m_shooter.Spinup(SmartDashboard::GetNumber("ShooterSpeed", 600));
+			if(m_shooterMode == BATTER_HIGOAL_MODE) {
+				m_shooter.Spinup(2750);
 			}
+			else if(m_shooterMode == RUNNING_HIGOAL_MODE) {
+							m_shooter.Spinup(2700);
+						}
 			else {
-				m_shooter.Spinup(380);
+				m_shooter.Spinup(3000);
 			}
 		}
 		else if(wui.SpinUpLow) {
-			m_shooter.Spinup(300);
+			m_shooter.Spinup(1000);
 		}
-		else {
+
+		else if (!wui.Pickup){
 			m_shooter.Stop();
 		}
 		m_shooter.Shoot(wui.Shoot);
@@ -171,11 +175,10 @@ public:
 				m_shooter.LiftTo(180 - AngleAdjust * 35);//TODO use preferences for values.
 				break;
 			case BATTER_HIGOAL_MODE:
-				m_shooter.LiftTo(45 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(66); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-
-				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 65));
+				m_shooter.LiftTo(40.5 + AngleAdjust*20);
 				//m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case RUNNING_HIGOAL_MODE:

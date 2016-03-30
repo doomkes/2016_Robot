@@ -24,6 +24,7 @@ struct WedgemoreUserInput
 	bool PickupPos = false;
 	bool Zero = false;
 	bool Custom = false;
+	bool ShooterDown = false;
 	bool BatterHiGoal = false;
 	bool DefenseHiGoal = false;
 	bool RunningHiGoal = false;
@@ -32,7 +33,6 @@ struct WedgemoreUserInput
 	bool VBusMode = false;
 	bool ToggleLight = false, RunGunLight = false;
 	bool ReverseDrive = false;
-	bool GiveManControl = false;
 };
 
 class UserInterface
