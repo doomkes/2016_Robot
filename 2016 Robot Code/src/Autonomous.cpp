@@ -8,7 +8,7 @@
 #include <Autonomous.h>
 
 Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension,Shooter* shooter)
-	: m_tank(tank), m_suspension(suspension), m_shooter(shooter), m_one(1), m_two(2), m_three(3), m_four(4) {
+	: m_tank(tank), m_suspension(suspension), m_shooter(shooter), m_one(1), m_two(2), m_three(3), m_four(4), m_five(5) {
 	// TODO Auto-generated constructor stub
 }
 
@@ -23,6 +23,7 @@ void Autonomous::Init(int mode) {
 	else if (!m_two.Get()) m_mode = 2;
 	else if (!m_three.Get()) m_mode = 3;
 	else if (!m_four.Get()) m_mode = 4;
+	else if (!m_five.Get()) m_mode = 5;
 	m_tank->Zero();
 	m_autoStartTime = Timer::GetFPGATimestamp();
 	switch(m_mode) {
@@ -69,6 +70,10 @@ void Autonomous::Init(int mode) {
 			m_move.SetMaxSpeed(64);
 			m_move.SetDistance(totalDistance);
 			m_move.CalcParams();
+			break;
+		case 5:
+			m_shooter->LiftTo(40.5);
+			m_shooter->Spinup(3000);
 			break;
 	}
 }
@@ -173,6 +178,16 @@ void Autonomous::Periodic() {
 			if ((currentAutoTime > (m_move.GetTotalTime() + 2)) && (currentAutoTime > (m_move.GetTotalTime() + 2.1))) {	//Give the ball time to clear the robot, then lower shooter and de-spin wheels.
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
+			}
+			break;
+		case 5:
+			if(m_shooter->GetLiftPosition() == 40.5) {
+				if( fabs(m_shooter->GetWheelRPM()) - 3000 < 20) {
+					m_shooter->Shoot(true);
+				}
+			}
+			else {
+				m_shooter->Shoot(false);
 			}
 			break;
 	}

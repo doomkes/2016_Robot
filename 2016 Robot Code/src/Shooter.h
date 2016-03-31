@@ -46,7 +46,7 @@ public:
 	void Update();
 	void Zero();
 	double GetLiftPosition();
-	double GetLiftAngle();
+	double GetWheelRPM();
 	int shooter_zero = 0;
 };
 

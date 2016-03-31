@@ -41,8 +41,8 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-		SmartDashboard::PutNumber("ShooterSpeed", 3000);
-		SmartDashboard::PutNumber("ShooterAngle", 65);
+		SmartDashboard::PutNumber("ShooterSpeed", 3400);
+		SmartDashboard::PutNumber("ShooterAngle", 40.5);
 
 		SmartDashboard::PutNumber("lift accel",		1);
 		SmartDashboard::PutNumber("lift decel",		1);
@@ -54,6 +54,7 @@ public:
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
+		SmartDashboard::PutNumber("ShootSpeed",3450);
 		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
 //		Preferences::GetInstance()->PutFloat("Drive I", 0);
@@ -121,13 +122,13 @@ public:
 		}
 		if(wui.SpinUp) {
 			if(m_shooterMode == BATTER_HIGOAL_MODE) {
-				m_shooter.Spinup(2750);
+				m_shooter.Spinup(2700);
 			}
 			else if(m_shooterMode == RUNNING_HIGOAL_MODE) {
 							m_shooter.Spinup(2700);
 						}
 			else {
-				m_shooter.Spinup(3000);
+				m_shooter.Spinup(SmartDashboard::GetNumber("ShootSpeed",3400));
 			}
 		}
 		else if(wui.SpinUpLow) {
@@ -178,7 +179,7 @@ public:
 				m_shooter.LiftTo(66); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(40.5 + AngleAdjust*20);
+				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 40.5) + AngleAdjust*20);
 				//m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 			case RUNNING_HIGOAL_MODE:

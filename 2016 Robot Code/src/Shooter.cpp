@@ -259,9 +259,9 @@ void Shooter::Zero() {
 
 double Shooter::GetLiftPosition()
 {
-	return m_targetPosition;
+	return m_lift.GetPosition();
 }
 
-double Shooter::GetLiftAngle() {
-	return m_targetPosition / 0.00277778;
+double Shooter::GetWheelRPM() {
+	return m_shoot1.GetSpeed();
 }
