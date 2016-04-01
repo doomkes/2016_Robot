@@ -93,6 +93,7 @@ Shooter::Shooter() :
 	m_shoot1.ConfigEncoderCodesPerRev(20);
 	m_shoot1.SetPID(4,0.01,0);
 	m_shoot1.SetF(1.5);
+	m_shoot1.SetVoltageRampRate(50);
 
 	m_shoot2.SetFeedbackDevice(CANTalon::QuadEncoder);
 	m_shoot2.ConfigNominalOutputVoltage(+0.0, -0.0);
@@ -104,7 +105,7 @@ Shooter::Shooter() :
 	m_shoot2.ConfigEncoderCodesPerRev(20);
 	m_shoot2.SetPID(4,0.01,0);
 	m_shoot2.SetF(1.5);//(16.620);
-
+	m_shoot2.SetVoltageRampRate(50);
 
 
 	m_aimLight.Set(false);
@@ -122,7 +123,7 @@ void Shooter::ToggleLight() {
 	static bool state = false;
 	m_aimLight.Set(!state);
 	state = !state;
-	SmartDashboard::PutBoolean("Light on", state);
+	//SmartDashboard::PutBoolean("Light on", state);
 }
 void Shooter::ToggleRunLight(bool state) {
 	//static bool state = false;
@@ -211,7 +212,7 @@ void Shooter::Update() {
 		}
 		velocity = Velocity(dt, error, velocity, m_liftAccel, m_liftMaxSpeed);
 
-		SmartDashboard::PutNumber("incr position", incr_position);
+		//SmartDashboard::PutNumber("incr position", incr_position);
 
 		incr_position = incr_position + velocity*dt;
 
@@ -237,16 +238,16 @@ void Shooter::Update() {
 
 	m_lift.Set(incr_position);
 
-	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
-	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
-	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
-	SmartDashboard::PutNumber("lift velocity", velocity);
-	SmartDashboard::PutNumber("position", m_lift.Get());
-	SmartDashboard::PutNumber("target position", m_targetPosition);
-	SmartDashboard::PutNumber("lift motor velocity", m_lift.GetSpeed());
-	SmartDashboard::PutNumber("lift error", error);
-	SmartDashboard::PutNumber("delta t", dt);
-}
+//	SmartDashboard::PutNumber("Spinup Time", m_spinUpTimer.Get());
+//	SmartDashboard::PutNumber("Closed loop error", m_lift.GetClosedLoopError());
+//	SmartDashboard::PutNumber("Shooter Angle", m_lift.Get()*360);
+//	SmartDashboard::PutNumber("lift velocity", velocity);
+//	SmartDashboard::PutNumber("position", m_lift.Get());
+//	SmartDashboard::PutNumber("target position", m_targetPosition);
+//	SmartDashboard::PutNumber("lift motor velocity", m_lift.GetSpeed());
+//	SmartDashboard::PutNumber("lift error", error);
+//	SmartDashboard::PutNumber("delta t", dt);
+	}
 
 void Shooter::Stop() {
 	Spinup(0);

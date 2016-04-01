@@ -82,6 +82,8 @@ void Autonomous::Periodic() {
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	float leftDist, rightDist;
 	float  curveRatio = 0.78;
+	static unsigned count = 0;
+	count++;
 
 	static float autoCount = 0;
 	switch(m_mode){
@@ -120,14 +122,7 @@ void Autonomous::Periodic() {
 			break;
 		case 3:
 			m_shooter->LiftTo(180);
-			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
-			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
 			rightDist = m_move.Position(currentAutoTime);
-			//rightDist = m_move.Position(currentAutoTime);
-			SmartDashboard::PutNumber("Auto Left distance", leftDist);
-			SmartDashboard::PutNumber("Auto Right distance", rightDist);
-			SmartDashboard::PutNumber("Auto Count", autoCount);
-
 			autoCount++;
 			if (rightDist < 146.84){
 				//leftDist = m_move.Position(currentAutoTime);
@@ -149,6 +144,12 @@ void Autonomous::Periodic() {
 				m_shooter->Shoot(true);
 			if (currentAutoTime > (m_move.GetTotalTime() + 5))
 				m_shooter->Spinup(0);
+			if (count%10 == 0){
+				SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
+				SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+				SmartDashboard::PutNumber("Auto Left distance", leftDist);
+				SmartDashboard::PutNumber("Auto Right distance", rightDist);
+			}
 			break;
 		case 4:
 			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
@@ -178,6 +179,12 @@ void Autonomous::Periodic() {
 			if ((currentAutoTime > (m_move.GetTotalTime() + 2)) && (currentAutoTime > (m_move.GetTotalTime() + 2.1))) {	//Give the ball time to clear the robot, then lower shooter and de-spin wheels.
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
+			}
+			if (count%10 == 0){
+				SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
+				SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+				SmartDashboard::PutNumber("Auto Left distance", leftDist);
+				SmartDashboard::PutNumber("Auto Right distance", rightDist);
 			}
 			break;
 		case 5:

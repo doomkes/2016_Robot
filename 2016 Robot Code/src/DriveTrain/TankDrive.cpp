@@ -83,6 +83,10 @@ void TankDrive::PositionDrive(float leftDist, float rightDist) {
 	m_rightDistance = rightDist;
 	m_leftMotor1.Set(-m_leftDistance*COUNT_PER_INCH);
 	m_rightMotor1.Set(m_rightDistance*COUNT_PER_INCH);
+
+	SmartDashboard::PutNumber("left  Error", m_leftMotor1.GetClosedLoopError());
+	SmartDashboard::PutNumber("right Error", m_rightMotor1.GetClosedLoopError());
+
 }
 
 void TankDrive::VBusDrive(float leftSpeed, float rightSpeed) {
