@@ -39,7 +39,7 @@ public:
 	void Pickup();
 	void Stop();
 	void ToggleLight();
-	void ToggleRunLight();
+	void ToggleRunLight(bool state);
 	/**
 	 * Call every loop to update async actions.
 	 */

@@ -13,7 +13,7 @@ enum ShooterMode {
 	PICKUP_MODE,
 	BATTER_HIGOAL_MODE,
 	DEFENSE_HIGOAL_MODE,
-	RUNNING_HIGOAL_MODE
+	MID_SHOT_MODE
 };
 
 class Wedgemore: public IterativeRobot
@@ -117,19 +117,20 @@ public:
 		else if(wui.DefenseHiGoal) {
 			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
-		else if(wui.RunningHiGoal) {
-			m_shooterMode = RUNNING_HIGOAL_MODE;
+		else if(wui.MidHiGoal) {
+			m_shooterMode = MID_SHOT_MODE;
 		}
 		if(wui.SpinUp) {
 			if(m_shooterMode == BATTER_HIGOAL_MODE) {
-				m_shooter.Spinup(2700);
+				m_shooter.Spinup(2650);
 			}
-			else if(m_shooterMode == RUNNING_HIGOAL_MODE) {
-							m_shooter.Spinup(2700);
+			else if(m_shooterMode == MID_SHOT_MODE) {
+							m_shooter.Spinup(4500);
 						}
 			else {
-				m_shooter.Spinup(SmartDashboard::GetNumber("ShootSpeed",3400));
+				m_shooter.Spinup(5000);
 			}
+
 		}
 		else if(wui.SpinUpLow) {
 			m_shooter.Spinup(1000);
@@ -154,9 +155,9 @@ public:
 		if(wui.ToggleLight) {
 			m_shooter.ToggleLight();
 		}
-		if(wui.RunGunLight) {
-			m_shooter.ToggleRunLight();
-		}
+		//if(wui.RunGunLight) {
+			m_shooter.ToggleRunLight(wui.RunGunLight);
+		//}
 		if(wui.SpeedMode) {
 			m_tank.SetMode(SPEED_MODE);
 			SmartDashboard::PutBoolean("VBus Mode", false);
@@ -179,11 +180,11 @@ public:
 				m_shooter.LiftTo(66); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 40.5) + AngleAdjust*20);
+				m_shooter.LiftTo(34 + AngleAdjust*20);
 				//m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
 				break;
-			case RUNNING_HIGOAL_MODE:
-				m_shooter.LiftTo(65); //TODO use preferences for values.
+			case MID_SHOT_MODE:
+				m_shooter.LiftTo(37 + AngleAdjust*20); //TODO use preferences for values.
 				break;
 		}
 

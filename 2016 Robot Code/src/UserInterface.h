@@ -27,7 +27,7 @@ struct WedgemoreUserInput
 	bool ShooterDown = false;
 	bool BatterHiGoal = false;
 	bool DefenseHiGoal = false;
-	bool RunningHiGoal = false;
+	bool MidHiGoal = false;
 	bool SpinAndShoot = false;
 	bool SpeedMode = false;
 	bool VBusMode = false;

@@ -124,10 +124,10 @@ void Shooter::ToggleLight() {
 	state = !state;
 	SmartDashboard::PutBoolean("Light on", state);
 }
-void Shooter::ToggleRunLight() {
-	static bool state = false;
-	m_runNgunLight.Set(!state);
-	state = !state;
+void Shooter::ToggleRunLight(bool state) {
+	//static bool state = false;
+	m_runNgunLight.Set(state);
+	//state = !state;
 	//SmartDashboard::PutBoolean("Light on", state);
 }
 
