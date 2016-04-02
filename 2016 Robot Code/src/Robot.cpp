@@ -133,7 +133,7 @@ public:
 
 		}
 		else if(wui.SpinUpLow) {
-			m_shooter.Spinup(1000);
+			m_shooter.Spinup(2000);
 		}
 
 		else if (!wui.Pickup){

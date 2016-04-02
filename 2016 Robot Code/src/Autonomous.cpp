@@ -81,7 +81,7 @@ void Autonomous::Init(int mode) {
 void Autonomous::Periodic() {
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	float leftDist, rightDist;
-	float  curveRatio = 0.78;
+	float  curveRatio = 0.8;
 	static unsigned count = 0;
 	count++;
 
