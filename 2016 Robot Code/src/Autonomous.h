@@ -25,6 +25,8 @@ private:
 	TankDrive *m_tank;
 	SuspensionDrive *m_suspension;
 	Shooter *m_shooter;
+	unsigned m_autoState = 0;
+	ADXRS450_Gyro m_rateSensor;
 	DigitalInput m_one, m_two, m_three, m_four, m_five;
 	TrapezoidalMove m_move;
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
@@ -34,6 +36,8 @@ public:
 	virtual ~Autonomous();
 	void Init(int mode);
 	void Periodic();
+	void RockWall(unsigned position);
+	void LowBar(unsigned position);
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */

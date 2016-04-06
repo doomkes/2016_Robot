@@ -41,8 +41,8 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-		SmartDashboard::PutNumber("ShooterSpeed", 3400);
-		SmartDashboard::PutNumber("ShooterAngle", 40.5);
+//		SmartDashboard::PutNumber("ShooterSpeed", 3400);
+//		SmartDashboard::PutNumber("ShooterAngle", 40.5);
 
 		SmartDashboard::PutNumber("lift accel",		1);
 		SmartDashboard::PutNumber("lift decel",		1);
@@ -85,6 +85,7 @@ public:
 		m_shooter.Zero();
 		m_tank.Zero();
 		ui.Init(&wui);
+		//m_leddar.StartAutoDetections(true);
 
 	}
 
@@ -202,6 +203,10 @@ public:
 	}
 	void DisabledInit(){
 		m_tank.Zero();
+		m_shooter.Shoot(false);
+		m_shooter.Spinup(0);
+		//m_leddar.StartAutoDetections(false);
+
 	}
 };
 

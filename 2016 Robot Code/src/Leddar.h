@@ -19,15 +19,16 @@ struct point {
 };
 
 struct LineSeg {
-	point p1, p2;
+	point p1, p2, mid;
 	float angle;
 	float slope;
 	float yIntercept;
 	float length;
+	float distToMidpoint;
 };
 
 struct Detection {
-	unsigned short distance;
+	float distance;
 	unsigned short amplitude;
 	unsigned char  detectionNumber;
 	unsigned char  flags;
@@ -50,11 +51,12 @@ public:
 	vector<point> GetDetections();
 	// fill the buffer with detections, get them from the buffer with GetDetections().
 	void FillBuffer();
+	void RequestDetections(); // send modbus request
 
 	unsigned GetLineSegs(LineSeg lineSeg[], point points[], const unsigned numPoints);
 
 	unsigned GetDetectionsAsCarteasion(point buff[], unsigned buffSize);
-	unsigned GetDetectionsAsLineSegs(LineSeg buff[], unsigned buffSize);
+	unsigned GetDetectionsAsLineSegs();
 	void StartAutoDetections(bool start);
 	bool IsAutoDetectEnabled();
 };

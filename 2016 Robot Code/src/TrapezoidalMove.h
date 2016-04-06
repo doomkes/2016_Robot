@@ -22,6 +22,7 @@ public:
 	void SetDecel(float);		// feet per second per second
 	void SetMaxSpeed(float);	// feet per second
 	void SetDistance(float);
+	void SetAll(float accel, float decel, float maxSpeed,float distance);
 	void CalcParams(void);
 	float GetTotalTime();
 	float Position(float time);

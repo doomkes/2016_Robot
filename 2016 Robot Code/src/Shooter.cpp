@@ -161,8 +161,8 @@ void Shooter::Spinup(float speed) {
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-3000);
-	m_shoot2.Set(3000);
+	m_shoot1.Set(-2000);
+	m_shoot2.Set(2000);
 }
 
 void Shooter::SpinShoot() {

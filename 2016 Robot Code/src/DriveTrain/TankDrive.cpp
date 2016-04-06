@@ -43,17 +43,22 @@ void TankDrive::SetMode(DriveMode mode) {
 	m_rightMotor1.SetPID(SmartDashboard::GetNumber("Driver P", 1), SmartDashboard::GetNumber("Driver I", 0), 0);
 	switch(mode) {
 		case SPEED_MODE:
-			Zero();
 			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_leftMotor1.Set(0);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_rightMotor1.Set(0);
 			break;
 		case VBUS_MODE:
 			m_leftMotor1.SetControlMode(CANSpeedController::kPercentVbus);
+			m_leftMotor1.Set(0);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPercentVbus);
+			m_rightMotor1.Set(0);
 			break;
 		case POSITION_MODE:
 			m_leftMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_leftMotor1.Set(0);
 			m_rightMotor1.SetControlMode(CANSpeedController::kPosition);
+			m_rightMotor1.Set(0);
 			break;
 	}
 }
@@ -133,6 +138,8 @@ void TankDrive::Zero()
 {
 	m_leftMotor1.SetPosition(0.0);
 	m_rightMotor1.SetPosition(0.0);
+	m_leftMotor1.Set(0);
+	m_rightMotor1.Set(0);
 	m_leftDistance = 0;
 	m_rightDistance = 0;
 }

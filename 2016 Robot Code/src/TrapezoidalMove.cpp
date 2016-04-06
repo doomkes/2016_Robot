@@ -40,7 +40,18 @@ void TrapezoidalMove::SetMaxSpeed(float value){
 }
 void TrapezoidalMove::SetDistance(float value){
 	m_distance = value;
+	CalcParams();
 }
+
+void TrapezoidalMove::SetAll(float accel, float decel, float maxSpeed,float distance){
+	m_accel = accel;
+	m_decel = decel;
+	m_max_speed = maxSpeed;
+	m_distance = distance;
+	CalcParams();
+}
+
+
 void TrapezoidalMove::CalcParams(void){
 	float accel_time, decel_time, min_dist, accel_dist, decel_dist;
 
@@ -68,12 +79,12 @@ void TrapezoidalMove::CalcParams(void){
 		cout << "T2 Time: " << m_t2 << "\n";
 		cout << "T3 Time: " << m_t3 << "\n";
 		};
-	SmartDashboard::PutNumber("T1", m_t1);
-	SmartDashboard::PutNumber("T2", m_t2);
-	SmartDashboard::PutNumber("T3", m_t3);
-	SmartDashboard::PutNumber("accel dist", accel_dist);
-	SmartDashboard::PutNumber("accel time", accel_time);
-	SmartDashboard::PutNumber("decel_dist", decel_dist);
+//	SmartDashboard::PutNumber("T1", m_t1);
+//	SmartDashboard::PutNumber("T2", m_t2);
+//	SmartDashboard::PutNumber("T3", m_t3);
+//	SmartDashboard::PutNumber("accel dist", accel_dist);
+//	SmartDashboard::PutNumber("accel time", accel_time);
+//	SmartDashboard::PutNumber("decel_dist", decel_dist);
 }
 
 float TrapezoidalMove::Position(float time){
