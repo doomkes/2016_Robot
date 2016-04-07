@@ -37,6 +37,7 @@ public:
 	void Drive(float leftSpeed, float rightSpeed);
 	void SpeedDrive(float leftSpeed, float rightSpeed);
 	void VBusDrive(float leftSpeed, float rightSpeed);
+	void StraightDrive(float dist, float angleError, bool reset = false );
 	void PositionDrive(float leftSpeed, float rightSpeed);
 };
 
