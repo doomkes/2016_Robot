@@ -38,7 +38,7 @@ public:
 	void Periodic();
 	void RockWall(unsigned position);
 	void LowBar(unsigned position);
-	void Ramparts(unsigned position);
+	void Ramparts(int position);
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */

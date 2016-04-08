@@ -430,26 +430,34 @@ void Autonomous::LowBar(unsigned position){
 
 }
 
-void Autonomous::Ramparts(unsigned position){
+void Autonomous::Ramparts(int position){
 	static unsigned count = 0; // General Purpose counter
-	static double delayStartTime = 0; // used to remember delay start times for when
-									// we want to insert a pure time delay;
 	static float adjust = 0;
 	static double caseStartTime = 0;
 	float leftDist,rightDist;
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
-
 	static TrapezoidalMove move(24,24,36,220);
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+	static int finalMoveDist = 0;
 
-	printf("Auto Time %f \n", currentAutoTime);
+	switch(position){//set distance of final move based on starting position
+		case 1:
+			finalMoveDist = 77;
+			break;
+		case 2:
+			finalMoveDist = 27;
+			break;
+		case 3:
+			finalMoveDist = 23;
+			break;
+		case 4:
+			finalMoveDist = 73;
+			break;
+	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
 	rightDist = move.Position(currentAutoTime) - adjust/2;
-	//adjust += m_rateSensor.GetAngle()*0.367*0.05;	//this is the tangent of 1deg times wheel separation of 21in
-
-	printf("case %i   right dist:%f \n", m_autoState, rightDist);
 
 	switch (m_autoState){
 		case 0:  // Drive to ramparts
@@ -465,59 +473,59 @@ void Autonomous::Ramparts(unsigned position){
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 61.67) m_autoState++;
 			break;
 		case 1:  // Drive to ramparts
 			m_suspension->SetBackLeft(false);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 72.795) m_autoState++;
 			break;
 		case 2:  // Drive to ramparts
 			m_suspension->SetBackLeft(true);
 			m_suspension->SetBackRight(false);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 83.92) m_autoState++;
 			break;
 		case 3:  // Drive to ramparts
 			m_suspension->SetFrontLeft(false);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 84.25) m_autoState++;
 			break;
 		case 4:  // Drive to ramparts
 			m_suspension->SetBackRight(true);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 98.25) m_autoState++;
 			break;
 		case 5:  // Drive to ramparts
 			m_suspension->SetFrontLeft(true);
 			m_suspension->SetFrontRight(false);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 105.5) m_autoState++;
 			break;
 		case 6:  // Drive to ramparts
 			m_suspension->SetFrontRight(true);
-			leftDist = move.Position(currentAutoTime) + adjust/2;
-			rightDist = move.Position(currentAutoTime) - adjust/2;
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
 			if (rightDist > 115) m_autoState++;
 			break;
 		case 7:
 			timeAdjust += 0.01;
 			currentAutoTime += timeAdjust;
-			adjust += m_rateSensor.GetAngle()*0.367*0.05;
+			adjust += m_rateSensor.GetAngle()*0.367*0.05; //this is the tangent of 1deg times wheel separation of 21in
 			m_suspension->SetFrontLeft(false);
 			m_suspension->SetBackLeft(false);
 			m_suspension->SetFrontRight(false);
@@ -532,17 +540,31 @@ void Autonomous::Ramparts(unsigned position){
 				startAngle = m_rateSensor.GetAngle();
 				}
 			break;
-		case 8:
+		case 8://first 90deg turn to line up horizontally to tower
 			static float pos = 0;
 			m_shooter->Spinup(-3000);
-				pos += 0.2*(90 - m_rateSensor.GetAngle())/25 + 0.01;
-				m_tank->PositionDrive(-pos, pos);
-				if(m_rateSensor.GetAngle() - startAngle > 90) {
-					m_autoState++; // move to next state
-					caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-					move.SetAll(36,36,48,77); // Setup move for next step
-					m_tank->Zero();
-				}
+			switch (position){
+				case 1 ... 2://positions 1 and 2 (turn clockwise)
+					pos += 0.2*(90 - m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor.GetAngle() - startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+				case 3 ... 4://positions 3 and 4 (turn counter-clockwise)
+					pos += 0.2*fabs(90 + m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(fabs(m_rateSensor.GetAngle()) + startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+			}
 			break;
 		case 9:
 			m_shooter->Spinup(4500);
@@ -556,21 +578,30 @@ void Autonomous::Ramparts(unsigned position){
 				//caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 			}
 			break;
-		case 10:{
+		case 10:{//second 90deg turn to line up towards goal
 			static float pos = 0;
-			pos += 0.20*(m_rateSensor.GetAngle())/25 + 0.01;
-				m_tank->PositionDrive(pos, -pos);
-				m_shooter->Spinup(4500);
-				m_shooter->LiftTo(45);
-				if(m_rateSensor.GetAngle() < 0) {
-					//m_autoState++; // move to next state
-					//caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-					//move.SetAll(24,24,36,90); // Setup move for next step
-					m_tank->Zero();
-					m_autoState++;
-					m_shooter->Shoot(true);
-
-				}
+			m_shooter->Spinup(4500);
+			m_shooter->LiftTo(45);
+			switch(position){
+				case 1 ... 2://positions 1 and 2 (turn counter-clockwise)
+					pos += 0.20*(m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(m_rateSensor.GetAngle() < 0) {
+						m_tank->Zero();
+						m_autoState++;
+						m_shooter->Shoot(true);
+					}
+					break;
+				case 3 ... 4://positions 3 and 4 (turn clockwise)
+					pos += 0.20*fabs(m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor.GetAngle() > 0) {
+						m_tank->Zero();
+						m_autoState++;
+						m_shooter->Shoot(true);
+					}
+					break;
+			}
 			break;
 		}
 		case 11:
