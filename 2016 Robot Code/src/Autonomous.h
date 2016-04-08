@@ -27,7 +27,7 @@ private:
 	Shooter *m_shooter;
 	unsigned m_autoState = 0;
 	ADXRS450_Gyro m_rateSensor;
-	DigitalInput m_one, m_two, m_three, m_four, m_five;
+	DigitalInput m_one, m_two, m_three, m_four, m_five, m_six;
 	TrapezoidalMove m_move;
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
 	int m_mode = DO_NOTHING;
@@ -38,6 +38,7 @@ public:
 	void Periodic();
 	void RockWall(unsigned position);
 	void LowBar(unsigned position);
+	void Ramparts(unsigned position);
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */
