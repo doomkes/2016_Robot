@@ -156,6 +156,8 @@ void Autonomous::Periodic() {
 			break;
 		case 4:
 			LowBar(0);
+
+
 //			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
 //			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
 //			rightDist = m_move.Position(currentAutoTime);
@@ -341,46 +343,51 @@ void Autonomous::RockWall(unsigned position){
 
 void Autonomous::LowBar(unsigned position){
 	static unsigned count = 0; // General Purpose counter
-	static double delayStartTime = 0; // used to remember delay start times for when
-									// we want to insert a pure time delay;
 	static float startAngle = 0;
 
 	static double caseStartTime = 0;
 	float leftDist,rightDist;
 	static unsigned lastState = 99; // used to detect state change
 
-	static TrapezoidalMove move(24,24,72,233);
+	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 
 	switch (m_autoState){
 		case 0:  // Drive to low bar
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
 				caseStartTime = currentAutoTime;
+				move.SetAll(24,24,72,233);
 				move.CalcParams();
+				startAngle = m_rateSensor.GetAngle();
+				m_tank->StraightDrive(0, 0, false);
 			}
+
 			leftDist = move.Position(currentAutoTime);
 			rightDist = leftDist;
-			m_tank->PositionDrive(leftDist, rightDist);
-			m_shooter->LiftTo(180);
+			//m_tank->PositionDrive(leftDist, rightDist);
+			m_tank->StraightDrive(-move.Position(currentAutoTime),
+								  startAngle - m_rateSensor.GetAngle());
+			m_shooter->LiftTo(165);
 			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
 				m_autoState++; // move to next state
+				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_tank->Zero();
-				startAngle = m_rateSensor.GetAngle();
 			}
 
 			break;
 		case 1: // Turn 60 degrees - wheels equal and opposite directions 1/4 of circle circumference
 			static float pos = 0;
-			pos += 0.3;
+			pos += 0.2;
 			m_tank->PositionDrive(-pos, pos);
-			if(m_rateSensor.GetAngle() - startAngle > 60) {
+			if(m_rateSensor.GetAngle() - startAngle > 57) {
 				m_autoState++; // move to next state
+				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				move.SetAll(24,24,72,30); // Setup move for next step
 				m_tank->Zero();
 				m_shooter->Spinup(-2000); // set shooter angle and speed set
-				m_shooter->LiftTo(42);
+				m_shooter->LiftTo(40);
 			}
 			break;
 		case 2: // Move toward the tower and bring up shooter
@@ -389,14 +396,15 @@ void Autonomous::LowBar(unsigned position){
 			m_tank->PositionDrive(leftDist, rightDist);
 			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
 				m_autoState++; // move to next state
+				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_shooter->Spinup(5000);
 			}
 			break;
-
 		case 3: // wait for spinup
 			if ((currentAutoTime - caseStartTime) > 2.0){
 				m_autoState++; // move to next state
+				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 			}
 			break;
@@ -404,6 +412,7 @@ void Autonomous::LowBar(unsigned position){
 			m_shooter->Shoot(true);
 			if ((currentAutoTime - caseStartTime) > 0.10){
 				m_autoState++; // move to next state
+				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_shooter->Spinup(0);
 			}

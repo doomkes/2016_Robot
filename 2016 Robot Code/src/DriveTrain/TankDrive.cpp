@@ -98,7 +98,18 @@ void TankDrive::VBusDrive(float leftSpeed, float rightSpeed) {
 	m_leftMotor1.Set(-leftSpeed);
 	m_rightMotor1.Set(rightSpeed);
 }
+void TankDrive::StraightDrive(float dist, float angleError, bool reset ) {
+	static float adjust = 0;
+	if(reset) {
+		adjust = 0;
+	}
+	//0.367 is the calculated angle adjust factor
+	//0.05 is the dampener
+	adjust += angleError * 0.367 * 0.05;
+	m_leftMotor1.Set((dist + adjust/2)*COUNT_PER_INCH);
+	m_rightMotor1.Set(-(dist - adjust/2)*COUNT_PER_INCH);
 
+}
 void TankDrive::Drive(float leftSpeed, float rightSpeed)
 {
 	if(fabs(leftSpeed) < 0.1) {
