@@ -40,6 +40,7 @@ public:
 	void LowBar(unsigned position);
 	void Ramparts(int position);
 	void RoughTerrain(int position);
+	void Portcullis();
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */

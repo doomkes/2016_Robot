@@ -157,7 +157,6 @@ void Autonomous::Periodic() {
 		case 4:
 			LowBar(0);
 
-
 //			SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
 //			SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
 //			rightDist = m_move.Position(currentAutoTime);
@@ -769,4 +768,61 @@ void Autonomous::RoughTerrain(int position){
 	count ++; // increment counter
 	lastState = m_autoState;
 
+}
+
+void Autonomous::Portcullis(){
+	static unsigned count = 0; // General Purpose counter
+	static double caseStartTime = 0;
+	float leftDist,rightDist;
+	static unsigned lastState = 99; // used to detect state change
+	static float startAngle = 0;
+	static float timeAdjust = 0;
+	static TrapezoidalMove move(12,12,12,144);
+	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+
+	leftDist = move.Position(currentAutoTime);
+	rightDist = move.Position(currentAutoTime);
+	m_tank->PositionDrive(leftDist, rightDist);
+
+	switch (m_autoState){
+		case 0: //reach portcullis
+			if (m_autoState != lastState){ // put things here that only need done once when entering the state
+				caseStartTime = currentAutoTime;
+				startAngle = m_rateSensor.GetAngle();
+				move.SetAll(12,12,12,144);
+				move.CalcParams();
+				m_shooter->Spinup(0);
+				m_shooter->LiftTo(170);
+				m_suspension->SetFrontLeft(false);
+				m_suspension->SetBackLeft(false);
+				m_suspension->SetFrontRight(false);
+				m_suspension->SetBackRight(false);
+			}
+			if (rightDist > 48) m_autoState++;
+			break;
+		case 1://start lifting
+			m_shooter->LiftTo(0);
+			if (m_shooter->GetLiftPosition() > 90) m_autoState++;
+			break;
+		case 2://
+			timeAdjust += 0.02;
+			currentAutoTime += timeAdjust;
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+				m_autoState++; // move to next state
+				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+				m_tank->Zero();
+				}
+			break;
+		case 3://be done
+			m_tank->Zero();
+			break;
+	}
+
+	if (count%10 == 0){
+		SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+		SmartDashboard::PutNumber("Auto Left distance", leftDist);
+		SmartDashboard::PutNumber("Auto Right distance", rightDist);
+	}
+	count ++; // increment counter
+	lastState = m_autoState;
 }
