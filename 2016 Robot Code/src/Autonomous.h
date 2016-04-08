@@ -39,6 +39,7 @@ public:
 	void RockWall(unsigned position);
 	void LowBar(unsigned position);
 	void Ramparts(int position);
+	void RoughTerrain(int position);
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */

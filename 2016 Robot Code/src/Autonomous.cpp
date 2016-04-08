@@ -431,6 +431,7 @@ void Autonomous::LowBar(unsigned position){
 }
 
 void Autonomous::Ramparts(int position){
+
 	static unsigned count = 0; // General Purpose counter
 	static float adjust = 0;
 	static double caseStartTime = 0;
@@ -622,3 +623,150 @@ void Autonomous::Ramparts(int position){
 
 }
 
+void Autonomous::RoughTerrain(int position){
+	static unsigned count = 0; // General Purpose counter
+	static float adjust = 0;
+	static double caseStartTime = 0;
+	float leftDist,rightDist;
+	static unsigned lastState = 99; // used to detect state change
+	static float startAngle = 0;
+	static float timeAdjust = 0;
+	static TrapezoidalMove move(24,24,36,220);
+	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+	static int finalMoveDist = 0;
+
+	switch(position){//set distance of final move based on starting position
+		case 1:
+			finalMoveDist = 77;
+			break;
+		case 2:
+			finalMoveDist = 27;
+			break;
+		case 3:
+			finalMoveDist = 23;
+			break;
+		case 4:
+			finalMoveDist = 73;
+			break;
+	}
+	leftDist = move.Position(currentAutoTime) + adjust/2;
+	rightDist = move.Position(currentAutoTime) - adjust/2;
+
+	switch (m_autoState){
+		case 0:  // Drive over rough terrain with wheels extended
+			if (m_autoState != lastState){ // put things here that only need done once when entering the state
+				caseStartTime = currentAutoTime;
+				startAngle = m_rateSensor.GetAngle();
+				move.SetAll(24,24,36,220);
+				m_suspension->SetFrontLeft(true);
+				m_suspension->SetBackLeft(true);
+				m_suspension->SetFrontRight(true);
+				m_suspension->SetBackRight(true);
+				move.CalcParams();
+				m_shooter->Spinup(0);
+				m_shooter->LiftTo(0);
+			}
+			leftDist = move.Position(currentAutoTime);
+			rightDist = move.Position(currentAutoTime);
+			m_tank->PositionDrive(leftDist, rightDist);
+			if (rightDist > 115) m_autoState++;
+			break;
+		case 1://finish the rest of the move to the tower with wheels retracted and gyro feedback
+			timeAdjust += 0.01;
+			currentAutoTime += timeAdjust;
+			adjust += m_rateSensor.GetAngle()*0.367*0.05; //this is the tangent of 1deg times wheel separation of 21in
+			m_suspension->SetFrontLeft(false);
+			m_suspension->SetBackLeft(false);
+			m_suspension->SetFrontRight(false);
+			m_suspension->SetBackRight(false);
+			leftDist = move.Position(currentAutoTime) + adjust/2;
+			rightDist = move.Position(currentAutoTime) - adjust/2;
+			m_tank->PositionDrive(leftDist, rightDist);
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+				m_autoState++; // move to next state
+				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+				m_tank->Zero();
+				startAngle = m_rateSensor.GetAngle();
+				}
+			break;
+		case 2://first 90deg turn to line up horizontally to tower
+			static float pos = 0;
+			m_shooter->Spinup(-3000);
+			switch (position){
+				case 1 ... 2://positions 1 and 2 (turn clockwise)
+					pos += 0.2*(90 - m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor.GetAngle() - startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+				case 3 ... 4://positions 3 and 4 (turn counter-clockwise)
+					pos += 0.2*fabs(90 + m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(fabs(m_rateSensor.GetAngle()) + startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+			}
+			break;
+		case 3:
+			m_shooter->Spinup(4500);
+			m_shooter->LiftTo(45);
+			leftDist = move.Position(currentAutoTime - caseStartTime);
+			rightDist = leftDist;
+			m_tank->PositionDrive(leftDist, rightDist);
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+				m_tank->Zero();
+				m_autoState++; // move to next state
+				//caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+			}
+			break;
+		case 4:{//second 90deg turn to line up towards goal
+			static float pos = 0;
+			m_shooter->Spinup(4500);
+			m_shooter->LiftTo(45);
+			switch(position){
+				case 1 ... 2://positions 1 and 2 (turn counter-clockwise)
+					pos += 0.20*(m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(m_rateSensor.GetAngle() < 0) {
+						m_tank->Zero();
+						m_autoState++;
+						m_shooter->Shoot(true);
+					}
+					break;
+				case 3 ... 4://positions 3 and 4 (turn clockwise)
+					pos += 0.20*fabs(m_rateSensor.GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor.GetAngle() > 0) {
+						m_tank->Zero();
+						m_autoState++;
+						m_shooter->Shoot(true);
+					}
+					break;
+			}
+			break;
+		}
+		case 5:
+			m_tank->Zero();
+			m_shooter->LiftTo(45);
+			m_shooter->Spinup(0);
+			break;
+	}
+
+
+	if (count%10 == 0){
+		SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
+		SmartDashboard::PutNumber("Auto Left distance", leftDist);
+		SmartDashboard::PutNumber("Auto Right distance", rightDist);
+	}
+	count ++; // increment counter
+	lastState = m_autoState;
+
+}
