@@ -15,7 +15,7 @@ class Shooter
 private:
 	CANTalon m_lift, m_shoot1, m_shoot2;
 	Solenoid m_kicker;
-	DigitalOutput m_aimLight, m_runNgunLight;
+	DigitalOutput  m_runNgunLight;
 	float max_speed = 0.5;
 	float m_startTime = 0;
 	float m_liftAccel = 0, m_liftMaxSpeed = 0;
@@ -38,7 +38,6 @@ public:
 	void SpinShoot();
 	void Pickup();
 	void Stop();
-	void ToggleLight();
 	void ToggleRunLight(bool state);
 	/**
 	 * Call every loop to update async actions.
@@ -46,6 +45,7 @@ public:
 	void Update();
 	void Zero();
 	double GetLiftPosition();
+	double GetLiftAngle();
 	double GetWheelRPM();
 	int shooter_zero = 0;
 };

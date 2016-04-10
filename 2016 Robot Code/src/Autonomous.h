@@ -27,20 +27,23 @@ private:
 	Shooter *m_shooter;
 	unsigned m_autoState = 0;
 	ADXRS450_Gyro m_rateSensor;
-	DigitalInput m_one, m_two, m_three, m_four, m_five, m_six;
+	DigitalInput m_DIO0, m_DIO1, m_DIO2, m_DIO3, m_DIO4, m_DIO5;
 	TrapezoidalMove m_move;
 	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
-	int m_mode = DO_NOTHING;
+	int m_mode = 0, m_pos = 0;
 public:
 	Autonomous(TankDrive*, SuspensionDrive*,Shooter*);
 	virtual ~Autonomous();
 	void Init(int mode);
 	void Periodic();
-	void RockWall(unsigned position);
+	void RockWall(int position);
 	void LowBar(unsigned position);
+	void TwoBallLowBar();
 	void Ramparts(int position);
 	void RoughTerrain(int position);
 	void Portcullis();
+	void Moat(int position);
+	void ChivalDeFrise(int position);
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */

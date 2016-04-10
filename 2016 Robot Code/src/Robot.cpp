@@ -104,7 +104,14 @@ public:
 //			cout << "length of seg " << i <<": " << lineSegs[i].length << endl;
 //		}
 		ui.GetData(&wui);
-		m_tank.Drive(wui.LeftSpeed, wui.RightSpeed);
+
+		float leftSpeed = wui.LeftSpeed;
+		float rightSpeed = wui.RightSpeed;
+		if(wui.RunGunLight) {
+			leftSpeed  *= 0.7;
+			rightSpeed *= 0.7;
+		}
+		m_tank.Drive(leftSpeed, rightSpeed);
 
 		if(wui.PickupPos || wui.ShooterDown) {
 			m_shooterMode = PICKUP_MODE;
@@ -134,7 +141,7 @@ public:
 
 		}
 		else if(wui.SpinUpLow) {
-			m_shooter.Spinup(2000);
+			m_shooter.Spinup(3500);
 		}
 
 		else if (!wui.Pickup){
@@ -152,9 +159,6 @@ public:
 			m_shooterMode = STOW_MODE;
 			m_shooter.Zero();
 			//m_shooter.shooter_zero = 1;
-		}
-		if(wui.ToggleLight) {
-			m_shooter.ToggleLight();
 		}
 		//if(wui.RunGunLight) {
 			m_shooter.ToggleRunLight(wui.RunGunLight);

@@ -31,7 +31,7 @@ struct WedgemoreUserInput
 	bool SpinAndShoot = false;
 	bool SpeedMode = false;
 	bool VBusMode = false;
-	bool ToggleLight = false, RunGunLight = false;
+	bool RunGunLight = false;
 	bool ReverseDrive = false;
 };
 

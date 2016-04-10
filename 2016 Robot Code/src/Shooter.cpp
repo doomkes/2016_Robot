@@ -76,7 +76,6 @@ Shooter::Shooter() :
 
 		m_shoot2(SHOOT2),
 		m_kicker(SHOOTERSOL),
-		m_aimLight(AIM_LIGHT),
 		m_runNgunLight(RUN_GUN_LIGHT)
 
 {
@@ -108,7 +107,6 @@ Shooter::Shooter() :
 	m_shoot2.SetVoltageRampRate(50);
 
 
-	m_aimLight.Set(false);
 	m_runNgunLight.Set(false);
 	m_lift.Reset();
 	m_lift.SetControlMode(CANSpeedController::kPosition);
@@ -119,12 +117,6 @@ Shooter::Shooter() :
 
 }
 
-void Shooter::ToggleLight() {
-	static bool state = false;
-	m_aimLight.Set(!state);
-	state = !state;
-	//SmartDashboard::PutBoolean("Light on", state);
-}
 void Shooter::ToggleRunLight(bool state) {
 	//static bool state = false;
 	m_runNgunLight.Set(state);
@@ -161,8 +153,8 @@ void Shooter::Spinup(float speed) {
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-2000);
-	m_shoot2.Set(2000);
+	m_shoot1.Set(-2500);
+	m_shoot2.Set(2500);
 }
 
 void Shooter::SpinShoot() {
@@ -261,6 +253,11 @@ void Shooter::Zero() {
 double Shooter::GetLiftPosition()
 {
 	return m_lift.GetPosition();
+}
+
+double Shooter::GetLiftAngle()
+{
+	return m_lift.GetPosition()/SHOOTER_SCALE;
 }
 
 double Shooter::GetWheelRPM() {

@@ -38,12 +38,10 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->SpeedMode = false;
 	wui->VBusMode = false;
 	wui->MidHiGoal = false;
-	wui->ToggleLight = false;
 	wui->RunGunLight = false;
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
-	static bool lastLightButton = false;
 	wui->LiftSpeed = m_manStick.GetRawAxis(LIFTAXIS);
 	wui->SliderValue = m_manStick.GetRawAxis(SLIDERAXIS);
 	wui->YawValue = 0;
@@ -60,8 +58,6 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	wui->DefenseHiGoal = m_manStick.GetRawButton(DEFENSEHIGOALPOS);
 	wui->MidHiGoal = m_manStick.GetRawButton(MIDSHOTPOS);
 	wui->SpinAndShoot = m_manStick.GetRawButton(SPINANDSHOOT);
-	wui->ToggleLight = m_manStick.GetRawButton(TOGGLE_LIGHT) && !lastLightButton ? true : false;
-	lastLightButton = m_manStick.GetRawButton(TOGGLE_LIGHT);
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 	if(m_lStick.GetRawButton(DROPBACK))
