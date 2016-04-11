@@ -17,7 +17,6 @@ Autonomous::~Autonomous() {
 }
 
 void Autonomous::Init(int mode) {
-	float totalDistance = SmartDashboard::GetNumber("Total Distance", 284.93);
 	m_mode = 0;
 	m_pos = 0;
 	m_mode |= !m_DIO0.Get() ? 0x04 : 0;
@@ -33,6 +32,22 @@ void Autonomous::Init(int mode) {
 	m_autoState = 0;
 	m_autoStartTime = Timer::GetFPGATimestamp();
 	m_tank->SetMode(POSITION_MODE);
+
+	//textual representation of selected auto mode.
+	std::string autoName = "";
+	switch(m_mode) {
+		case 0: autoName = "do nothing"; break;
+		case 1: autoName = "low bar"; break;
+		case 2: autoName = "portcullis"; break;
+		case 3: autoName = "Chival De Friese"; break;
+		case 4: autoName = "Ramparts"; break;
+		case 5: autoName = "Moat"; break;
+		case 6: autoName = "Rock Wall"; break;
+		case 7: autoName = "RoughTerrain"; break;
+	}
+	//Put textual representation of auto mode to dashboard.
+	SmartDashboard::PutString("auto mode", std::to_string(m_mode) + ": " + autoName);
+	m_init = true;
 }
 
 void Autonomous::Periodic() {
@@ -75,31 +90,27 @@ void Autonomous::LowBar(unsigned position){
 	static float startAngle = 0;
 
 	static double caseStartTime = 0;
-	float leftDist,rightDist;
-	static unsigned lastState = 99; // used to detect state change
-
 	static TrapezoidalMove move;
+	float leftDist,rightDist;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+
+	if(m_init) { // Initilize static variables.
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,24,72,233);
+		startAngle = m_rateSensor.GetAngle();
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
+	}
 
 	switch (m_autoState){
 		case 0:  // Drive to low bar
-			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				move.SetAll(24,24,72,233);
-				move.CalcParams();
-				startAngle = m_rateSensor.GetAngle();
-				m_tank->StraightDrive(0, 0, false);
-			}
-
 			leftDist = move.Position(currentAutoTime);
 			rightDist = leftDist;
-			//m_tank->PositionDrive(leftDist, rightDist);
 			m_tank->StraightDrive(-move.Position(currentAutoTime),
 								  startAngle - m_rateSensor.GetAngle());
 			m_shooter->LiftTo(165);
-			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()) {
 				m_autoState++; // move to next state
-				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_tank->Zero();
 			}
@@ -111,7 +122,6 @@ void Autonomous::LowBar(unsigned position){
 			m_tank->PositionDrive(-pos, pos);
 			if(m_rateSensor.GetAngle() - startAngle > 57) {
 				m_autoState++; // move to next state
-				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				move.SetAll(24,24,72,30); // Setup move for next step
 				m_tank->Zero();
@@ -125,7 +135,6 @@ void Autonomous::LowBar(unsigned position){
 			m_tank->PositionDrive(leftDist, rightDist);
 			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
 				m_autoState++; // move to next state
-				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_shooter->Spinup(5000);
 			}
@@ -133,7 +142,6 @@ void Autonomous::LowBar(unsigned position){
 		case 3: // wait for spinup
 			if ((currentAutoTime - caseStartTime) > 2.0){
 				m_autoState++; // move to next state
-				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 			}
 			break;
@@ -141,7 +149,6 @@ void Autonomous::LowBar(unsigned position){
 			m_shooter->Shoot(true);
 			if ((currentAutoTime - caseStartTime) > 0.10){
 				m_autoState++; // move to next state
-				printf("going to state: %i\n", m_autoState);
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_shooter->Spinup(0);
 			}
@@ -155,8 +162,6 @@ void Autonomous::LowBar(unsigned position){
 		SmartDashboard::PutNumber("Auto Right distance", rightDist);
 	}
 	count ++; // increment counter
-	lastState = m_autoState;
-
 }
 
 void Autonomous::Ramparts(int position){
@@ -168,24 +173,27 @@ void Autonomous::Ramparts(int position){
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
-	static TrapezoidalMove move(24,24,36,220);
+	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
 
-	switch(position){//set distance of final move based on starting position
-		case 0:
-			finalMoveDist = 77;
-			break;
-		case 1:
-			finalMoveDist = 27;
-			break;
-		case 2:
-			finalMoveDist = 27;
-			break;
-		case 3:
-			finalMoveDist = 73;
-			break;
+	if(m_init) { // Initilize static variables.
+		switch(position){//set distance of final move based on starting position
+			case 0: finalMoveDist = 77; break;
+			case 1: finalMoveDist = 27; break;
+			case 2: finalMoveDist = 27; break;
+			case 3: finalMoveDist = 73; break;
+		}
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,24,36,220);
+		startAngle = m_rateSensor.GetAngle();
+		timeAdjust = 0;
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
 	}
+
 	leftDist = move.Position(currentAutoTime) + adjust/2;
 	rightDist = move.Position(currentAutoTime) - adjust/2;
 	printf("case: %i\n",m_autoState);
@@ -193,14 +201,10 @@ void Autonomous::Ramparts(int position){
 	switch (m_autoState){
 		case 0:  // Drive to ramparts
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(24,24,36,220);
 				m_suspension->SetFrontLeft(true);
 				m_suspension->SetBackLeft(true);
 				m_suspension->SetFrontRight(true);
 				m_suspension->SetBackRight(true);
-				move.CalcParams();
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -375,19 +379,22 @@ void Autonomous::RoughTerrain(int position){
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
 
-	switch(position){//set distance of final move based on starting position
-		case 0:
-			finalMoveDist = 77;
-			break;
-		case 1:
-			finalMoveDist = 27;
-			break;
-		case 2:
-			finalMoveDist = 23;
-			break;
-		case 3:
-			finalMoveDist = 73;
-			break;
+	if(m_init) { // Initilize static variables.
+		switch(position){//set distance of final move based on starting position
+			case 0:  finalMoveDist = 77; break;
+			case 1:  finalMoveDist = 27; break;
+			case 2:  finalMoveDist = 23; break;
+			case 3:  finalMoveDist = 73; break;
+			default: finalMoveDist = 0; break;
+		}
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,24,36,212);
+		startAngle = m_rateSensor.GetAngle();
+		timeAdjust = 0;
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
 	rightDist = move.Position(currentAutoTime) - adjust/2;
@@ -395,14 +402,10 @@ void Autonomous::RoughTerrain(int position){
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(24,24,36,212);
 				m_suspension->SetFrontLeft(true);
 				m_suspension->SetBackLeft(true);
 				m_suspension->SetFrontRight(true);
 				m_suspension->SetBackRight(true);
-				move.CalcParams();
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -518,18 +521,24 @@ void Autonomous::Portcullis(){
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
-	static TrapezoidalMove move(12,12,12,160);
+	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+
+	if(m_init) { // Initilize static variables.
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(12,12,15,62);
+		startAngle = m_rateSensor.GetAngle();
+		timeAdjust = 0;
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
+	}
 
 	printf("case: %i   auto time: %f    right:%f  left:%f\n",m_autoState,currentAutoTime,rightDist,leftDist);
 	switch (m_autoState){
 		case 0: //reach portcullis
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(12,12,15,62);
-				move.CalcParams();
-				m_shooter->Spinup(0);
 				m_suspension->SetFrontLeft(true);
 				m_suspension->SetBackLeft(false);
 				m_suspension->SetFrontRight(true);
@@ -593,23 +602,26 @@ void Autonomous::RockWall(int position){
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
-	static TrapezoidalMove move(24,24,36,218);
+	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
 
-	switch(position){//set distance of final move based on starting position
-		case 0:
-			finalMoveDist = 80;
-			break;
-		case 1:
-			finalMoveDist = 29;
-			break;
-		case 2:
-			finalMoveDist = 23;
-			break;
-		case 3:
-			finalMoveDist = 73;
-			break;
+	if(m_init) { // Initilize static variables.
+		switch(position) {//set distance of final move based on starting position
+			case 0: finalMoveDist = 80; break;
+			case 1: finalMoveDist = 29; break;
+			case 2: finalMoveDist = 23; break;
+			case 3: finalMoveDist = 73; break;
+		}
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,24,36,218);
+		startAngle = m_rateSensor.GetAngle();
+		timeAdjust = 0;
+		adjust = 0;
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
 	rightDist = move.Position(currentAutoTime) - adjust/2;
@@ -617,14 +629,10 @@ void Autonomous::RockWall(int position){
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(24,24,36,218);
 				m_suspension->SetFrontLeft(true);
 				m_suspension->SetBackLeft(true);
 				m_suspension->SetFrontRight(true);
 				m_suspension->SetBackRight(true);
-				move.CalcParams();
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -741,23 +749,26 @@ void Autonomous::Moat(int position){
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
-	static TrapezoidalMove move(24,24,36,225);
+	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
 
-	switch(position){//set distance of final move based on starting position
-		case 0:
-			finalMoveDist = 80;
-			break;
-		case 1:
-			finalMoveDist = 29;
-			break;
-		case 2:
-			finalMoveDist = 25;
-			break;
-		case 3:
-			finalMoveDist = 74;
-			break;
+	if(m_init) { // Initilize static variables.
+		switch(position) {//set distance of final move based on starting position
+			case 0: finalMoveDist = 80; break;
+			case 1: finalMoveDist = 29; break;
+			case 2: finalMoveDist = 25; break;
+			case 3: finalMoveDist = 74; break;
+		}
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,24,36,225);
+		startAngle = m_rateSensor.GetAngle();
+		timeAdjust = 0;
+		adjust = 0;
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
 	rightDist = move.Position(currentAutoTime) - adjust/2;
@@ -765,16 +776,10 @@ void Autonomous::Moat(int position){
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(24,24,36,225);
 				m_suspension->SetFrontLeft(true);
 				m_suspension->SetBackLeft(true);
 				m_suspension->SetFrontRight(true);
 				m_suspension->SetBackRight(true);
-				move.CalcParams();
-				m_shooter->Spinup(0);
-				m_shooter->LiftTo(0);
 			}
 			leftDist = move.Position(currentAutoTime) + adjust/2;
 			rightDist = move.Position(currentAutoTime) - adjust/2;
@@ -886,25 +891,29 @@ void Autonomous::ChivalDeFrise(int position) {
 	float leftDist = 0,rightDist = 0;
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
-	static float timeAdjust = 0;
 	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
+
+	if(m_init) { // Initilize static variables.
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24, 36, 36, 52);
+		startAngle = m_rateSensor.GetAngle();
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
+	}
 
 	printf("case: %i   auto time: %f    right:%f  left:%f\n",m_autoState,currentAutoTime,rightDist,leftDist);
 	switch (m_autoState){
 		case 0: //reach chival
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				caseStartTime = currentAutoTime;
-				startAngle = m_rateSensor.GetAngle();
-				move.SetAll(24, 36, 36, 52);
-				move.CalcParams();
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(135);
 				m_suspension->SetFrontLeft(false);
 				m_suspension->SetBackLeft(false);
 				m_suspension->SetFrontRight(false);
 				m_suspension->SetBackRight(false);
-				m_tank->StraightDrive(0, 0, false);
 			}
 			rightDist = -move.Position(currentAutoTime);
 			m_tank->StraightDrive(-rightDist, startAngle - m_rateSensor.GetAngle());
@@ -1009,6 +1018,16 @@ void Autonomous::TwoBallLowBar() {
 	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 
+	if(m_init) { // Initilize static variables.
+		lastState = 0;
+		count = 0;
+		caseStartTime = currentAutoTime;
+		move.SetAll(24,36,72,155);
+		startAngle = m_rateSensor.GetAngle();
+		m_tank->StraightDrive(0, 0, false);
+		m_init = false;
+	}
+
 	switch (m_autoState){
 		case 0:  // Drive to low bar
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
@@ -1021,7 +1040,6 @@ void Autonomous::TwoBallLowBar() {
 
 			leftDist = move.Position(currentAutoTime);
 			rightDist = leftDist;
-			//m_tank->PositionDrive(leftDist, rightDist);
 			m_tank->StraightDrive(-move.Position(currentAutoTime),startAngle - m_rateSensor.GetAngle());
 			m_shooter->Spinup(-2000);
 			if (rightDist > 135) m_shooter->LiftTo(35);

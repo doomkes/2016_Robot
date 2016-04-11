@@ -12,15 +12,9 @@
 #include "DriveTrain/SuspensionDrive.h"
 #include "Shooter.h"
 #include <wpilib.h>
-enum AutoMode {
-	DO_NOTHING,
-	CROSS_DEFENSE,
-	LOW_BAR
-};
 
 class Autonomous {
 private:
-	//Timer m_autoTime;
 	double m_autoStartTime = 0;
 	TankDrive *m_tank;
 	SuspensionDrive *m_suspension;
@@ -28,8 +22,7 @@ private:
 	unsigned m_autoState = 0;
 	ADXRS450_Gyro m_rateSensor;
 	DigitalInput m_DIO0, m_DIO1, m_DIO2, m_DIO3, m_DIO4, m_DIO5;
-	TrapezoidalMove m_move;
-	//bool Cross(Defense, TankDrive*, SuspensionDrive*);
+	bool m_init = false;
 	int m_mode = 0, m_pos = 0;
 public:
 	Autonomous(TankDrive*, SuspensionDrive*,Shooter*);
