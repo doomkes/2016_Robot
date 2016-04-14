@@ -180,9 +180,9 @@ void Autonomous::Ramparts(int position){
 	if(m_init) { // Initilize static variables.
 		switch(position){//set distance of final move based on starting position
 			case 0: finalMoveDist = 77; break;
-			case 1: finalMoveDist = 27; break;
-			case 2: finalMoveDist = 27; break;
-			case 3: finalMoveDist = 73; break;
+			case 1: finalMoveDist = 24; break;
+			case 2: finalMoveDist = 29; break;
+			case 3: finalMoveDist = 82; break;
 		}
 		lastState = 0;
 		count = 0;
@@ -381,10 +381,10 @@ void Autonomous::RoughTerrain(int position){
 
 	if(m_init) { // Initilize static variables.
 		switch(position){//set distance of final move based on starting position
-			case 0:  finalMoveDist = 77; break;
-			case 1:  finalMoveDist = 27; break;
-			case 2:  finalMoveDist = 23; break;
-			case 3:  finalMoveDist = 73; break;
+		case 0: finalMoveDist = 77; break;
+		case 1: finalMoveDist = 24; break;
+		case 2: finalMoveDist = 29; break;
+		case 3: finalMoveDist = 82; break;
 			default: finalMoveDist = 0; break;
 		}
 		lastState = 0;
@@ -608,10 +608,10 @@ void Autonomous::RockWall(int position){
 
 	if(m_init) { // Initilize static variables.
 		switch(position) {//set distance of final move based on starting position
-			case 0: finalMoveDist = 80; break;
-			case 1: finalMoveDist = 29; break;
-			case 2: finalMoveDist = 23; break;
-			case 3: finalMoveDist = 73; break;
+		case 0: finalMoveDist = 77; break;
+		case 1: finalMoveDist = 24; break;
+		case 2: finalMoveDist = 29; break;
+		case 3: finalMoveDist = 82; break;
 		}
 		lastState = 0;
 		count = 0;
@@ -755,10 +755,10 @@ void Autonomous::Moat(int position){
 
 	if(m_init) { // Initilize static variables.
 		switch(position) {//set distance of final move based on starting position
-			case 0: finalMoveDist = 80; break;
-			case 1: finalMoveDist = 29; break;
-			case 2: finalMoveDist = 25; break;
-			case 3: finalMoveDist = 74; break;
+		case 0: finalMoveDist = 77; break;
+		case 1: finalMoveDist = 24; break;
+		case 2: finalMoveDist = 29; break;
+		case 3: finalMoveDist = 82; break;
 		}
 		lastState = 0;
 		count = 0;
