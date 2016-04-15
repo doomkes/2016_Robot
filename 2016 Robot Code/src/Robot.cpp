@@ -55,6 +55,8 @@ public:
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
 		SmartDashboard::PutNumber("ShootSpeed",3450);
+
+		SmartDashboard::PutBoolean("Calibrate", false);
 		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
 //		Preferences::GetInstance()->PutFloat("Drive I", 0);
@@ -212,6 +214,10 @@ public:
 		//m_leddar.StartAutoDetections(false);
 
 	}
+	void DisabledPeriodic() override {
+		m_auto.Disabled();
+	}
+
 };
 
 START_ROBOT_CLASS(Wedgemore)

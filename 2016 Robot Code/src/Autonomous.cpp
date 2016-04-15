@@ -46,7 +46,7 @@ void Autonomous::Init(int mode) {
 		case 7: autoName = "RoughTerrain"; break;
 	}
 	//Put textual representation of auto mode to dashboard.
-	SmartDashboard::PutString("auto mode", std::to_string(m_mode) + ": " + autoName);
+	SmartDashboard::PutString("auto name", std::to_string(m_mode) + ": " + autoName);
 	m_init = true;
 }
 
@@ -60,8 +60,8 @@ void Autonomous::Periodic() {
 		case 0:
 			break;
 		case 1:
-			//LowBar(0);
-			TwoBallLowBar();
+			LowBar(0);
+			//TwoBallLowBar();
 			break;
 		case 2:
 			Portcullis();
@@ -84,7 +84,17 @@ void Autonomous::Periodic() {
 
 	}
 }
-
+void Autonomous::Disabled() {
+	static unsigned count = 0;
+	if(count % 100 == 0) {
+		if(SmartDashboard::GetBoolean("Calibrate", false)) {
+			m_rateSensor.Calibrate();
+			SmartDashboard::PutBoolean("Calibrate", false);
+		}
+		SmartDashboard::PutNumber("RS Angle", m_rateSensor.GetAngle());
+	}
+	count++;
+}
 void Autonomous::LowBar(unsigned position){
 	static unsigned count = 0; // General Purpose counter
 	static float startAngle = 0;
@@ -191,6 +201,10 @@ void Autonomous::Ramparts(int position){
 		startAngle = m_rateSensor.GetAngle();
 		timeAdjust = 0;
 		m_tank->StraightDrive(0, 0, false);
+		m_suspension->SetFrontLeft(true);
+		m_suspension->SetBackLeft(true);
+		m_suspension->SetFrontRight(true);
+		m_suspension->SetBackRight(true);
 		m_init = false;
 	}
 
@@ -201,10 +215,7 @@ void Autonomous::Ramparts(int position){
 	switch (m_autoState){
 		case 0:  // Drive to ramparts
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				m_suspension->SetFrontLeft(true);
-				m_suspension->SetBackLeft(true);
-				m_suspension->SetFrontRight(true);
-				m_suspension->SetBackRight(true);
+
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -394,6 +405,10 @@ void Autonomous::RoughTerrain(int position){
 		startAngle = m_rateSensor.GetAngle();
 		timeAdjust = 0;
 		m_tank->StraightDrive(0, 0, false);
+		m_suspension->SetFrontLeft(true);
+		m_suspension->SetBackLeft(true);
+		m_suspension->SetFrontRight(true);
+		m_suspension->SetBackRight(true);
 		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
@@ -402,10 +417,7 @@ void Autonomous::RoughTerrain(int position){
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				m_suspension->SetFrontLeft(true);
-				m_suspension->SetBackLeft(true);
-				m_suspension->SetFrontRight(true);
-				m_suspension->SetBackRight(true);
+
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -532,18 +544,16 @@ void Autonomous::Portcullis(){
 		startAngle = m_rateSensor.GetAngle();
 		timeAdjust = 0;
 		m_tank->StraightDrive(0, 0, false);
+		m_suspension->SetFrontLeft(true);
+		m_suspension->SetBackLeft(false);
+		m_suspension->SetFrontRight(true);
+		m_suspension->SetBackRight(false);
 		m_init = false;
 	}
 
 	printf("case: %i   auto time: %f    right:%f  left:%f\n",m_autoState,currentAutoTime,rightDist,leftDist);
 	switch (m_autoState){
 		case 0: //reach portcullis
-			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				m_suspension->SetFrontLeft(true);
-				m_suspension->SetBackLeft(false);
-				m_suspension->SetFrontRight(true);
-				m_suspension->SetBackRight(false);
-			}
 			leftDist = -move.Position(currentAutoTime);
 			rightDist = -move.Position(currentAutoTime);
 			m_tank->PositionDrive(leftDist, rightDist);
@@ -621,6 +631,10 @@ void Autonomous::RockWall(int position){
 		timeAdjust = 0;
 		adjust = 0;
 		m_tank->StraightDrive(0, 0, false);
+		m_suspension->SetFrontLeft(true);
+		m_suspension->SetBackLeft(true);
+		m_suspension->SetFrontRight(true);
+		m_suspension->SetBackRight(true);
 		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
@@ -629,10 +643,7 @@ void Autonomous::RockWall(int position){
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
 			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				m_suspension->SetFrontLeft(true);
-				m_suspension->SetBackLeft(true);
-				m_suspension->SetFrontRight(true);
-				m_suspension->SetBackRight(true);
+
 				m_shooter->Spinup(0);
 				m_shooter->LiftTo(0);
 			}
@@ -768,6 +779,10 @@ void Autonomous::Moat(int position){
 		timeAdjust = 0;
 		adjust = 0;
 		m_tank->StraightDrive(0, 0, false);
+		m_suspension->SetFrontLeft(true);
+		m_suspension->SetBackLeft(true);
+		m_suspension->SetFrontRight(true);
+		m_suspension->SetBackRight(true);
 		m_init = false;
 	}
 	leftDist = move.Position(currentAutoTime) + adjust/2;
@@ -775,12 +790,6 @@ void Autonomous::Moat(int position){
 
 	switch (m_autoState){
 		case 0:  // Drive over rough terrain with wheels extended
-			if (m_autoState != lastState){ // put things here that only need done once when entering the state
-				m_suspension->SetFrontLeft(true);
-				m_suspension->SetBackLeft(true);
-				m_suspension->SetFrontRight(true);
-				m_suspension->SetBackRight(true);
-			}
 			leftDist = move.Position(currentAutoTime) + adjust/2;
 			rightDist = move.Position(currentAutoTime) - adjust/2;
 			m_tank->PositionDrive(leftDist, rightDist);
@@ -900,7 +909,7 @@ void Autonomous::ChivalDeFrise(int position) {
 		caseStartTime = currentAutoTime;
 		move.SetAll(24, 36, 36, 52);
 		startAngle = m_rateSensor.GetAngle();
-		m_tank->StraightDrive(0, 0, false);
+		//m_tank->StraightDrive(0, 0, false);
 		m_init = false;
 	}
 
@@ -916,7 +925,9 @@ void Autonomous::ChivalDeFrise(int position) {
 				m_suspension->SetBackRight(false);
 			}
 			rightDist = -move.Position(currentAutoTime);
-			m_tank->StraightDrive(-rightDist, startAngle - m_rateSensor.GetAngle());
+			leftDist = rightDist;
+			//m_tank->StraightDrive(-rightDist, startAngle - m_rateSensor.GetAngle());
+			m_tank->Drive(rightDist, leftDist);
 			if (currentAutoTime - caseStartTime  > move.GetTotalTime()){
 				m_autoState++;
 				m_tank->Zero();
@@ -982,7 +993,7 @@ void Autonomous::ChivalDeFrise(int position) {
 						caseStartTime = currentAutoTime;
 					}
 					break;
-				case 3://position 2(turn clockwise)
+				case 3://position 4(turn clockwise)
 					m_shooter->LiftTo(129);
 					pos += 0.2*(22 - m_rateSensor.GetAngle())/25 + 0.01;
 					m_tank->PositionDrive(pos, -pos);

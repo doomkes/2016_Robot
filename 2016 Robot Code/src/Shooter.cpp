@@ -153,8 +153,8 @@ void Shooter::Spinup(float speed) {
 
 void Shooter::Pickup()
 {
-	m_shoot1.Set(-2500);
-	m_shoot2.Set(2500);
+	m_shoot1.Set(-3000);
+	m_shoot2.Set(3000);
 }
 
 void Shooter::SpinShoot() {
@@ -180,7 +180,18 @@ void Shooter::LiftTo(float angle) {
 
 void Shooter::Update() {
 	static Timer timer;
-
+	static unsigned count = 0;
+	printf("error: %f\n", m_shoot1.GetSpeed());
+	if(fabs(m_shoot1.GetSpeed()) >= m_targetWheelSpeed - 50 && m_targetWheelSpeed != 0) {
+		if(count % 10 == 0) {
+			SmartDashboard::PutBoolean("At Target Speed", true);
+		}
+	} else {
+		if(count % 10 == 0) {
+			SmartDashboard::PutBoolean("At Target Speed", false);
+		}
+	}
+	count++;
 //	cout << "Target speed: " << m_targetWheelSpeed << endl;
 //
 //	cout << "Shoot1 output: " << m_shoot1.GetOutputVoltage()/m_shoot1.GetBusVoltage() << endl;

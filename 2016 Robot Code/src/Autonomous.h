@@ -11,6 +11,7 @@
 #include "DriveTrain/TankDrive.h"
 #include "DriveTrain/SuspensionDrive.h"
 #include "Shooter.h"
+#include "ADXRS450_Gyro_4967.h"
 #include <wpilib.h>
 
 class Autonomous {
@@ -29,6 +30,8 @@ public:
 	virtual ~Autonomous();
 	void Init(int mode);
 	void Periodic();
+	void Disabled();
+	void DisabledInit();
 	void RockWall(int position);
 	void LowBar(unsigned position);
 	void TwoBallLowBar();
