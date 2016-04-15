@@ -116,9 +116,11 @@ void Autonomous::LowBar(unsigned position){
 		case 0:  // Drive to low bar
 			leftDist = move.Position(currentAutoTime);
 			rightDist = leftDist;
-			m_tank->StraightDrive(-move.Position(currentAutoTime),
-								  startAngle - m_rateSensor.GetAngle());
-			m_shooter->LiftTo(165);
+//			m_tank->StraightDrive(-move.Position(currentAutoTime),
+//								  startAngle - m_rateSensor.GetAngle());
+			m_tank->Drive(leftDist, rightDist);
+			if (rightDist > 200) m_shooter->LiftTo(40);
+			else m_shooter->LiftTo(165);
 			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()) {
 				m_autoState++; // move to next state
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
