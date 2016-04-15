@@ -128,7 +128,7 @@ public:
 		}
 		if(wui.SpinUp) {
 			if(m_shooterMode == BATTER_HIGOAL_MODE) {
-				m_shooter.Spinup(2650);
+				m_shooter.Spinup(2600);
 			}
 			else if(m_shooterMode == MID_SHOT_MODE) {
 							m_shooter.Spinup(4500);
@@ -179,7 +179,7 @@ public:
 				m_shooter.LiftTo(180 - AngleAdjust * 35);//TODO use preferences for values.
 				break;
 			case BATTER_HIGOAL_MODE:
-				m_shooter.LiftTo(66); //TODO use preferences for values.
+				m_shooter.LiftTo(64); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
 				m_shooter.LiftTo(34 + AngleAdjust*20);
