@@ -170,8 +170,8 @@ void Shooter::LiftTo(float angle) {
 	if(angle < 0)
 		angle = 0;
 	float position = angle*SHOOTER_SCALE; //multiplying shooter angle by this number gives a value from 0 to 0.5 (range of shooter)
-	m_liftAccel = SmartDashboard::GetNumber("lift accel", 0);
-	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0);
+	m_liftAccel = SmartDashboard::GetNumber("lift accel", 1);
+	m_liftMaxSpeed = SmartDashboard::GetNumber("lift max speed", 0.5);
 	m_targetPosition = position;
 	m_lift.SetPID(SmartDashboard::GetNumber("Shooter P", 4), //TODO hard code values/perfernces
 				  SmartDashboard::GetNumber("Shooter I", 0.01),
