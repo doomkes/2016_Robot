@@ -41,9 +41,9 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-//		SmartDashboard::PutNumber("lift accel",		1);
-//		SmartDashboard::PutNumber("lift decel",		1);
-//		SmartDashboard::PutNumber("lift max speed",	0.5);
+		SmartDashboard::PutNumber("lift accel",		1);
+		SmartDashboard::PutNumber("lift decel",		1);
+		SmartDashboard::PutNumber("lift max speed",	0.5);
 
 		SmartDashboard::PutNumber("Shooter P",		4);
 		SmartDashboard::PutNumber("Shooter I",		0);
