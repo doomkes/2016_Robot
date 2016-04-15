@@ -7,7 +7,7 @@
 #include "Leddar.h"
 #include "Autonomous.h"
 #include "DriveTrain/SuspensionDrive.h"
-//The Robot's name is "Wedgemore"
+//The Robot's name is "Sir. Wedgemore"
 enum ShooterMode {
 	STOW_MODE,
 	PICKUP_MODE,
@@ -41,12 +41,9 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
-//		SmartDashboard::PutNumber("ShooterSpeed", 3400);
-//		SmartDashboard::PutNumber("ShooterAngle", 40.5);
-
-		SmartDashboard::PutNumber("lift accel",		1);
-		SmartDashboard::PutNumber("lift decel",		1);
-		SmartDashboard::PutNumber("lift max speed",	0.5);
+//		SmartDashboard::PutNumber("lift accel",		1);
+//		SmartDashboard::PutNumber("lift decel",		1);
+//		SmartDashboard::PutNumber("lift max speed",	0.5);
 
 		SmartDashboard::PutNumber("Shooter P",		4);
 		SmartDashboard::PutNumber("Shooter I",		0);
@@ -54,7 +51,6 @@ public:
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
-		SmartDashboard::PutNumber("ShootSpeed",3450);
 
 		SmartDashboard::PutBoolean("Calibrate", false);
 		//m_leddar.StartAutoDetections(true);
@@ -174,8 +170,7 @@ public:
 			SmartDashboard::PutBoolean("VBus Mode", true);
 		}
 		m_tank.Reverse(wui.ReverseDrive);
-		SmartDashboard::PutNumber("slider val", wui.SliderValue);
-		float AngleAdjust = wui.LiftSpeed * (-(wui.SliderValue) + 1);
+		float AngleAdjust = wui.LiftSpeed * ((-wui.SliderValue + 1)*1.5);//
 		switch(m_shooterMode) {
 			case STOW_MODE:
 				m_shooter.LiftTo(AngleAdjust * 30);

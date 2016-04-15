@@ -106,7 +106,7 @@ void Autonomous::LowBar(unsigned position){
 
 	if(m_init) { // Initilize static variables.
 		caseStartTime = currentAutoTime;
-		move.SetAll(24,24,72,233);
+		move.SetAll(24,24,72,221);
 		startAngle = m_rateSensor.GetAngle();
 		m_tank->StraightDrive(0, 0, false);
 		m_init = false;
@@ -133,7 +133,7 @@ void Autonomous::LowBar(unsigned position){
 			if(m_rateSensor.GetAngle() - startAngle > 57) {
 				m_autoState++; // move to next state
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-				move.SetAll(24,24,72,30); // Setup move for next step
+				move.SetAll(24,24,72,40); // Setup move for next step
 				m_tank->Zero();
 				m_shooter->Spinup(-2000); // set shooter angle and speed set
 				m_shooter->LiftTo(40);
