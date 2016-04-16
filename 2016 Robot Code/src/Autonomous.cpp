@@ -622,7 +622,7 @@ void Autonomous::RockWall(int position){
 		switch(position) {//set distance of final move based on starting position
 		case 0: finalMoveDist = 77; break;
 		case 1: finalMoveDist = 24; break;
-		case 2: finalMoveDist = 29; break;
+		case 2: finalMoveDist = 23; break;
 		case 3: finalMoveDist = 82; break;
 		}
 		lastState = 0;
