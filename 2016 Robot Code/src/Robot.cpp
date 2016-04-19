@@ -27,7 +27,7 @@ private:
 	UserInterface ui;
 	WedgemoreUserInput wui;
 	Autonomous m_auto;
-	//ADXRS450_Gyro m_rateSensor;
+	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore() :
@@ -149,7 +149,7 @@ public:
 			m_shooter.Shoot(wui.Shoot);
 		}
 		else {
-			m_shooter.LimitShoot(wui.LimitShoot);
+			m_shooter.LimitShoot(wui.LimitShoot, m_rateSensor.GetRate());
 		}
 		if(wui.Pickup) {
 			m_shooter.Pickup();
