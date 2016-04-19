@@ -133,8 +133,9 @@ void Shooter::Shoot(bool val)
 	m_kicker.Set(val);
 }
 void Shooter::LimitShoot(bool val) {
-	if(fabs(m_shoot1.GetSpeed()) >= m_targetWheelSpeed - 50) {
-		m_kicker.Set(true);
+	if((fabs(m_shoot1.GetSpeed()) >= m_targetWheelSpeed - 50
+			&& m_targetWheelSpeed != 0) || m_targetWheelSpeed < 0) {
+		m_kicker.Set(val);
 	} else m_kicker.Set(false);
 }
 void Shooter::Spinup(float speed) {
@@ -159,6 +160,7 @@ void Shooter::Pickup()
 {
 	m_shoot1.Set(-3000);
 	m_shoot2.Set(3000);
+	m_targetWheelSpeed = -3000;
 }
 
 void Shooter::SpinShoot() {
