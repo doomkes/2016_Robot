@@ -132,7 +132,11 @@ void Shooter::Shoot(bool val)
 {
 	m_kicker.Set(val);
 }
-
+void Shooter::LimitShoot(bool val) {
+	if(fabs(m_shoot1.GetSpeed()) >= m_targetWheelSpeed - 50) {
+		m_kicker.Set(true);
+	} else m_kicker.Set(false);
+}
 void Shooter::Spinup(float speed) {
 //	static float lastSpeed = 0;
 	m_targetWheelSpeed = speed;

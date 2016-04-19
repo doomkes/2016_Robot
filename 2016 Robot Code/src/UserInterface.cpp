@@ -34,7 +34,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->ShooterDown = false;
 	wui->BatterHiGoal = false;
 	wui->DefenseHiGoal = false;
-	wui->SpinAndShoot = false;
+	wui->LimitShoot = false;
 	wui->SpeedMode = false;
 	wui->VBusMode = false;
 	wui->MidHiGoal = false;
@@ -57,7 +57,7 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	wui->BatterHiGoal = m_manStick.GetRawButton(BATTERHIGOALPOS);
 	wui->DefenseHiGoal = m_manStick.GetRawButton(DEFENSEHIGOALPOS);
 	wui->MidHiGoal = m_manStick.GetRawButton(MIDSHOTPOS);
-	wui->SpinAndShoot = m_manStick.GetRawButton(SPINANDSHOOT);
+	wui->LimitShoot = m_manStick.GetRawButton(LIMIT_SHOOT);
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 	if(m_lStick.GetRawButton(DROPBACK))

@@ -145,8 +145,8 @@ public:
 		else if (!wui.Pickup){
 			m_shooter.Stop();
 		}
-		m_shooter.Shoot(wui.Shoot);
-
+		//m_shooter.Shoot(wui.Shoot);
+		m_shooter.LimitShoot(wui.Shoot);
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}

@@ -9,7 +9,8 @@
 #define SRC_ROBOTMAP_H_
 
 enum ManStickMap {
-	SHOOT = 1,
+	SHOOT = 5,
+	LIMIT_SHOOT = 1,
 	PICKUP = 4,
 	PICKUPPOS = 9,
 	STARTPOS = 10,
@@ -23,7 +24,6 @@ enum ManStickMap {
 	BATTERHIGOALPOS = 11, //Button to press to shoot from the batter.
 	DEFENSEHIGOALPOS = 12,//Button to press to shoot from the defenses.
 	MIDSHOTPOS = 6,//Button to press to shoot from the defenses.,
-	SPINANDSHOOT = 3,
 	TOGGLE_LIGHT = 7
 
 };
