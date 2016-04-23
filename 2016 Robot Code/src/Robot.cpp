@@ -1,9 +1,10 @@
-#include "WPILib.h"
+#include <WPILib.h>
 #include "UserInterface.h"
 #include <stdio.h>
 #include <string>
 #include "DriveTrain/TankDrive.h"
 #include "Shooter.h"
+#include "GoalVision.h"
 #include "Leddar.h"
 #include "Autonomous.h"
 #include "DriveTrain/SuspensionDrive.h"
@@ -26,17 +27,19 @@ private:
 	//Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
+	GoalVision m_goalVision;
 	Autonomous m_auto;
 	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 public:
 	Wedgemore() :
-		m_auto(&m_tank, &m_suspension, &m_shooter)
+		m_auto(&m_tank, &m_suspension, &m_shooter, &m_rateSensor, &m_goalVision)
 	{
 	}
 
 	void RobotInit()
 	{
+
 		//CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
@@ -49,10 +52,22 @@ public:
 		SmartDashboard::PutNumber("Shooter I",		0);
 		SmartDashboard::PutNumber("Shooter D",		0);
 
+		SmartDashboard::PutNumber("Wheel Comp", 1);
+		SmartDashboard::PutBoolean("Save Prefs", false);
+
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
 		SmartDashboard::PutNumber("Total Distance", 260);
-
 		SmartDashboard::PutBoolean("Calibrate", false);
+		SmartDashboard::PutBoolean("Save Captured Image", false);
+		//Create keys if they do not exist already.
+		if(!Preferences::GetInstance()->ContainsKey("Auto left Goal x1")) {
+			Preferences::GetInstance()->PutFloat("Auto left Goal x1", 150);
+			Preferences::GetInstance()->PutFloat("Auto left Goal x2", 300);
+			Preferences::GetInstance()->PutFloat("Auto left Goal y1", 110);
+			Preferences::GetInstance()->PutFloat("Auto left Goal y2", 110);
+		}
+		m_goalVision.Init();
+		m_tank.Init();
 		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
 //		Preferences::GetInstance()->PutFloat("Drive I", 0);
@@ -210,13 +225,45 @@ public:
 		m_tank.Zero();
 		m_shooter.Shoot(false);
 		m_shooter.Spinup(0);
+		m_tank.Init();
+
+
 		//m_leddar.StartAutoDetections(false);
 
 	}
-	void DisabledPeriodic() override {
-		m_auto.Disabled();
-	}
 
+	void DisabledPeriodic() override {
+		static unsigned count = 0;
+		if(count % 100 == 0) {
+			if(SmartDashboard::GetBoolean("Calibrate", false)) {
+				m_rateSensor.Calibrate();
+				SmartDashboard::PutBoolean("Calibrate", false);
+			}
+			SmartDashboard::PutNumber("RS Angle", m_rateSensor.GetAngle());
+		}
+
+		bool setPref = SmartDashboard::GetBoolean("Save Prefs", false);
+		if (true == setPref) {
+			float wheelComp = SmartDashboard::GetNumber("Wheel Comp", 1);
+			Preferences::GetInstance()->PutFloat("Wheel Comp Pref", wheelComp);
+
+			SmartDashboard::PutBoolean("Save Prefs", false);
+		}
+		Point start, end;
+
+		start.x = Preferences::GetInstance()->GetInt("Auto left Goal x1", 0);
+		start.y = Preferences::GetInstance()->GetInt("Auto left Goal y1", 0);
+		end.x = Preferences::GetInstance()->GetInt("Auto left Goal x2", 0);
+		end.y = Preferences::GetInstance()->GetInt("Auto left Goal y2", 0);
+
+		m_goalVision.SetLine(start, end);
+		if(m_goalVision.GetAngleCorrection()) {
+			SmartDashboard::PutBoolean("target found", true);
+		} else {
+			SmartDashboard::PutBoolean("target found", false);
+		}
+		count++;
+	}
 };
 
 START_ROBOT_CLASS(Wedgemore)

@@ -24,13 +24,13 @@ private:
 	float m_maxSpeed;
 	bool m_reverse = false;
 	float m_leftDistance = 0, m_rightDistance = 0;
-
+	float m_countPerInch = COUNT_PER_INCH;
 
 public:
 	TankDrive();
 	virtual ~TankDrive();
 	void Zero();
-
+	void Init();
 	void Reverse(bool);
 
 	void SetMode(DriveMode);

@@ -21,9 +21,9 @@ static void AutoDetect(Leddar *leddar) {
 
 		//if(leddar->IsAutoDetectEnabled()) {
 			leddar->FillBuffer();
+			leddar->GetDetectionsAsLineSegs();
 			Wait(0.05);
 			leddar->RequestDetections();
-			leddar->GetDetectionsAsLineSegs();
 			printf("Leddar Loop %i\n",count++);
 		//}
 
@@ -173,6 +173,23 @@ void Leddar::FillBuffer() {
 				m_detections[13].amplitude,
 				m_detections[14].amplitude,
 				m_detections[15].amplitude);
+		printf("flag # %i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t \n",
+				m_detections[0].flags,
+				m_detections[1].flags,
+				m_detections[2].flags,
+				m_detections[3].flags,
+				m_detections[4].flags,
+				m_detections[5].flags,
+				m_detections[6].flags,
+				m_detections[7].flags,
+				m_detections[8].flags,
+				m_detections[9].flags,
+				m_detections[10].flags,
+				m_detections[11].flags,
+				m_detections[12].flags,
+				m_detections[13].flags,
+				m_detections[14].flags,
+				m_detections[15].flags);
 		}
 	}
 //	if(m_detections.size() >=8 ) {
@@ -250,8 +267,8 @@ unsigned Leddar::GetDetectionsAsCarteasion(point buff[], unsigned buffSize) {
 	printf("xy data:\n");
 	for(unsigned i = 0; i < buffSize; i++) {
 		angle = 1.5 + m_detections[i].detectionNumber*3 - 24;
-		x = sin(angle*M_PI/180)*m_detections[i].distance - 7; // Leddar offset 7 inches in x and 3 in y
-		y = cos(angle*M_PI/180)*m_detections[i].distance + 3;
+		x = sin(angle*M_PI/180)*m_detections[i].distance; // Leddar offset 7 inches in x and 3 in y
+		y = cos(angle*M_PI/180)*m_detections[i].distance;
 		buff[i] = {x, y};
 		printf("%i,%f,%f \n",i,x,y);
 	}
