@@ -15,6 +15,8 @@ class GoalVision {
 	AxisCamera *m_camera = nullptr;
 	Image *m_frame = nullptr;
 	Image *m_binaryFrame = nullptr;
+	Image *m_template = nullptr;
+	Image *m_shapesImage = nullptr;
 	Range m_hue, m_sat, m_val;
 public:
 	GoalVision();
