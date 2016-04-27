@@ -78,8 +78,8 @@ float GoalVision::GetAngleCorrection() {
 	if(!targetFound){
 		return -99;
 	}
-	float correctionAngle = 0;
-	correctionAngle = (320 - sr[foundIndex].centroid.x) * 0.1112;
+	float pixelError = 0;
+	pixelError = (320 - sr[foundIndex].centroid.x);
 	if(sr != nullptr) {
 		imaqDispose(sr);
 	}
@@ -87,7 +87,7 @@ float GoalVision::GetAngleCorrection() {
 		return 0;
 	}
 
-	return correctionAngle;
+	return pixelError;
 }
 
 //float GoalVision::GetAngleCorrection() {

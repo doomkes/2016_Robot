@@ -95,6 +95,7 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 	static TrapezoidalMove move;
 	float leftDist,rightDist;
 	static float correctionAngle = 0;
+	static float pixelError = 0;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 
 	if(m_init) { // Initilize static variables.
@@ -157,15 +158,15 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
 				m_shooter->Spinup(5000);
 				startAngle = m_rateSensor->GetAngle();
-				correctionAngle = m_goalVision->GetAngleCorrection();
+				pixelError = m_goalVision->GetAngleCorrection();
 				pos = 0;
 				m_tank->Zero();
 			}
 			break;
 		case 3: // adjust angle using vision
+			correctionAngle = pixelError*.18;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
-
 			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.5) {
 				caseStartTime = currentAutoTime;
 				m_autoState++;
@@ -210,6 +211,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
 	static float correctionAngle = 0;
+	static float pixelError = 0;
 
 	if(m_init) { // Initilize static variables.
 		switch(position){//set distance of final move based on starting position
@@ -370,7 +372,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -381,7 +383,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -389,6 +391,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 			break;
 		}
 		case 11: //adjust angle with vision
+			correctionAngle = pixelError*.22;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -427,7 +430,8 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 	static TrapezoidalMove move(24,24,36,212);
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
-	static int correctionAngle = 0;
+	static float correctionAngle = 0;
+	static float pixelError = 0;
 
 	if(m_init) { // Initilize static variables.
 		switch(position){//set distance of final move based on starting position
@@ -541,7 +545,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -549,6 +553,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
+			correctionAngle = pixelError*.22;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -666,7 +671,8 @@ void Autonomous::RockWall(int position){ //This now uses vision
 	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
-	static int correctionAngle = 0;
+	static float correctionAngle = 0;
+	static float pixelError = 0;
 
 	if(m_init) { // Initilize static variables.
 		switch(position) {//set distance of final move based on starting position
@@ -772,7 +778,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -783,7 +789,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -791,6 +797,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
+			correctionAngle = pixelError*.22;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -830,7 +837,8 @@ void Autonomous::Moat(int position){ //This now uses vision
 	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
-	static int correctionAngle = 0;
+	static float correctionAngle = 0;
+	static float pixelError = 0;
 
 	if(m_init) { // Initilize static variables.
 		switch(position) {//set distance of final move based on starting position
@@ -931,7 +939,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -942,7 +950,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 						m_tank->Zero();
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
-						correctionAngle = m_goalVision->GetAngleCorrection();
+						pixelError = m_goalVision->GetAngleCorrection();
 						pos = 0;
 					}
 					break;
@@ -950,6 +958,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
+			correctionAngle = pixelError*.22;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
