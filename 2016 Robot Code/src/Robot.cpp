@@ -31,9 +31,11 @@ private:
 	Autonomous m_auto;
 	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
+	VictorSP m_climber;
 public:
 	Wedgemore() :
-		m_auto(&m_tank, &m_suspension, &m_shooter, &m_rateSensor, &m_goalVision)
+		m_auto(&m_tank, &m_suspension, &m_shooter, &m_rateSensor, &m_goalVision),
+		m_climber(0)
 	{
 	}
 
@@ -170,8 +172,10 @@ public:
 			m_shooter.Pickup();
 		}
 		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
+			m_climber.Set(1.0);
+		}
+		else {
+			m_climber.Set(0.0);
 		}
 
 //		if(wui.Custom) {
@@ -254,7 +258,7 @@ public:
 
 			SmartDashboard::PutBoolean("Save Prefs", false);
 		}
-		Point start, end;
+//		Point start, end;
 
 //		start.x = Preferences::GetInstance()->GetInt("Auto left Goal x1", 0);
 //		start.y = Preferences::GetInstance()->GetInt("Auto left Goal y1", 0);
