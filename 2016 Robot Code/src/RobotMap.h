@@ -53,7 +53,7 @@ enum SolenoidMap {
 	FRONTRIGHTSOL,
 	BACKLEFTSOL,
 	BACKRIGHTSOL,
-	SHOOTERSOL,
+	SHOOTERSOL = 7,
 };
 
 enum CANTalonMap {
