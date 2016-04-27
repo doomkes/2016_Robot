@@ -63,7 +63,7 @@ float GoalVision::GetAngleCorrection() {
 //		printf("done writing to file");
 //	}
 	bool targetFound = false;
-	int foundIndex = 0;
+	int foundIndex = -1;
 	for(int i = 0; i < numMatches; i++) {
 		float aspectRatio = (float)sr[i].coordinates.width / (float)sr[i].coordinates.height;
 		if(!(fabs(aspectRatio - 1.67) < 0.5) || sr[i].size < 700) {
@@ -83,6 +83,10 @@ float GoalVision::GetAngleCorrection() {
 	if(sr != nullptr) {
 		imaqDispose(sr);
 	}
+	if(foundIndex == -1 || numMatches == 0){
+		return 0;
+	}
+
 	return correctionAngle;
 }
 

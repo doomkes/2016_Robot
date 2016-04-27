@@ -251,17 +251,17 @@ public:
 		}
 		Point start, end;
 
-		start.x = Preferences::GetInstance()->GetInt("Auto left Goal x1", 0);
-		start.y = Preferences::GetInstance()->GetInt("Auto left Goal y1", 0);
-		end.x = Preferences::GetInstance()->GetInt("Auto left Goal x2", 0);
-		end.y = Preferences::GetInstance()->GetInt("Auto left Goal y2", 0);
+//		start.x = Preferences::GetInstance()->GetInt("Auto left Goal x1", 0);
+//		start.y = Preferences::GetInstance()->GetInt("Auto left Goal y1", 0);
+//		end.x = Preferences::GetInstance()->GetInt("Auto left Goal x2", 0);
+//		end.y = Preferences::GetInstance()->GetInt("Auto left Goal y2", 0);
 
-		m_goalVision.SetLine(start, end);
-		if(m_goalVision.GetAngleCorrection()) {
-			SmartDashboard::PutBoolean("target found", true);
-		} else {
-			SmartDashboard::PutBoolean("target found", false);
-		}
+//		m_goalVision.SetLine(start, end);
+//		if(m_goalVision.GetAngleCorrection()) {
+//			SmartDashboard::PutBoolean("target found", true);
+//		} else {
+//			SmartDashboard::PutBoolean("target found", false);
+//		}
 		count++;
 	}
 };
