@@ -45,7 +45,8 @@ enum RStickMap {
 	SET_SPEED_MODE = 10,
 	SET_VBUS_MODE = 11,
 	TOGGLE_RUN_LIGHT = 2,
-	SHOOTER_DOWN = 4
+	SHOOTER_DOWN = -99,
+	CLIMBER = 5
 };
 enum SolenoidMap {
 	FRONTLEFTSOL,

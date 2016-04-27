@@ -169,6 +169,11 @@ public:
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
+		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+		}
+
 //		if(wui.Custom) {
 //			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
 //		}

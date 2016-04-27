@@ -99,6 +99,7 @@ void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
 	wui->ReverseDrive = m_rStick.GetRawButton(REVERSE_DRIVE);
 	wui->SpeedMode = m_rStick.GetRawButton(SET_SPEED_MODE);
 	wui->VBusMode = m_rStick.GetRawButton(SET_VBUS_MODE);
+	wui->Climber = m_rStick.GetRawButton(CLIMBER);
 }
 
 void UserInterface::GetData(WedgemoreUserInput *wui)
