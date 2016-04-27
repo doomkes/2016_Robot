@@ -76,6 +76,7 @@ float GoalVision::GetAngleCorrection() {
 		break;
 	}
 	if(!targetFound){
+		imaqDispose(sr);
 		return -99;
 	}
 	float pixelError = 0;
@@ -84,6 +85,7 @@ float GoalVision::GetAngleCorrection() {
 		imaqDispose(sr);
 	}
 	if(foundIndex == -1 || numMatches == 0){
+		imaqDispose(sr);
 		return 0;
 	}
 
