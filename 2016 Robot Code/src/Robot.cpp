@@ -186,9 +186,9 @@ public:
 			m_shooter.Zero();
 			//m_shooter.shooter_zero = 1;
 		}
-		//if(wui.RunGunLight) {
-			m_shooter.ToggleRunLight(wui.RunGunLight);
-		//}
+
+		m_shooter.ToggleRunLight(wui.RunGunLight);
+
 		if(wui.SpeedMode) {
 			m_tank.SetMode(SPEED_MODE);
 			SmartDashboard::PutBoolean("VBus Mode", false);

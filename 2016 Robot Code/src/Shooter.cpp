@@ -106,8 +106,9 @@ Shooter::Shooter() :
 	m_shoot2.SetF(1.5);//(16.620);
 	m_shoot2.SetVoltageRampRate(50);
 
-
-	m_runNgunLight.Set(false);
+	m_runNgunLight.SetPWMRate(1000);
+	m_runNgunLight.EnablePWM(0.05);
+	m_runNgunLight.Set(0);
 	m_lift.Reset();
 	m_lift.SetControlMode(CANSpeedController::kPosition);
 	m_lift.SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
@@ -119,7 +120,12 @@ Shooter::Shooter() :
 
 void Shooter::ToggleRunLight(bool state) {
 	//static bool state = false;
-	m_runNgunLight.Set(state);
+	//m_runNgunLight.Set(state);
+	if(state)
+		m_runNgunLight.UpdateDutyCycle(0.7);
+	else
+		m_runNgunLight.UpdateDutyCycle(0);
+
 	//state = !state;
 	//SmartDashboard::PutBoolean("Light on", state);
 }
