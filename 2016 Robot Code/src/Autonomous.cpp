@@ -391,7 +391,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 			break;
 		}
 		case 11: //adjust angle with vision
-			correctionAngle = pixelError*.22;
+			correctionAngle = pixelError*.18;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -553,7 +553,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.22;
+			correctionAngle = pixelError*.18;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -797,7 +797,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.22;
+			correctionAngle = pixelError*.18;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -958,7 +958,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.22;
+			correctionAngle = pixelError*.18;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
