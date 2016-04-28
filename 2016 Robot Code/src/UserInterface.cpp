@@ -39,6 +39,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->VBusMode = false;
 	wui->MidHiGoal = false;
 	wui->RunGunLight = false;
+	wui->Climber = -1;
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
@@ -58,6 +59,7 @@ void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
 	wui->DefenseHiGoal = m_manStick.GetRawButton(DEFENSEHIGOALPOS);
 	wui->MidHiGoal = m_manStick.GetRawButton(MIDSHOTPOS);
 	wui->LimitShoot = m_manStick.GetRawButton(LIMIT_SHOOT);
+	wui->Climber = m_manStick.GetPOV(CLIMBER);
 }
 void UserInterface::GetLStickValues(WedgemoreUserInput *wui) {
 	if(m_lStick.GetRawButton(DROPBACK))
@@ -99,7 +101,6 @@ void UserInterface::GetRStickValues(WedgemoreUserInput *wui){
 	wui->ReverseDrive = m_rStick.GetRawButton(REVERSE_DRIVE);
 	wui->SpeedMode = m_rStick.GetRawButton(SET_SPEED_MODE);
 	wui->VBusMode = m_rStick.GetRawButton(SET_VBUS_MODE);
-	wui->Climber = m_rStick.GetRawButton(CLIMBER);
 }
 
 void UserInterface::GetData(WedgemoreUserInput *wui)

@@ -68,7 +68,7 @@ public:
 			Preferences::GetInstance()->PutFloat("Auto left Goal y1", 110);
 			Preferences::GetInstance()->PutFloat("Auto left Goal y2", 110);
 		}
-		m_goalVision.Init();
+		//m_goalVision.Init();
 		m_tank.Init();
 		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);
@@ -84,6 +84,7 @@ public:
 		m_shooter.Zero();
 		int automode = SmartDashboard::GetNumber("Auto Mode Select", 0);
 		m_auto.Init(automode);
+		m_goalVision.Init();
 
 	}
 
@@ -101,6 +102,7 @@ public:
 		m_tank.Zero();
 		ui.Init(&wui);
 		//m_leddar.StartAutoDetections(true);
+
 
 	}
 
@@ -171,8 +173,8 @@ public:
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
-		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			m_climber.Set(1.0);
+		if(wui.Climber == 0){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			m_climber.Set(-1.0);
 		}
 		else {
 			m_climber.Set(0.0);

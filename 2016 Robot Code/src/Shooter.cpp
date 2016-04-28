@@ -107,7 +107,7 @@ Shooter::Shooter() :
 	m_shoot2.SetVoltageRampRate(50);
 
 	m_runNgunLight.SetPWMRate(1000);
-	m_runNgunLight.EnablePWM(0.05);
+	m_runNgunLight.EnablePWM(0);
 	m_runNgunLight.Set(0);
 	m_lift.Reset();
 	m_lift.SetControlMode(CANSpeedController::kPosition);

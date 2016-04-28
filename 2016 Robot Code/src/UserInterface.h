@@ -33,7 +33,7 @@ struct WedgemoreUserInput
 	bool VBusMode = false;
 	bool RunGunLight = false;
 	bool ReverseDrive = false;
-	bool Climber = false;
+	int Climber = -1;
 };
 
 class UserInterface
