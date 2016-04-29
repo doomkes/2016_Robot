@@ -164,7 +164,7 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 			}
 			break;
 		case 3: // adjust angle using vision
-			correctionAngle = pixelError*.18;
+			correctionAngle = pixelError*.1112;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.5) {
@@ -391,7 +391,7 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 			break;
 		}
 		case 11: //adjust angle with vision
-			correctionAngle = pixelError*.18;
+			correctionAngle = pixelError*.1112;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -553,7 +553,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.18;
+			correctionAngle = pixelError*.1112;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -668,6 +668,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 	static unsigned lastState = 99; // used to detect state change
 	static float startAngle = 0;
 	static float timeAdjust = 0;
+	static float pos = 0;
 	static TrapezoidalMove move;
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
 	static int finalMoveDist = 0;
@@ -681,6 +682,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 		case 2: finalMoveDist = 22; break;
 		case 3: finalMoveDist = 75; break;
 		}
+		pos = 0;
 		lastState = 0;
 		count = 0;
 		caseStartTime = currentAutoTime;
@@ -688,6 +690,10 @@ void Autonomous::RockWall(int position){ //This now uses vision
 		startAngle = m_rateSensor->GetAngle();
 		timeAdjust = 0;
 		adjust = 0;
+
+		// for debugging.
+		m_autoState = 99;
+
 		m_tank->StraightDrive(0, 0, false);
 		m_suspension->SetFrontLeft(true);
 		m_suspension->SetBackLeft(true);
@@ -729,7 +735,6 @@ void Autonomous::RockWall(int position){ //This now uses vision
 				}
 			break;
 		case 2://first 90deg turn to line up horizontally to tower
-			static float pos = 0;
 			m_shooter->Spinup(-3000);
 			switch (position){
 				case 0 ... 1://positions 1 and 2 (turn clockwise)
@@ -759,6 +764,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			m_shooter->LiftTo(47);
 			leftDist = move.Position(currentAutoTime - caseStartTime);
 			rightDist = leftDist;
+			pos = 0;
 			m_tank->PositionDrive(leftDist, rightDist);
 			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
 				m_tank->Zero();
@@ -767,7 +773,6 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			}
 			break;
 		case 4:{//second 90deg turn to line up towards goal
-			static float pos = 0;
 			m_shooter->Spinup(4500);
 			m_shooter->LiftTo(47);
 			switch(position){
@@ -796,8 +801,15 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			}
 			break;
 		}
+		case 99: //for debugging.
+			startAngle = m_rateSensor->GetAngle();
+			pixelError = m_goalVision->GetAngleCorrection();
+			pos = 0;
+			m_tank->Zero();
+			m_autoState = 5;
+			break;
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.18;
+			correctionAngle = pixelError*.1112;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
@@ -805,6 +817,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 				caseStartTime = currentAutoTime;
 				m_autoState++;
 				m_tank->Zero();
+				pos = 0;
 				m_shooter->Shoot(true);
 			}
 			break;
@@ -958,7 +971,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 			break;
 		}
 		case 5: //adjust angle using vision
-			correctionAngle = pixelError*.18;
+			correctionAngle = pixelError*.1112;
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 

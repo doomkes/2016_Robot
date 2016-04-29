@@ -35,6 +35,7 @@ void GoalVision::SetLine(Point start, Point end) {
 	m_end = end;
 }
 float GoalVision::GetAngleCorrection() {
+	return 20;
 	if(!m_camera->IsFreshImage()) {
 		return -1;
 	}
@@ -80,7 +81,7 @@ float GoalVision::GetAngleCorrection() {
 		return -99;
 	}
 	float pixelError = 0;
-	pixelError = (320 - sr[foundIndex].centroid.x);
+	pixelError = (sr[foundIndex].centroid.x - 320);
 	if(sr != nullptr) {
 		imaqDispose(sr);
 	}

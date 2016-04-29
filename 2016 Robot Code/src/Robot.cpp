@@ -230,7 +230,14 @@ public:
 
 	void TestPeriodic()
 	{
-
+		ui.GetData(&wui);
+		if(wui.Climber == 0){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			m_climber.Set(0.4);
+			printf("working");
+		}
+		else {
+			m_climber.Set(0.0);
+		}
 	}
 	void DisabledInit(){
 		m_tank.Zero();
