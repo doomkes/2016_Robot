@@ -41,8 +41,6 @@ public:
 
 	void RobotInit()
 	{
-
-		//CameraServer::GetInstance()->StartAutomaticCapture("cam0");
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
@@ -70,13 +68,6 @@ public:
 		}
 		m_goalVision.Init();
 		m_tank.Init();
-		//m_leddar.StartAutoDetections(true);
-//		Preferences::GetInstance()->PutFloat("Drive P", 1);
-//		Preferences::GetInstance()->PutFloat("Drive I", 0);
-//		Preferences::GetInstance()->PutFloat("Drive D", 0);
-//		Preferences::GetInstance()->PutFloat("Lift P", 4);
-//		Preferences::GetInstance()->PutFloat("Lift I", 0.01);
-//		Preferences::GetInstance()->PutFloat("Lift D", 0);
 	}
 
 	void AutonomousInit()
@@ -107,17 +98,6 @@ public:
 	void TeleopPeriodic()
 	{
 
-		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
-		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());
-		//m_leddar.FillBuffer();
-		//SmartDashboard::PutNumber("Num Detections", m_leddar.GetDetections().size());
-//		LineSeg lineSegs[16];
-//		unsigned numSegs = m_leddar.GetDetectionsAsLineSegs(lineSegs, 16);
-//		SmartDashboard::PutNumber("Num Linesegs", numSegs);
-//		cout << "num segments: " << numSegs << endl;
-//		for(unsigned i = 0; i < numSegs; i++) {
-//			cout << "length of seg " << i <<": " << lineSegs[i].length << endl;
-//		}
 		ui.GetData(&wui);
 
 		float leftSpeed = wui.LeftSpeed;
@@ -128,17 +108,11 @@ public:
 		}
 		m_tank.Drive(leftSpeed, rightSpeed);
 
-		if(wui.PickupPos || wui.ShooterDown) {
+		if(wui.PickupPos) {
 			m_shooterMode = PICKUP_MODE;
 		}
 		else if(wui.StartPosition) {	//start & stow pos
 			m_shooterMode = STOW_MODE;
-		}
-		else if(wui.BatterHiGoal) {
-			m_shooterMode = BATTER_HIGOAL_MODE;
-		}
-		else if(wui.DefenseHiGoal) {
-			m_shooterMode = DEFENSE_HIGOAL_MODE;
 		}
 		else if(wui.MidHiGoal) {
 			m_shooterMode = MID_SHOT_MODE;
@@ -158,63 +132,45 @@ public:
 		else if(wui.SpinUpLow) {
 			m_shooter.Spinup(3500);
 		}
-
 		else if (!wui.Pickup){
 			m_shooter.Stop();
 		}
 		if(wui.Shoot) {
 			m_shooter.Shoot(wui.Shoot);
 		}
-		else {
-			m_shooter.LimitShoot(wui.LimitShoot, m_rateSensor.GetRate());
-		}
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
-		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			m_climber.Set(1.0);
-		}
-		else {
-			m_climber.Set(0.0);
-		}
-
-//		if(wui.Custom) {
-//			m_shooter.LiftTo(SmartDashboard::GetNumber("ShooterAngle", 0));
+//		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			m_climber.Set(1.0);
 //		}
+//		else {
+//			m_climber.Set(0.0);
+//		}
+
 		if(wui.Zero) {
 			m_shooterMode = STOW_MODE;
 			m_shooter.Zero();
-			//m_shooter.shooter_zero = 1;
 		}
 
 		m_shooter.ToggleRunLight(wui.RunGunLight);
 
-		if(wui.SpeedMode) {
-			m_tank.SetMode(SPEED_MODE);
-			SmartDashboard::PutBoolean("VBus Mode", false);
-		}
-		if(wui.VBusMode) {
-			m_tank.SetMode(VBUS_MODE);
-			SmartDashboard::PutBoolean("VBus Mode", true);
-		}
 		m_tank.Reverse(wui.ReverseDrive);
-		float AngleAdjust = wui.LiftSpeed * ((-wui.SliderValue + 1)*1.5);//
 		switch(m_shooterMode) {
 			case STOW_MODE:
-				m_shooter.LiftTo(AngleAdjust * 30);
+				m_shooter.LiftTo(0);
 				break;
 			case PICKUP_MODE:
-				m_shooter.LiftTo(180 - AngleAdjust * 35);//TODO use preferences for values.
+				m_shooter.LiftTo(180);//TODO use preferences for values.
 				break;
 			case BATTER_HIGOAL_MODE:
 				m_shooter.LiftTo(64); //TODO use preferences for values.
 				break;
 			case DEFENSE_HIGOAL_MODE:
-				m_shooter.LiftTo(34 + AngleAdjust*20);
-				//m_shooter.LiftTo(36.6 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(34);
 				break;
 			case MID_SHOT_MODE:
-				m_shooter.LiftTo(37 + AngleAdjust*20); //TODO use preferences for values.
+				m_shooter.LiftTo(37); //TODO use preferences for values.
 				break;
 		}
 
@@ -235,43 +191,6 @@ public:
 		m_shooter.Shoot(false);
 		m_shooter.Spinup(0);
 		m_tank.Init();
-
-
-		//m_leddar.StartAutoDetections(false);
-
-	}
-
-	void DisabledPeriodic() override {
-		static unsigned count = 0;
-		if(count % 100 == 0) {
-			if(SmartDashboard::GetBoolean("Calibrate", false)) {
-				m_rateSensor.Calibrate();
-				SmartDashboard::PutBoolean("Calibrate", false);
-			}
-			SmartDashboard::PutNumber("RS Angle", m_rateSensor.GetAngle());
-		}
-
-		bool setPref = SmartDashboard::GetBoolean("Save Prefs", false);
-		if (true == setPref) {
-			float wheelComp = SmartDashboard::GetNumber("Wheel Comp", 1);
-			Preferences::GetInstance()->PutFloat("Wheel Comp Pref", wheelComp);
-
-			SmartDashboard::PutBoolean("Save Prefs", false);
-		}
-//		Point start, end;
-
-//		start.x = Preferences::GetInstance()->GetInt("Auto left Goal x1", 0);
-//		start.y = Preferences::GetInstance()->GetInt("Auto left Goal y1", 0);
-//		end.x = Preferences::GetInstance()->GetInt("Auto left Goal x2", 0);
-//		end.y = Preferences::GetInstance()->GetInt("Auto left Goal y2", 0);
-
-//		m_goalVision.SetLine(start, end);
-//		if(m_goalVision.GetAngleCorrection()) {
-//			SmartDashboard::PutBoolean("target found", true);
-//		} else {
-//			SmartDashboard::PutBoolean("target found", false);
-//		}
-		count++;
 	}
 };
 
