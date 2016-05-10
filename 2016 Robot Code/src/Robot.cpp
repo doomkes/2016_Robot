@@ -91,7 +91,6 @@ public:
 		m_shooter.Zero();
 		m_tank.Zero();
 		ui.Init(&wui);
-		//m_leddar.StartAutoDetections(true);
 
 	}
 
@@ -105,6 +104,13 @@ public:
 		if(wui.RunGunLight) {
 			leftSpeed  *= 0.7;
 			rightSpeed *= 0.7;
+		}
+		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			m_climber.Set(wui.RightSpeed);
+			rightSpeed = 0;
+		}
+		else {
+			m_climber.Set(0.0);
 		}
 		m_tank.Drive(leftSpeed, rightSpeed);
 
@@ -141,12 +147,6 @@ public:
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}
-//		if(wui.Climber){ //CLIMBER CODE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			m_climber.Set(1.0);
-//		}
-//		else {
-//			m_climber.Set(0.0);
-//		}
 
 		if(wui.Zero) {
 			m_shooterMode = STOW_MODE;

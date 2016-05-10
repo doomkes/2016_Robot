@@ -8,32 +8,30 @@
 #ifndef SRC_ROBOTMAP_H_
 #define SRC_ROBOTMAP_H_
 
-enum ManStickMap {
-	LEFTAXIS = 2,
-	RIGHTAXIS = 4,
-	SHOOT = 7,
-	PICKUPPOS = 2,
-	SPINUP = 8,
-	SLOWSPIN = 6,
-	ZERO = 10,
-	PICKUP = 4,
-	STARTPOS = 3,
+enum JoystickMap {
+	//Button
 	MIDSHOTPOS = 1,//Button to press to shoot from the defenses.,
+	PICKUPPOS = 2,
+	STARTPOS = 3,
+	PICKUP = 4,
+	DROPALL = 5,
+	SLOWSPIN = 6,
+	SHOOT = 7,
+	SPINUP = 8,
+	CLIMBER = 9,
+	ZERO = 10,
+	REVERSE_DRIVE = 11,
+	TOGGLE_RUN_LIGHT = 12,
 
-};
+	//Axis
+	LEFTAXIS = 1,
+	RIGHTAXIS = 3,
 
-enum LStickMap {
+	//POV
 	DROPLEFT = 90,//POV
 	DROPRIGHT = 270,//POV
 	DROPFRONT = 0,//POV
 	DROPBACK = 180,//POV
-	DROPALL = 5
-};
-
-enum RStickMap {
-	REVERSE_DRIVE = 11,
-	TOGGLE_RUN_LIGHT = 12,
-	CLIMBER = 5
 };
 
 enum DIOMap {
