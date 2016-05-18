@@ -115,13 +115,13 @@ public:
 		m_tank.Drive(leftSpeed, rightSpeed);
 
 		if(wui.PickupPos) {
-//	 		m_shooterMode = PICKUP_MODE;
+	 		m_shooterMode = PICKUP_MODE;
 			m_shooter.LiftTo(m_shooter.GetLiftAngle() + 4);
 
 
 		}
 		else if(wui.StartPosition) {	//start & stow pos
-//			m_shooterMode = STOW_MODE;
+			m_shooterMode = STOW_MODE;
 			m_shooter.LiftTo(m_shooter.GetLiftAngle() - 4);
 		}
 		else if(wui.MidHiGoal) {
@@ -162,10 +162,10 @@ public:
 		m_tank.Reverse(wui.ReverseDrive);
 		switch(m_shooterMode) {
 			case STOW_MODE:
-				m_shooter.LiftTo(0);
+//				m_shooter.LiftTo(0);
 				break;
 			case PICKUP_MODE:
-				m_shooter.LiftTo(180);//TODO use preferences for values.
+//				m_shooter.LiftTo(180);//TODO use preferences for values.
 				break;
 			case BATTER_HIGOAL_MODE:
 				m_shooter.LiftTo(64); //TODO use preferences for values.
