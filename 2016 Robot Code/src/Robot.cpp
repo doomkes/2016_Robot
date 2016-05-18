@@ -1,4 +1,4 @@
-#include <WPILib.h>
+ #include <WPILib.h>
 #include "UserInterface.h"
 #include <stdio.h>
 #include <string>
@@ -136,14 +136,14 @@ public:
 
 		}
 		else if(wui.SpinUpLow) {
-			m_shooter.Spinup(3500);
+			m_shooter.Spinup(2500);
 		}
 		else if (!wui.Pickup){
 			m_shooter.Stop();
 		}
-		if(wui.Shoot) {
-			m_shooter.Shoot(wui.Shoot);
-		}
+
+		m_shooter.Shoot(wui.Shoot);
+
 		if(wui.Pickup) {
 			m_shooter.Pickup();
 		}

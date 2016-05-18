@@ -45,22 +45,22 @@ void UserInterface::GetAllStickValues(WedgemoreUserInput *wui){
 	wui->Zero = m_fullStick.GetRawButton(ZERO);
 	wui->MidHiGoal = m_fullStick.GetRawButton(MIDSHOTPOS);
 
-	if(m_fullStick.GetPOV(DROPBACK))
+	if(m_fullStick.GetPOV() == DROPBACK)
 	{
 		wui->DropBR = true;
 		wui->DropBL = true;
 	}
-	if(m_fullStick.GetPOV(DROPFRONT))
+	if(m_fullStick.GetPOV() == DROPFRONT)
 	{
 		wui->DropFL = true;
 		wui->DropFR = true;
 	}
-	if(m_fullStick.GetPOV(DROPLEFT))
+	if(m_fullStick.GetPOV() == DROPLEFT)
 	{
 		wui->DropFL = true;
 		wui->DropBL = true;
 	}
-	if(m_fullStick.GetPOV(DROPRIGHT))
+	if(m_fullStick.GetPOV() == DROPRIGHT)
 	{
 		wui->DropFR = true;
 		wui->DropBR = true;
