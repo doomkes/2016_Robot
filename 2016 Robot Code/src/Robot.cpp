@@ -46,6 +46,8 @@ public:
 		SmartDashboard::PutNumber("Driver P", 1);
 		SmartDashboard::PutNumber("Driver I", 0);
 
+		SmartDashboard::PutNumber("Curve Ratio", 0.79);
+
 		SmartDashboard::PutNumber("lift accel",		1);
 		SmartDashboard::PutNumber("lift decel",		1);
 		SmartDashboard::PutNumber("lift max speed",	0.5);

@@ -18,7 +18,7 @@ GoalVision::~GoalVision() {
 	// TODO Auto-generated destructor stub
 }
 void GoalVision::Init() {
-	m_camera = new AxisCamera("axis-camera.local");
+	//m_camera = new AxisCamera("axis-camera.local");
 	m_frame = imaqCreateImage(IMAQ_IMAGE_RGB, 7);
 	m_binaryFrame = imaqCreateImage(IMAQ_IMAGE_U8, 7);
 	m_shapesImage = imaqCreateImage(IMAQ_IMAGE_U8, 7);
@@ -35,7 +35,7 @@ void GoalVision::SetLine(Point start, Point end) {
 	m_end = end;
 }
 float GoalVision::GetAngleCorrection() {
-	return 20;
+	return 0;
 	if(!m_camera->IsFreshImage()) {
 		return -1;
 	}
