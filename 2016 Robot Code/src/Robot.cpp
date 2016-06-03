@@ -116,13 +116,13 @@ public:
 
 		if(wui.PickupPos) {
 	 		m_shooterMode = PICKUP_MODE;
-			m_shooter.LiftTo(m_shooter.GetLiftAngle() + 4);
+			m_shooter.LiftTo(m_shooter.GetLiftAngle() + 10);
 
 
 		}
 		else if(wui.StartPosition) {	//start & stow pos
 			m_shooterMode = STOW_MODE;
-			m_shooter.LiftTo(m_shooter.GetLiftAngle() - 4);
+			m_shooter.LiftTo(m_shooter.GetLiftAngle() - 10);
 		}
 		else if(wui.MidHiGoal) {
 			m_shooterMode = MID_SHOT_MODE;
