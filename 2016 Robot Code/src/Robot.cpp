@@ -60,6 +60,8 @@ public:
 		SmartDashboard::PutBoolean("Save Prefs", false);
 
 		SmartDashboard::PutNumber("Auto Mode Select", 0);
+		SmartDashboard::PutNumber("Auto Pos Select", 0);
+
 		SmartDashboard::PutNumber("Total Distance", 260);
 		SmartDashboard::PutBoolean("Calibrate", false);
 		SmartDashboard::PutBoolean("Save Captured Image", false);
@@ -92,8 +94,41 @@ public:
 
 	void AutonomousPeriodic()
 	{
-		m_auto.Periodic();
-		m_shooter.Update();
+	/*** This section of code is used to test vision code for aligning with the goal. ***/
+				static float start = 0, correctionAngle = -99, t = 0;
+				static float startAngle = 0;
+				static float pos = 0;
+
+				static bool firstTime = true;
+				if(firstTime) {
+					startAngle = m_rateSensor.GetAngle();
+					pos = 0;
+
+					start = Timer::GetFPGATimestamp();
+					correctionAngle = m_goalVision.GetAngleCorrection();
+
+					t = Timer::GetFPGATimestamp() - start;
+					printf("Angle Correction: %f, took %fs\n", correctionAngle, t);
+
+					firstTime = false;
+				}
+				static bool done = false;
+				if(correctionAngle != -99) {
+					if(!done) {
+						pos += 0.2*(correctionAngle - (m_rateSensor.GetAngle() - startAngle))/25;
+						m_tank.PositionDrive(-pos, pos);
+					}
+					static unsigned count = 0;
+					if(fabs(correctionAngle - (m_rateSensor.GetAngle() - startAngle)) < 0.025) {
+						done = true;
+						printf("done");
+						//correctionAngle = m_goalVision.GetAngleCorrection();
+
+					}
+				}
+
+//		m_auto.Periodic();
+//		m_shooter.Update();
 	}
 
 	void TeleopInit()
@@ -104,12 +139,14 @@ public:
 		m_tank.Zero();
 		ui.Init(&wui);
 		//m_leddar.StartAutoDetections(true);
-
+		//m_goalVision.Init();
 
 	}
 
 	void TeleopPeriodic()
 	{
+
+
 
 		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
 		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());

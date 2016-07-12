@@ -12,7 +12,7 @@
 class GoalVision {
 	Point m_start = {0, 0}, m_end = {0, 0};
 	LineProfile *m_profile = nullptr;
-	AxisCamera *m_camera = nullptr;
+	USBCamera m_camera;
 	Image *m_frame = nullptr;
 	Image *m_binaryFrame = nullptr;
 	Image *m_template = nullptr;
@@ -22,7 +22,6 @@ public:
 	GoalVision();
 	virtual ~GoalVision();
 	void Init();
-	void SetLine(Point start, Point end);
 	float GetAngleCorrection();
 };
 
