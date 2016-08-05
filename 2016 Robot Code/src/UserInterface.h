@@ -16,7 +16,7 @@ struct WedgemoreUserInput
 	float LeftSpeed = 0.0, RightSpeed = 0.0;
 	float LiftSpeed = 0;
 	float SliderValue = 0;
-	float YawValue = 0;
+	float YawValue = 0.0;
 	bool Shoot = false, Pickup = false;
 	bool SpinUp = false, SpinUpLow = false;
 	bool StartPosition = false;
@@ -34,12 +34,13 @@ struct WedgemoreUserInput
 	bool RunGunLight = false;
 	bool ReverseDrive = false;
 	int Climber = -1;
+	float SpeedMultiplier = 1.0;
 };
 
 class UserInterface
 {
 private:
-	Joystick m_lStick, m_rStick, m_manStick;
+	Joystick m_lStick, m_rStick, m_manStick, m_overrideControl;
 	void GetManStickValues(WedgemoreUserInput *wui);
 	void GetLStickValues(WedgemoreUserInput *wui);
 	void GetRStickValues(WedgemoreUserInput *wui);

@@ -95,40 +95,40 @@ public:
 	void AutonomousPeriodic()
 	{
 	/*** This section of code is used to test vision code for aligning with the goal. ***/
-				static float start = 0, correctionAngle = -99, t = 0;
-				static float startAngle = 0;
-				static float pos = 0;
-
-				static bool firstTime = true;
-				if(firstTime) {
-					startAngle = m_rateSensor.GetAngle();
-					pos = 0;
-
-					start = Timer::GetFPGATimestamp();
-					correctionAngle = m_goalVision.GetAngleCorrection();
-
-					t = Timer::GetFPGATimestamp() - start;
-					printf("Angle Correction: %f, took %fs\n", correctionAngle, t);
-
-					firstTime = false;
-				}
-				static bool done = false;
-				if(correctionAngle != -99) {
-					if(!done) {
-						pos += 0.2*(correctionAngle - (m_rateSensor.GetAngle() - startAngle))/25;
-						m_tank.PositionDrive(-pos, pos);
-					}
-					static unsigned count = 0;
-					if(fabs(correctionAngle - (m_rateSensor.GetAngle() - startAngle)) < 0.025) {
-						done = true;
-						printf("done");
-						//correctionAngle = m_goalVision.GetAngleCorrection();
-
-					}
-				}
-
-//		m_auto.Periodic();
-//		m_shooter.Update();
+//				static float start = 0, correctionAngle = -99, t = 0;
+//				static float startAngle = 0;
+//				static float pos = 0;
+//
+//				static bool firstTime = true;
+//				if(firstTime) {
+//					startAngle = m_rateSensor.GetAngle();
+//					pos = 0;
+//
+//					start = Timer::GetFPGATimestamp();
+//					correctionAngle = m_goalVision.GetAngleCorrection();
+//
+//					t = Timer::GetFPGATimestamp() - start;
+//					printf("Angle Correction: %f, took %fs\n", correctionAngle, t);
+//					firstTime = false;
+//				}
+//				static bool done = false;
+//				if(correctionAngle != -99) {
+//					//if(!done) {
+//						pos += 0.2*(correctionAngle - (m_rateSensor.GetAngle() - startAngle))/25;
+//						m_tank.PositionDrive(-pos, pos);
+//					//}
+//					if(fabs(correctionAngle - (m_rateSensor.GetAngle() - startAngle)) < 0.025) {
+//						done = true;
+//						printf("done");
+//						//correctionAngle = m_goalVision.GetAngleCorrection();
+//
+//					}
+//				}
+//				m_goalVision.UpdateSettings();
+//				m_goalVision.ShowFrame();
+//
+		m_auto.Periodic();
+		m_shooter.Update();
 	}
 
 	void TeleopInit()
@@ -146,7 +146,7 @@ public:
 	void TeleopPeriodic()
 	{
 
-
+		SmartDashboard::PutNumber("Override Control", wui.SpeedMultiplier);
 
 		//SmartDashboard::PutNumber("Angle", m_rateSensor.GetAngle());
 		//SmartDashboard::PutNumber("Rate", m_rateSensor.GetRate());

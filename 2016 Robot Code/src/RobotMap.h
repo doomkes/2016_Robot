@@ -8,6 +8,7 @@
 #ifndef SRC_ROBOTMAP_H_
 #define SRC_ROBOTMAP_H_
 
+#define X3D_RSTICK
 enum ManStickMap {
 	SHOOT = 5,
 	LIMIT_SHOOT = 1,
@@ -28,26 +29,42 @@ enum ManStickMap {
 	CLIMBER = 0
 
 };
-
 enum LStickMap {
+#ifdef X3D_LSTICK	// X3D config.
+	DROPLEFT = 3,
+	DROPRIGHT = 4,
+	DROPFRONT = 6,
+	DROPBACK = 5,
+	DROPALL = 1,
+#else // attack 3 config.
 	DROPLEFT = 4,
 	DROPRIGHT = 5,
 	DROPFRONT = 3,
 	DROPBACK = 2,
 	DROPALL = 1,
-};
 
-enum DIOMap {
-	AIM_LIGHT = 9,
-	RUN_GUN_LIGHT = 8
+#endif
 };
 enum RStickMap {
+#ifdef X3D_RSTICK
+	REVERSE_DRIVE = 1,
+	SET_SPEED_MODE = 11,
+	SET_VBUS_MODE = 12,
+	TOGGLE_RUN_LIGHT = 2,
+	SHOOTER_DOWN = -99
+#else // attack 3
 	REVERSE_DRIVE = 1,
 	SET_SPEED_MODE = 10,
 	SET_VBUS_MODE = 11,
 	TOGGLE_RUN_LIGHT = 2,
 	SHOOTER_DOWN = -99
+#endif
 };
+enum DIOMap {
+	AIM_LIGHT = 9,
+	RUN_GUN_LIGHT = 8
+};
+
 enum SolenoidMap {
 	FRONTLEFTSOL,
 	FRONTRIGHTSOL,

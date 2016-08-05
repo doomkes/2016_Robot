@@ -18,7 +18,31 @@ GoalVision::GoalVision() :
 GoalVision::~GoalVision() {
 	// TODO Auto-generated destructor stub
 }
-void GoalVision::Init() {
+void GoalVision::ShowFrame() {
+
+	if(SmartDashboard::GetBoolean("binary frame", false)) {
+		CameraServer::GetInstance()->SetImage(m_binaryFrame);
+	} else {
+		CameraServer::GetInstance()->SetImage(m_frame);
+	}
+}
+void GoalVision::UpdateSettings() {
+	int newExposure = Preferences::GetInstance()->GetInt("cam_exposure", 0);
+	int newBrightness = Preferences::GetInstance()->GetInt("cam_brightness", 0);
+	static int oldExposure
+		= Preferences::GetInstance()->GetInt("cam_exposure", 0);
+	static int oldBrightness
+		= Preferences::GetInstance()->GetInt("cam_brightness" , 0);
+	if(oldExposure != newExposure) {
+		m_camera.SetExposureManual(newExposure);
+		oldExposure = newExposure;
+	}
+	if(oldBrightness != newBrightness) {
+		m_camera.SetBrightness(newBrightness);
+		oldBrightness = newBrightness;
+	}
+}
+ void GoalVision::Init() {
 	m_camera.OpenCamera();
 	m_camera.StartCapture();
 	m_camera.SetSize(640, 480);
@@ -54,11 +78,6 @@ void GoalVision::Init() {
 float GoalVision::GetAngleCorrection() {
 	m_camera.GetImage(m_frame);
 
-	if(SmartDashboard::GetBoolean("binary frame", false)) {
-		CameraServer::GetInstance()->SetImage(m_binaryFrame);
-	} else {
-		CameraServer::GetInstance()->SetImage(m_frame);
-	}
 
 	ShapeReport *sr = nullptr;
 

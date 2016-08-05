@@ -23,6 +23,8 @@ public:
 	virtual ~GoalVision();
 	void Init();
 	float GetAngleCorrection();
+	void ShowFrame();
+	void UpdateSettings();
 };
 
 #endif /* SRC_GOALVISION_H_ */

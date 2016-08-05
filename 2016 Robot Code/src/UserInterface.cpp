@@ -10,7 +10,7 @@
 //The Robot's name is "Wedgemore"
 
 UserInterface::UserInterface() :
-		m_lStick(0), m_rStick(1), m_manStick(2)
+		m_lStick(0), m_rStick(1), m_manStick(2), m_overrideControl(3)
 {
 }
 
@@ -40,6 +40,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->MidHiGoal = false;
 	wui->RunGunLight = false;
 	wui->Climber = -1;
+	wui->SpeedMultiplier = 1.0;
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
@@ -110,6 +111,9 @@ void UserInterface::GetData(WedgemoreUserInput *wui)
 	GetRStickValues(wui);
 	GetManStickValues(wui);
 
-	wui->LeftSpeed = m_lStick.GetY();
-	wui->RightSpeed = m_rStick.GetY();
+	if (m_overrideControl.GetRawButton(10) && m_overrideControl.GetRawButton(3)) wui->SpeedMultiplier = 0.3;
+	if (m_overrideControl.GetRawButton(10) && m_overrideControl.GetRawButton(2)) wui->SpeedMultiplier = 1.0;
+
+	wui->LeftSpeed = m_lStick.GetY() * wui->SpeedMultiplier;
+	wui->RightSpeed = m_rStick.GetY() * wui->SpeedMultiplier;
 }

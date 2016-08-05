@@ -97,6 +97,11 @@ void Autonomous::Periodic() {
 
 void Autonomous::LowBar(unsigned position){ //This now uses vision
 	static TrapezoidalMove move;
+	static float startAngle;
+	static float correctionAngle;
+	static float pos;
+	static bool visionAdjust;
+	static bool dontMove;
 	if(m_init) {
 		m_tank->SetMode(POSITION_MODE);
 		m_tank->Zero();
@@ -105,6 +110,12 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 		move.SetMaxSpeed(36);
 		move.SetDistance(284.93);//used to be 284.93
 		move.CalcParams();
+
+		visionAdjust = false;
+		dontMove = false;
+		pos = 0;
+		correctionAngle = 0;
+		startAngle = 0;
 		m_init = false;
 	}
 	double currentAutoTime  = Timer::GetFPGATimestamp() - m_autoStartTime;
@@ -112,7 +123,7 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 	float  curveRatio = SmartDashboard::GetNumber("Curve Ratio", 0.79);
 
 	static float autoCount = 0;
-	m_shooter->LiftTo(180);
+	m_shooter->LiftTo(165);
 	SmartDashboard::PutString("Auto Mode", "Low Bar Defense");
 	SmartDashboard::PutNumber("Current Auto Time", currentAutoTime);
 	rightDist = move.Position(currentAutoTime);
@@ -133,15 +144,28 @@ void Autonomous::LowBar(unsigned position){ //This now uses vision
 	}
 	if ((rightDist >= 200) && (rightDist <= 240)){
 		m_shooter->Spinup(-3000);
-				}
-	m_tank->PositionDrive(leftDist, rightDist);
-	if (currentAutoTime > move.GetTotalTime() && currentAutoTime < (move.GetTotalTime() + 5))
-		//m_shooter->Shoot(true);
+	}
+	if(!dontMove) {
+		m_tank->PositionDrive(leftDist, rightDist);
+	}
+	if (currentAutoTime > move.GetTotalTime() && currentAutoTime < (move.GetTotalTime() + 5)) {
 		m_shooter->Spinup(4500);
-//	if (currentAutoTime > (move.GetTotalTime() + 3))
-//		m_shooter->Shoot(true);
-	if (currentAutoTime > (move.GetTotalTime() + 5))
+	}
+	if (currentAutoTime > (move.GetTotalTime() + 3)) {
+//		visionAdjust = true;
+		dontMove = true;
+	}
+	if(visionAdjust) {
+//		pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
+//		m_tank->PositionDrive(-pos, pos);
+//
+//		if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025 || correctionAngle == -99) {
+//			m_shooter->Shoot(true);
+//		}
+	}
+	if (currentAutoTime > (move.GetTotalTime() + 5)) {
 		m_shooter->Spinup(0);
+	}
 
 }
 
@@ -270,90 +294,92 @@ void Autonomous::Ramparts(int position){ //This now uses vision
 				}
 			break;
 		case 8://first 90deg turn to line up horizontally to tower
-//			static float pos = 0;
-//			m_shooter->Spinup(-3000);
-//			switch (position){
-//				case 0 ... 1://positions 1 and 2 (turn clockwise)
-//					pos += 0.2*(90 - m_rateSensor->GetAngle())/25 + 0.01;
-//					m_tank->PositionDrive(-pos, pos);
-//					if(m_rateSensor->GetAngle() - startAngle > 90) {
-//						m_autoState++; // move to next state
-//						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-//						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
-//						m_tank->Zero();
-//					}
-//					break;
-//				case 2 ... 3://positions 3 and 4 (turn counter-clockwise)
-//					pos += 0.2*fabs(90 + m_rateSensor->GetAngle())/25 + 0.01;
-//					m_tank->PositionDrive(pos, -pos);
-//					if(fabs(m_rateSensor->GetAngle()) + startAngle > 90) {
-//						m_autoState++; // move to next state
-//						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-//						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
-//						m_tank->Zero();
-//					}
-//					break;
-//			}
+			static float pos = 0;
+			m_shooter->Spinup(-3000);
+			switch (position){
+				case 0 ... 1://positions 1 and 2 (turn clockwise)
+					pos += 0.2*(90 - m_rateSensor->GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor->GetAngle() - startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+				case 2 ... 3://positions 3 and 4 (turn counter-clockwise)
+					pos += 0.2*fabs(90 + m_rateSensor->GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(fabs(m_rateSensor->GetAngle()) + startAngle > 90) {
+						m_autoState++; // move to next state
+						caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+						move.SetAll(36,36,48,finalMoveDist); // Setup move for next step
+						m_tank->Zero();
+					}
+					break;
+			}
 			m_tank->Zero();
 			break;
-//		case 9:
-//			m_shooter->Spinup(4500);
-//			m_shooter->LiftTo(45);
-//			leftDist = move.Position(currentAutoTime - caseStartTime);
-//			rightDist = leftDist;
-//			m_tank->PositionDrive(leftDist, rightDist);
-//			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
-//				m_tank->Zero();
-//				m_autoState++; // move to next state
-//				//caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-//			}
-//			break;
-//		case 10:{//second 90deg turn to line up towards goal
-//			static float pos = 0;
-//			m_shooter->Spinup(4500);
-//			m_shooter->LiftTo(45);
-//			switch(position){
-//				case 0 ... 1://positions 1 and 2 (turn counter-clockwise)
-//					pos += 0.20*(m_rateSensor->GetAngle())/25 + 0.01;
-//					m_tank->PositionDrive(pos, -pos);
-//					if(m_rateSensor->GetAngle() < 0) {
-//						m_tank->Zero();
-//						m_autoState++;
-//						startAngle = m_rateSensor->GetAngle();
-//						pixelError = m_goalVision->GetAngleCorrection();
-//						pos = 0;
-//					}
-//					break;
-//				case 2 ... 3://positions 3 and 4 (turn clockwise)
-//					pos += 0.20*fabs(m_rateSensor->GetAngle())/25 + 0.01;
-//					m_tank->PositionDrive(-pos, pos);
-//					if(m_rateSensor->GetAngle() > 0) {
-//						m_tank->Zero();
-//						m_autoState++;
-//						startAngle = m_rateSensor->GetAngle();
-//						pixelError = m_goalVision->GetAngleCorrection();
-//						pos = 0;
-//					}
-//					break;
-//			}
-//			break;
-//		}
-//		case 11: //adjust angle with vision
-//			correctionAngle = pixelError*.1112;
-//			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
-//			m_tank->PositionDrive(-pos, pos);
-//
-//			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.5) {
-//				caseStartTime = currentAutoTime;
-//				m_autoState++;
-//				m_shooter->Shoot(true);
-//			}
-//			break;
-//		case 12:
-//			m_tank->Zero();
-//			m_shooter->LiftTo(45);
-//			m_shooter->Spinup(0);
-//			break;
+		case 9:
+			m_shooter->Spinup(4500);
+			m_shooter->LiftTo(45);
+			leftDist = move.Position(currentAutoTime - caseStartTime);
+			rightDist = leftDist;
+			m_tank->PositionDrive(leftDist, rightDist);
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+				m_tank->Zero();
+				m_autoState++; // move to next state
+				//caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+			}
+			break;
+		case 10:{//second 90deg turn to line up towards goal
+			static float pos = 0;
+			m_shooter->Spinup(4500);
+			m_shooter->LiftTo(45);
+			switch(position){
+				case 0 ... 1://positions 1 and 2 (turn counter-clockwise)
+					pos += 0.20*(m_rateSensor->GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(pos, -pos);
+					if(m_rateSensor->GetAngle() < 0) {
+						m_tank->Zero();
+						m_autoState++;
+						startAngle = m_rateSensor->GetAngle();
+						correctionAngle = m_goalVision->GetAngleCorrection();
+						SmartDashboard::PutNumber("correction angle:", correctionAngle);
+
+						pos = 0;
+					}
+					break;
+				case 2 ... 3://positions 3 and 4 (turn clockwise)
+					pos += 0.20*fabs(m_rateSensor->GetAngle())/25 + 0.01;
+					m_tank->PositionDrive(-pos, pos);
+					if(m_rateSensor->GetAngle() > 0) {
+						m_tank->Zero();
+						m_autoState++;
+						startAngle = m_rateSensor->GetAngle();
+						correctionAngle = m_goalVision->GetAngleCorrection();
+						SmartDashboard::PutNumber("correction angle:", correctionAngle);
+						pos = 0;
+					}
+					break;
+			}
+			break;
+		}
+		case 11: //adjust angle with vision
+			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
+			m_tank->PositionDrive(-pos, pos);
+
+			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025 || correctionAngle == -99) {
+				caseStartTime = currentAutoTime;
+				m_autoState++;
+				m_shooter->Shoot(true);
+			}
+			break;
+		case 12:
+			m_tank->Zero();
+			m_shooter->LiftTo(45);
+			m_shooter->Spinup(0);
+			break;
 	}
 
 
@@ -476,7 +502,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 		case 4:{//second 90deg turn to line up towards goal
 			static float pos = 0;
 			m_shooter->Spinup(4500);
-			m_shooter->LiftTo(47);
+			m_shooter->LiftTo(40);
 			switch(position){
 				case 0 ... 1://positions 1 and 2 (turn counter-clockwise)
 					pos += 0.20*(m_rateSensor->GetAngle())/25 + 0.01;
@@ -497,6 +523,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 						m_autoState++;
 						startAngle = m_rateSensor->GetAngle();
 						correctionAngle = m_goalVision->GetAngleCorrection();
+						SmartDashboard::PutNumber("correction angle:", correctionAngle);
 						pos = 0;
 					}
 					break;
@@ -507,7 +534,7 @@ void Autonomous::RoughTerrain(int position){ //This now uses vision
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
-			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025) {
+			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025 || correctionAngle == -99) {
 				caseStartTime = currentAutoTime;
 				m_autoState++;
 				m_tank->Zero();
@@ -751,7 +778,7 @@ void Autonomous::RockWall(int position){ //This now uses vision
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
-			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025) {
+			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025 || correctionAngle == -99) {
 				caseStartTime = currentAutoTime;
 				m_autoState++;
 				m_tank->Zero();
@@ -778,6 +805,9 @@ void Autonomous::RockWall(int position){ //This now uses vision
 }
 
 void Autonomous::Moat(int position){ //This now uses vision
+	if(Timer::GetFPGATimestamp() - m_autoStartTime < 8) {
+		return;
+	}
 	static unsigned count = 0; // General Purpose counter
 	static float adjust = 0;
 	static double caseStartTime = 0;
@@ -800,7 +830,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 		lastState = 0;
 		count = 0;
 		caseStartTime = currentAutoTime;
-		move.SetAll(24,24,36,225);
+		move.SetAll(48,48,72,225);
 		startAngle = m_rateSensor->GetAngle();
 		timeAdjust = 0;
 		adjust = 0;
@@ -822,6 +852,9 @@ void Autonomous::Moat(int position){ //This now uses vision
 			if (rightDist > 135) m_autoState++;
 			break;
 		case 1://finish the rest of the move to the tower with wheels retracted and gyro feedback
+			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+				break;
+			}
 			timeAdjust += 0.01;
 			currentAutoTime += timeAdjust;
 			adjust += m_rateSensor->GetAngle()*0.367*0.05; //this is the tangent of 1deg times wheel separation of 21in
@@ -832,12 +865,12 @@ void Autonomous::Moat(int position){ //This now uses vision
 			leftDist = move.Position(currentAutoTime) + adjust/2;
 			rightDist = move.Position(currentAutoTime) - adjust/2;
 			m_tank->PositionDrive(leftDist, rightDist);
-			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
-				m_autoState++; // move to next state
-				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
-				m_tank->Zero();
-				startAngle = m_rateSensor->GetAngle();
-				}
+//			if ((currentAutoTime - caseStartTime) > move.GetTotalTime()){
+//				m_autoState++; // move to next state
+//				caseStartTime = currentAutoTime; // reset caseStartTime since we are starting new case
+//				m_tank->Zero();
+//				startAngle = m_rateSensor->GetAngle();
+//				}
 			break;
 		case 2://first 90deg turn to line up horizontally to tower
 			static float pos = 0;
@@ -911,7 +944,7 @@ void Autonomous::Moat(int position){ //This now uses vision
 			pos += 0.2*(correctionAngle - (m_rateSensor->GetAngle() - startAngle))/25;
 			m_tank->PositionDrive(-pos, pos);
 
-			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025) {
+			if(fabs(correctionAngle - (m_rateSensor->GetAngle() - startAngle)) < 0.025 || correctionAngle == -99) {
 				caseStartTime = currentAutoTime;
 				m_autoState++;
 				m_tank->Zero();
