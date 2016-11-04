@@ -6,22 +6,8 @@
  */
 
 #include <DriveTrain/TankDrive.h>
-#include "robotmap.h"
-TankDrive::TankDrive() :
-		m_leftMotor1(LEFTDRIVE1),
-		m_leftMotor2(LEFTDRIVE2),
-		m_rightMotor1(RIGHTDRIVE1),
-		m_rightMotor2(RIGHTDRIVE2)
-{
-	m_leftMotor1.SetControlMode(CANSpeedController::kFollower);
-	m_leftMotor2.SetControlMode(CANSpeedController::kSpeed);
-	m_rightMotor1.SetControlMode(CANSpeedController::kFollower);
-	m_rightMotor2.SetControlMode(CANSpeedController::kSpeed);
 
-	m_leftMotor1.Set(LEFTDRIVE2);
-	m_rightMotor1.Set(RIGHTDRIVE2);
-	// TODO TOT-generated constructor stub
-}
+#include "robotmap.h"
 
 TankDrive::~TankDrive()
 {

@@ -8,7 +8,7 @@
 #ifndef SRC_SHOOTER_H_
 #define SRC_SHOOTER_H_
 #include <wpilib.h>
-
+#include <CANTalon.h>
 class Shooter
 {
 private:
