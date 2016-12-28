@@ -21,6 +21,7 @@ class TankDrive
 private:
 	CANTalon m_leftMotor1, m_leftMotor2, m_rightMotor1, m_rightMotor2;
 	DriveMode m_mode = VBUS_MODE;
+	float m_leftEncoderDist, m_rightEncoderDist;
 	float m_maxSpeed;
 	bool m_reverse = false;
 	float m_leftDistance = 0, m_rightDistance = 0;
@@ -39,6 +40,11 @@ public:
 	void VBusDrive(float leftSpeed, float rightSpeed);
 	void StraightDrive(float dist, float angleError, bool reset = false );
 	void PositionDrive(float leftSpeed, float rightSpeed);
+
+	// In inches, return position of encoder.
+	float GetLeftEncPos();
+	// In inches, return position of encoder.
+	float GetRightEncPos();
 };
 
 #endif /* SRC_TANKDRIVE_H_ */

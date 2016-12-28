@@ -91,6 +91,8 @@ void TankDrive::PositionDrive(float leftDist, float rightDist) {
 	m_leftMotor1.Set(-m_leftDistance*m_countPerInch);
 	m_rightMotor1.Set(m_rightDistance*m_countPerInch);
 
+
+	m_rightEncoderDist = m_rightMotor1.GetEncPosition();
 	SmartDashboard::PutNumber("Closed Loop left  Error", m_leftMotor1.GetClosedLoopError()/4096/m_countPerInch);
 	SmartDashboard::PutNumber("Closed Loop right Error", m_rightMotor1.GetClosedLoopError()/4096/m_countPerInch);
 
@@ -157,3 +159,17 @@ void TankDrive::Zero()
 	m_rightDistance = 0;
 }
 
+float TankDrive::GetLeftEncPos() {
+	// Get() only returns position in position mode.
+	if(m_mode != POSITION_MODE) {
+		return -1;
+	}
+	return m_leftMotor1.Get() / m_countPerInch;
+}
+float TankDrive::GetRightEncPos() {
+	// Get() only returns position in position mode.
+	if(m_mode != POSITION_MODE) {
+		return -1;
+	}
+	return m_rightMotor1.Get() / m_countPerInch;
+}

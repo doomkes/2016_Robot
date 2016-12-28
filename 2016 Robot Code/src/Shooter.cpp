@@ -187,7 +187,7 @@ void Shooter::LiftTo(float angle) {
 void Shooter::Update() {
 	static Timer timer;
 	static unsigned count = 0;
-	printf("error: %f\n", m_shoot1.GetSpeed());
+	//printf("error: %f\n", m_shoot1.GetSpeed());
 	if(fabs(m_shoot1.GetSpeed()) >= m_targetWheelSpeed - 50 && m_targetWheelSpeed != 0) {
 		if(count % 10 == 0) {
 			SmartDashboard::PutBoolean("At Target Speed", true);

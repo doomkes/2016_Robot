@@ -6,7 +6,7 @@
  */
 
 #include <Autonomous.h>
-
+#include <fstream>
 Autonomous::Autonomous(TankDrive* tank, SuspensionDrive* suspension,Shooter* shooter, ADXRS450_Gyro *rateSensor, GoalVision *goalVision)
 	: m_tank(tank), m_suspension(suspension), m_rateSensor(rateSensor),
 	  m_shooter(shooter),m_goalVision(goalVision), m_DIO0(0), m_DIO1(1), m_DIO2(2), m_DIO3(3), m_DIO4(4), m_DIO5(5) {
@@ -20,12 +20,13 @@ Autonomous::~Autonomous() {
 void Autonomous::Init(int mode) {
 	m_mode = 0;
 	m_pos = 0;
-	m_mode |= !m_DIO0.Get() ? 0x04 : 0;
-	m_mode |= !m_DIO1.Get() ? 0x02 : 0;
-	m_mode |= !m_DIO2.Get() ? 0x01 : 0;
-
-	m_pos |= !m_DIO3.Get() ? 0x02 : 0;
-	m_pos |= !m_DIO4.Get() ? 0x01 : 0;
+	//m_mode |= !m_DIO0.Get() ? 0x04 : 0;
+	//m_mode |= !m_DIO1.Get() ? 0x02 : 0;
+	//m_mode |= !m_DIO2.Get() ? 0x01 : 0;
+    //
+	//m_pos |= !m_DIO3.Get() ? 0x02 : 0;
+	//m_pos |= !m_DIO4.Get() ? 0x01 : 0;
+	m_mode = SmartDashboard::GetNumber("Auto Mode Select", 0);
 
 	SmartDashboard::PutNumber("auto mode", m_mode);
 	SmartDashboard::PutNumber("auto pos", m_pos);
@@ -45,6 +46,7 @@ void Autonomous::Init(int mode) {
 		case 5: autoName = "Moat"; break;
 		case 6: autoName = "Rock Wall"; break;
 		case 7: autoName = "RoughTerrain"; break;
+		case 8: autoName = "Do The Thing"; break;
 	}
 	//Put textual representation of auto mode to dashboard.
 	SmartDashboard::PutString("auto name", std::to_string(m_mode) + ": " + autoName);
@@ -81,6 +83,9 @@ void Autonomous::Periodic() {
 			break;
 		case 7:
 			RoughTerrain(m_pos);
+			break;
+		case 8:
+			DoTheThing();
 			break;
 
 	}
@@ -1141,3 +1146,51 @@ void Autonomous::TwoBallLowBar() {
 	lastState = m_autoState;
 
 }
+
+#define ARC_RAD (3.5*12) // in inches
+#define WHEEL_DIF 10.125 //distance in inches from center to wheel
+#define PI 3.14159
+#define ARC_LEN (ARC_RAD*PI)
+#define MAX_SP (ARC_LEN/8)
+#define SMALL (ARC_RAD-WHEEL_DIF)/ARC_RAD
+#define LARGE (ARC_RAD+WHEEL_DIF)/ARC_RAD
+void Autonomous::DoTheThing(){
+	static int dir=0;
+	static TrapezoidalMove move;
+	static float autoTime;
+	static float autoStartTime;
+	static std::ofstream encCountCSV;
+	switch(dir){
+	case 0:
+		switch(m_autoState){
+		case 0:
+			m_tank->SetMode(POSITION_MODE);
+			autoStartTime = Timer::GetFPGATimestamp();
+			autoTime = 0;
+			//Accel, Decell, Max speed, Dist
+			move.SetAll(MAX_SP/2,MAX_SP/2,MAX_SP,ARC_LEN);
+			m_autoState++;
+			//printf ("accel %f decel %f maxsp %f dist %f \n",MAX_SP/8,MAX_SP/8,MAX_SP/4,ARC_LEN);
+			encCountCSV.open("//media//sda1//encoder_vals.csv");
+			break;
+
+		case 1:
+			m_tank->Drive(LARGE*move.Position(autoTime),SMALL*move.Position(autoTime));
+			autoTime=Timer::GetFPGATimestamp()-autoStartTime;
+			if (autoTime>=10) {
+				dir+=1;
+			}
+			encCountCSV << -m_tank->GetLeftEncPos() << ", " << m_tank->GetRightEncPos() << std::endl;
+			printf("left side enc  %f\nright side enc %f\n\n", -m_tank->GetLeftEncPos(), m_tank->GetRightEncPos());
+			//printf ("large %f small %f \n",LARGE,SMALL);
+			printf ("time %f distl %f distr %f \n",autoTime,LARGE*move.Position(autoTime),SMALL*move.Position(autoTime));
+			break;
+
+
+
+
+
+		}
+	}
+}
+

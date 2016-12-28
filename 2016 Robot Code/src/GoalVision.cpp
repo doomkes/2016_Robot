@@ -57,21 +57,21 @@ float GoalVision::GetAngleCorrection() {
 			pixelCount--;
 		}
 	}
-	printf("\n");
-	printf("i: %i, pixelCount %i\n", i, pixelCount);
+	//printf("\n");
+	//printf("i: %i, pixelCount %i\n", i, pixelCount);
 	Point p1 = {0, 0}, p2 = {0, 0}; // horizontal line.
 	if(pixelCount == 3) {
-		printf("bottom edge found\n");
+		//printf("bottom edge found\n");
 		p1.y = m_start.y + i - 20;
 		p1.x = 255;
 		p2.y = m_start.y + i - 20;
 		p2.x = 455;
 	} else {
-		printf("bottom edge not found\n");
+		//printf("bottom edge not found\n");
 		return -1;
 	}
 	if(p1.x < 0 || p1.y < 0 || p1.x > 639 || p1.y > 479 || p2.x < 0 || p2.y < 0 || p2.x > 639 || p2.y > 479) {
-		printf("horizontal line out of range\n");
+		//printf("horizontal line out of range\n");
 		return -1;
 	}
 	m_profile = imaqLineProfile(m_binaryFrame, p1, p2);
