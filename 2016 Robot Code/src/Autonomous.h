@@ -41,6 +41,7 @@ public:
 	void Portcullis();
 	void Moat(int position);
 	void ChivalDeFrise(int position);
+	void DoTheThing();
 };
 
 #endif /* SRC_AUTONOMOUS_AUTONOMOUS_H_ */
