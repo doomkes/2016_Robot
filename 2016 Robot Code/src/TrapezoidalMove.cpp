@@ -32,12 +32,15 @@ TrapezoidalMove::TrapezoidalMove(float Accel, float Decel, float MaxSpeed, float
 void TrapezoidalMove::SetAccel (float value){
 	m_accel = value;
 }
+
 void TrapezoidalMove::SetDecel(float value){
 	m_decel = value;
 }
+
 void TrapezoidalMove::SetMaxSpeed(float value){
 	m_max_speed = value;
 }
+
 void TrapezoidalMove::SetDistance(float value){
 	m_distance = value;
 	CalcParams();

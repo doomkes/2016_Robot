@@ -100,6 +100,7 @@ void TankDrive::VBusDrive(float leftSpeed, float rightSpeed) {
 	m_leftMotor1.Set(-leftSpeed);
 	m_rightMotor1.Set(rightSpeed);
 }
+
 void TankDrive::StraightDrive(float dist, float angleError, bool reset ) {
 	static float adjust = 0;
 	if(reset) {

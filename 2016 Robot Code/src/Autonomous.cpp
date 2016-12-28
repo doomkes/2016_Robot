@@ -20,12 +20,14 @@ Autonomous::~Autonomous() {
 void Autonomous::Init(int mode) {
 	m_mode = 0;
 	m_pos = 0;
-	m_mode |= !m_DIO0.Get() ? 0x04 : 0;
-	m_mode |= !m_DIO1.Get() ? 0x02 : 0;
-	m_mode |= !m_DIO2.Get() ? 0x01 : 0;
+	//m_mode |= !m_DIO0.Get() ? 0x04 : 0;
+	//m_mode |= !m_DIO1.Get() ? 0x02 : 0;
+	//m_mode |= !m_DIO2.Get() ? 0x01 : 0;
+    //
+	//m_pos |= !m_DIO3.Get() ? 0x02 : 0;
+	//m_pos |= !m_DIO4.Get() ? 0x01 : 0;
 
-	m_pos |= !m_DIO3.Get() ? 0x02 : 0;
-	m_pos |= !m_DIO4.Get() ? 0x01 : 0;
+	m_mode = SmartDashboard::GetNumber("auto mode", 0);
 
 	SmartDashboard::PutNumber("auto mode", m_mode);
 	SmartDashboard::PutNumber("auto pos", m_pos);
@@ -45,6 +47,7 @@ void Autonomous::Init(int mode) {
 		case 5: autoName = "Moat"; break;
 		case 6: autoName = "Rock Wall"; break;
 		case 7: autoName = "RoughTerrain"; break;
+		case 8: autoName = "Do The Thing"; break;
 	}
 	//Put textual representation of auto mode to dashboard.
 	SmartDashboard::PutString("auto name", std::to_string(m_mode) + ": " + autoName);
@@ -81,6 +84,9 @@ void Autonomous::Periodic() {
 			break;
 		case 7:
 			RoughTerrain(m_pos);
+			break;
+		case 8:
+			DoTheThing();
 			break;
 
 	}
@@ -1140,4 +1146,29 @@ void Autonomous::TwoBallLowBar() {
 	count ++; // increment counter
 	lastState = m_autoState;
 
+}
+
+void Autonomous::DoTheThing(){
+	static TrapezoidalMove move;
+	static float autoTime;
+	static float autoStartTime;
+	int test;
+	switch(m_autoState){
+	case 0:
+		autoStartTime = Timer::GetFPGATimestamp();
+		autoTime = 0;
+		//Accel, Decell, Max speed, Dist
+		move.SetAll(5,5,10,60);
+		m_autoState++;
+		break;
+
+	case 1:
+		m_tank->Drive(move.Position(autoTime),move.Position(autoTime));
+		autoTime=autoTime+Timer::GetFPGATimestamp()-autoStartTime;
+		printf("%f\n", autoTime);
+
+
+
+
+	}
 }

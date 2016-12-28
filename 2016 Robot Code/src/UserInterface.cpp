@@ -21,7 +21,7 @@ UserInterface::~UserInterface()
 void UserInterface::Init(WedgemoreUserInput *wui) {
 	wui->DropFR = false, wui->DropFL = false, wui->DropBR = false, wui->DropBL = false;
 	wui->LeftSpeed = 0.0, wui->RightSpeed = 0.0;
-	wui->LiftSpeed = 0;
+	wui->angleAdjust = 0;
 	wui->SliderValue = 0;
 	wui->Shoot = false, wui->Pickup = false;
 	wui->SpinUp = false, wui->SpinUpLow = false;
@@ -42,7 +42,7 @@ void UserInterface::Init(WedgemoreUserInput *wui) {
 }
 
 void UserInterface::GetManStickValues(WedgemoreUserInput *wui){
-	wui->LiftSpeed = m_manStick.GetRawAxis(LIFTAXIS);
+	wui->angleAdjust = m_manStick.GetRawAxis(LIFTAXIS);
 	wui->SliderValue = m_manStick.GetRawAxis(SLIDERAXIS);
 	wui->YawValue = 0;
 

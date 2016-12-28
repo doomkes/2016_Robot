@@ -275,6 +275,7 @@ unsigned Leddar::GetDetectionsAsCarteasion(point buff[], unsigned buffSize) {
 	printf("end xy data\n");
 	return m_detections.size();
 }
+
 unsigned Leddar::GetDetectionsAsLineSegs() {
 
 	unsigned startIndex = 99;
@@ -328,7 +329,7 @@ unsigned Leddar::GetDetectionsAsLineSegs() {
 			lineSeg[i].slope = (lineSeg[i].p2.y - lineSeg[i].p1.y) / run;
 		}
 		else {
-			lineSeg[i].slope = 99999999; //for out purposes, this will work fine.
+			lineSeg[i].slope = 99999999; //for our purposes, this will work fine.
 		}
 		lineSeg[i].yIntercept = (lineSeg[i].p1.y-lineSeg[i].slope * lineSeg[i].p1.x);
 		lineSeg[i].angle = atan2(lineSeg[i].p2.y - lineSeg[i].p1.y, run);

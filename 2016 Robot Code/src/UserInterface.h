@@ -14,7 +14,7 @@ struct WedgemoreUserInput
 {
 	bool DropFR = false, DropFL = false, DropBR = false, DropBL = false;
 	float LeftSpeed = 0.0, RightSpeed = 0.0;
-	float LiftSpeed = 0;
+	float angleAdjust = 0;
 	float SliderValue = 0;
 	float YawValue = 0;
 	bool Shoot = false, Pickup = false;

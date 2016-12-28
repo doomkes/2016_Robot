@@ -189,7 +189,7 @@ public:
 			SmartDashboard::PutBoolean("VBus Mode", true);
 		}
 		m_tank.Reverse(wui.ReverseDrive);
-		float AngleAdjust = wui.LiftSpeed * ((-wui.SliderValue + 1)*1.5);//
+		float AngleAdjust = wui.angleAdjust * ((-wui.SliderValue + 1)*1.5);//
 		switch(m_shooterMode) {
 			case STOW_MODE:
 				m_shooter.LiftTo(AngleAdjust * 30);

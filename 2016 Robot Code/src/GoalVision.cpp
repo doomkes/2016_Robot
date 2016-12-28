@@ -85,7 +85,7 @@ float GoalVision::GetAngleCorrection() {
 	}
 	return correctionAngle;
 }
-
+//
 //float GoalVision::GetAngleCorrection() {
 //	if(!m_camera->IsFreshImage()) {
 //		return -1;
