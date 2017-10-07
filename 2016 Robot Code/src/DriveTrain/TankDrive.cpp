@@ -6,7 +6,8 @@
  */
 
 #include <DriveTrain/TankDrive.h>
-#include "robotmap.h"
+#include "RobotMap.h"
+#include <CANTalon.h>
 using namespace std;
 TankDrive::TankDrive() :
 		m_leftMotor1(LEFTDRIVE1),

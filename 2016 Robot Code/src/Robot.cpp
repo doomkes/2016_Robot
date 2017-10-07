@@ -27,15 +27,17 @@ private:
 	//Leddar m_leddar;
 	UserInterface ui;
 	WedgemoreUserInput wui;
-	GoalVision m_goalVision;
+//	GoalVision m_goalVision;
 	Autonomous m_auto;
 	ADXRS450_Gyro m_rateSensor;
 	ShooterMode m_shooterMode = STOW_MODE;
 	VictorSP m_climber;
 public:
 	Wedgemore() :
-		m_auto(&m_tank, &m_suspension, &m_shooter, &m_rateSensor, &m_goalVision),
+		m_auto(&m_tank, &m_suspension, &m_shooter),
 		m_climber(0)
+//		m_auto(&m_tank, &m_suspension, &m_shooter, &m_rateSensor, &m_goalVision),
+//		m_climber(0)
 	{
 	}
 
@@ -68,7 +70,7 @@ public:
 			Preferences::GetInstance()->PutFloat("Auto left Goal y1", 110);
 			Preferences::GetInstance()->PutFloat("Auto left Goal y2", 110);
 		}
-		m_goalVision.Init();
+//		m_goalVision.Init();
 		m_tank.Init();
 		//m_leddar.StartAutoDetections(true);
 //		Preferences::GetInstance()->PutFloat("Drive P", 1);

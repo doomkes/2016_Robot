@@ -7,7 +7,9 @@
 
 #ifndef SRC_SHOOTER_H_
 #define SRC_SHOOTER_H_
-#include <wpilib.h>
+#include <WPILib.h>
+#include <CANSpeedController.h>
+#include <CANTalon.h>
 #include "TrapezoidalMove.h"
 #define SHOOTER_SCALE (1.0/360.0)
 class Shooter

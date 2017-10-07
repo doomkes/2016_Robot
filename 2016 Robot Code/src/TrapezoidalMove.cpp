@@ -2,7 +2,7 @@
 #include "iostream"
 #include "TrapezoidalMove.h"
 #include <math.h>
-#include <wpilib.h>
+#include <WPILib.h>
 using namespace std;
 
 TrapezoidalMove::TrapezoidalMove() {

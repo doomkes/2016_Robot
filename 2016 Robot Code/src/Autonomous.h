@@ -13,7 +13,7 @@
 #include "Shooter.h"
 #include "GoalVision.h"
 #include "ADXRS450_Gyro_4967.h"
-#include <wpilib.h>
+#include <WPILib.h>
 
 class Autonomous {
 private:
@@ -22,13 +22,14 @@ private:
 	SuspensionDrive *m_suspension;
 	ADXRS450_Gyro *m_rateSensor;
 	Shooter *m_shooter;
-	GoalVision *m_goalVision;
+//	GoalVision *m_goalVision;
 	unsigned m_autoState = 0;
 	DigitalInput m_DIO0, m_DIO1, m_DIO2, m_DIO3, m_DIO4, m_DIO5;
 	bool m_init = false;
 	int m_mode = 0, m_pos = 0;
 public:
-	Autonomous(TankDrive*, SuspensionDrive*, Shooter*, ADXRS450_Gyro*, GoalVision*);
+//	Autonomous(TankDrive*, SuspensionDrive*, Shooter*, ADXRS450_Gyro*, GoalVision*);
+	Autonomous(TankDrive*, SuspensionDrive*, Shooter*);
 	virtual ~Autonomous();
 	void Init(int mode);
 	void Periodic();

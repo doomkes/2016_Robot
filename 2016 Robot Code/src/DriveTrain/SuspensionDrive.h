@@ -8,7 +8,7 @@
 #ifndef SRC_SUSPENSIONDRIVE_H_
 #define SRC_SUSPENSIONDRIVE_H_
 
-#include <wpilib.h>
+#include <WPILib.h>
 
 class SuspensionDrive
 {

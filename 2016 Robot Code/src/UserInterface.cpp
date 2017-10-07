@@ -6,7 +6,7 @@
  */
 
 #include <UserInterface.h>
-#include "robotmap.h"
+#include "RobotMap.h"
 //The Robot's name is "Wedgemore"
 
 UserInterface::UserInterface() :

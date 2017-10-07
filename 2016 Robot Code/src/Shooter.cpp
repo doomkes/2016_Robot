@@ -6,8 +6,10 @@
  */
 
 #include <Shooter.h>
-#include "robotmap.h"
+#include "RobotMap.h"
 #include <iostream>
+#include <CANTalon.h>
+#include <CANSpeedController.h>
 using namespace std;
 /*
  *  On each iteration, you feed this module
